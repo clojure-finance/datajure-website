@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Dature: Examples</title>
+        
+
+<meta name="description" content="The following are several examples showing how to use Dature to conveniently complete various data processing operations.">
+
+<meta property="og:description" content="The following are several examples showing how to use Dature to conveniently complete various data processing operations.">
+
+<meta property="og:url" content="https://clojure-finance.github.io/dature-website/dature-website/pages-output/examples/" />
+<meta property="og:title" content="Examples" />
+<meta property="og:type" content="article" />
+
+        <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+        
+        <link rel="shortcut icon" href="images/ico/favicon.png">
+        <link href="https://fonts.googleapis.com/css2?family=Fira+Code&family=Titillium+Web:wght@400;700&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@400;700&display=swap" rel="stylesheet">
+        <link href="/dature-website/css/normalize.css" rel="stylesheet" type="text/css" />
+        <link href="/dature-website/css/blog.css" rel="stylesheet" type="text/css" />
+        <link href="/dature-website/css/lotus-highlightjs.min.css" rel="stylesheet" type="text/css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/default.min.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/clojure.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/plaintext.min.js"></script>
+    </head>
+    <body>
+        <aside id="sidebar">
+            <div id="logo">
+                <a title="Dature" href="/dature-website/">
+                    <div class="title-text text desktop-and-tablet-only">
+                        <i class="desktop-and-tablet-only fa fa-table"></i>
+                        <br/><br/>
+                        Dature
+                    </div>
+                    <div class="title-text text mobile-only">Dature</div>
+                </a>
+            </div> 
+
+            <nav id="sidebar-links">
+                <nav id="menucont">
+                    <ul class="menu">
+                        <li ><a title="Home" href="/dature-website/"><div class="menu-item-text">Home</div></a></li>
+                        
+                        <li >
+                            <a href="/dature-website/pages-output/docs/"><div class="menu-item-text">Docs</div></a>
+                        </li>
+                        
+                        <li  class="active" >
+                            <a href="/dature-website/pages-output/examples/"><div class="menu-item-text">Examples</div></a>
+                        </li>
+                        
+                        <li ><a title="Archives" href="/dature-website/archives/"><div class="menu-item-text">Archives</div></a></li>
+                    </ul>
+                </nav>
+
+                <nav id="socialmedia">
+                    <ul>
+                        <li><a target="_blank" title="RSS" href="/dature-website/feed.xml" rel="external"><i class="icon fa-solid fa-rss"></i></a></li>
+                        <li><a target="_blank" title="GitHub" href="https://github.com/clojure-finance/HKU-TDLEG-data-processing-DSL" rel="external"><i class="icon fa-brands fa-github"></i></a></li>
+                    </ul>
+                </nav>
+            </nav>
+        </aside>
+
+        <article id="main">
+            
+<div id="custom-page">
+    <div id="page-header">
+        <h1>Examples</h1>
+    </div>
+    <ul class="toc"><li><a href="#backend-specification">Backend Specification</a></li><li><a href="#datasets-construction">Datasets Construction</a></li><li><a href="#datasets-printing">Datasets Printing</a></li><li><a href="#operations">Operations</a></li><ul><li><a href="#example-1">Example 1</a></li><li><a href="#example-2">Example 2</a></li><li><a href="#example-3">Example 3</a></li><li><a href="#example-4">Example 4</a></li><li><a href="#example-5">Example 5</a></li><li><a href="#example-6">Example 6</a></li></ul></ul>
+    <p>The following are several examples showing how to use Dature to conveniently complete various data processing operations.</p><hr /><h2 id="backend-specification">Backend Specification</h2><p>The following code sets <code>tablecloth</code> as the backend using the function <code>set-backend</code>:</p><pre><code class="clojure">(set-backend "tablecloth")
+</code></pre><h2 id="datasets-construction">Datasets Construction</h2><p>The following code construct a dataset object <code>data</code> of the specified backend from an associative map <code>data-map</code> using the function <code>dataset</code>:</p><pre><code class="clojure">(def data-map {:age [31 25 18 18 25]
+               :name ["a" "b" "c" "c" "d"]
+               :salary [200 500 200 370 3500]})
+(def data (dataset data-map))
+</code></pre><h2 id="datasets-printing">Datasets Printing</h2><p>The following code prints the content of the dataset <code>data</code> using the function <code>print-dataset</code>:</p><pre><code class="clojure">(print-dataset data)
+</code></pre><p>Sample output:</p><pre>
+| :age | :name | :salary |
+|-----:|-------|--------:|
+|   31 |     a |     200 |
+|   25 |     b |     500 |
+|   18 |     c |     200 |
+|   18 |     c |     370 |
+|   25 |     d |    3500 |
+</pre><h2 id="operations">Operations</h2><h3 id="example-1">Example 1</h3><pre><code class="clojure">(print-dataset (dt-get data [[:salary #(&lt; 300 %)] [:age #(&gt; 20 %)]] []))
+</code></pre><p>Sample output:</p><pre>
+| :age | :name | :salary |
+|-----:|-------|--------:|
+|   18 |     c |     370 |
+</pre><h3 id="example-2">Example 2</h3><pre><code class="clojure">(print-dataset (dt-get data [[:sum :salary #(&lt; 1000 %)]] [:age :sum :salary] [:group-by :age]))
+</code></pre><p>Sample output:</p><pre>
+| :age | :salary-sum |
+|-----:|------------:|
+|   25 |      4000.0 |
+</pre><h3 id="example-3">Example 3</h3><pre><code class="clojure">(print-dataset (dt-get data [] [:age :sum :salary :sd :salary] [:group-by :age :sort-by :sd :salary &gt;]))
+</code></pre><p>Sample output:</p><pre>
+| :age | :salary-sum |    :salary-sd |
+|-----:|------------:|--------------:|
+|   25 |      4000.0 | 2121.32034356 |
+|   18 |       570.0 |  120.20815280 |
+|   31 |       200.0 |               |
+</pre><h3 id="example-4">Example 4</h3><pre><code class="clojure">(print-dataset (dt-get data [] [:age :name :sum :salary] [:group-by :age :name]))
+</code></pre><p>Sample output:</p><pre>
+| :age | :name | :salary-sum |
+|-----:|-------|------------:|
+|   31 |     a |       200.0 |
+|   25 |     b |       500.0 |
+|   18 |     c |       570.0 |
+|   25 |     d |      3500.0 |
+</pre><h3 id="example-5">Example 5</h3><pre><code class="clojure">(print-dataset (dt-get data [[:salary #(&lt; 0 %)] [:age #(&lt; 24 %)]] []))
+</code></pre><p>Sample output:</p><pre>
+| :age | :name | :salary |
+|-----:|-------|--------:|
+|   31 |     a |     200 |
+|   25 |     b |     500 |
+|   25 |     d |    3500 |
+</pre><h3 id="example-6">Example 6</h3><pre><code class="clojure">(print-dataset (dt-get data [[:sum :salary #(&lt; 0 %)] [:age #(&lt; 0 %)]] [:name :age :salary :sum :salary :sd :salary] [:group-by :name :age :sort-by :salary])))
+</code></pre><p>Sample output:</p><pre>
+| :name | :age | :salary | :salary-sum |  :salary-sd |
+|-------|-----:|--------:|------------:|------------:|
+|     a |   31 |     200 |       200.0 |             |
+|     c |   18 |     200 |       570.0 | 120.2081528 |
+|     b |   25 |     500 |       500.0 |             |
+|     d |   25 |    3500 |      3500.0 |             |
+</pre>
+
+    
+    <div id="prev-next">
+    
+    <a class="prev" href="/dature-website/pages-output/docs/"><i class="fa-solid fa-circle-left"></i><div class="nav-text">Docs</div></a>
+    
+    
+    <div class="next"></div>
+    
+</div>
+
+    
+
+</div>
+
+            <br/>
+            <div id="footercont">
+                Copyright &copy; 2023 Dature
+                <br>Powered by <a href="http://cryogenweb.org">Cryogen</a>
+            </div>
+        </article>
+
+        <script src="/dature-website/js/highlight.pack.js" type="application/javascript"></script>
+        <script>hljs.initHighlightingOnLoad();</script>
+        <script src="/dature-website/js.dropdown.js" type="application/javascript"></script> 
+        
+
+        
+        
+    </body>
+</html>
