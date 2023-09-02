@@ -51,6 +51,8 @@ Sample output:
 
 ### Example 1
 
+- Select rows with `salary` > 300, `age` < 20
+
 ```clojure
 (print-dataset (dt-get data [[:salary #(< 300 %)] [:age #(> 20 %)]] []))
 ```
@@ -65,6 +67,9 @@ Sample output:
 
 ### Example 2
 
+- Group rows by `age` with sum of `salary` > 1000
+- Show `age` and sum of `salary`
+
 ```clojure
 (print-dataset (dt-get data [[:sum :salary #(< 1000 %)]] [:age :sum :salary] [:group-by :age]))
 ```
@@ -78,6 +83,10 @@ Sample output:
 </pre>
 
 ### Example 3
+
+- Group rows by `age`
+- Show `age`, sum of `salary` and standard deviation of `salary`
+- Sort by standard deviation of `salary` in descending order
 
 ```clojure
 (print-dataset (dt-get data [] [:age :sum :salary :sd :salary] [:group-by :age :sort-by :sd :salary >]))
@@ -94,6 +103,9 @@ Sample output:
 </pre>
 
 ### Example 4
+
+- Group rows by `age` and `name`
+- Show `age`, `name` and sum of `salary`
 
 ```clojure
 (print-dataset (dt-get data [] [:age :name :sum :salary] [:group-by :age :name]))
@@ -112,6 +124,8 @@ Sample output:
 
 ### Example 5
 
+- Select rows with `salary` > 0, `age` < 24
+
 ```clojure
 (print-dataset (dt-get data [[:salary #(< 0 %)] [:age #(< 24 %)]] []))
 ```
@@ -127,6 +141,10 @@ Sample output:
 </pre>
 
 ### Example 6
+
+- Select rows with sum of `salary` > 0 (after grouping), `age` > 0
+- Group rows by `name` and `age`, show `name`, `age`, `salary` (of the first record in the group), sum of `salary` and standard deviation of `salary`
+- Sort by `salary`
 
 ```clojure
 (print-dataset (dt-get data [[:sum :salary #(< 0 %)] [:age #(< 0 %)]] [:name :age :salary :sum :salary :sd :salary] [:group-by :name :age :sort-by :salary])))
