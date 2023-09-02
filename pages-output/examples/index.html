@@ -87,24 +87,24 @@
 |   18 |     c |     200 |
 |   18 |     c |     370 |
 |   25 |     d |    3500 |
-</pre><h2 id="operations">Operations</h2><h3 id="example-1">Example 1</h3><pre><code class="clojure">(print-dataset (dt-get data [[:salary #(&lt; 300 %)] [:age #(&gt; 20 %)]] []))
+</pre><h2 id="operations">Operations</h2><h3 id="example-1">Example 1</h3><ul><li>Select rows with <code>salary</code> &gt; 300, <code>age</code> &lt; 20</li></ul><pre><code class="clojure">(print-dataset (dt-get data [[:salary #(&lt; 300 %)] [:age #(&gt; 20 %)]] []))
 </code></pre><p>Sample output:</p><pre>
 | :age | :name | :salary |
 |-----:|-------|--------:|
 |   18 |     c |     370 |
-</pre><h3 id="example-2">Example 2</h3><pre><code class="clojure">(print-dataset (dt-get data [[:sum :salary #(&lt; 1000 %)]] [:age :sum :salary] [:group-by :age]))
+</pre><h3 id="example-2">Example 2</h3><ul><li>Group rows by <code>age</code> with sum of <code>salary</code> &gt; 1000</li><li>Show <code>age</code> and sum of <code>salary</code></li></ul><pre><code class="clojure">(print-dataset (dt-get data [[:sum :salary #(&lt; 1000 %)]] [:age :sum :salary] [:group-by :age]))
 </code></pre><p>Sample output:</p><pre>
 | :age | :salary-sum |
 |-----:|------------:|
 |   25 |      4000.0 |
-</pre><h3 id="example-3">Example 3</h3><pre><code class="clojure">(print-dataset (dt-get data [] [:age :sum :salary :sd :salary] [:group-by :age :sort-by :sd :salary &gt;]))
+</pre><h3 id="example-3">Example 3</h3><ul><li>Group rows by <code>age</code></li><li>Show <code>age</code>, sum of <code>salary</code> and standard deviation of <code>salary</code></li><li>Sort by standard deviation of <code>salary</code> in descending order</li></ul><pre><code class="clojure">(print-dataset (dt-get data [] [:age :sum :salary :sd :salary] [:group-by :age :sort-by :sd :salary &gt;]))
 </code></pre><p>Sample output:</p><pre>
 | :age | :salary-sum |    :salary-sd |
 |-----:|------------:|--------------:|
 |   25 |      4000.0 | 2121.32034356 |
 |   18 |       570.0 |  120.20815280 |
 |   31 |       200.0 |               |
-</pre><h3 id="example-4">Example 4</h3><pre><code class="clojure">(print-dataset (dt-get data [] [:age :name :sum :salary] [:group-by :age :name]))
+</pre><h3 id="example-4">Example 4</h3><ul><li>Group rows by <code>age</code> and <code>name</code></li><li>Show <code>age</code>, <code>name</code> and sum of <code>salary</code></li></ul><pre><code class="clojure">(print-dataset (dt-get data [] [:age :name :sum :salary] [:group-by :age :name]))
 </code></pre><p>Sample output:</p><pre>
 | :age | :name | :salary-sum |
 |-----:|-------|------------:|
@@ -112,14 +112,14 @@
 |   25 |     b |       500.0 |
 |   18 |     c |       570.0 |
 |   25 |     d |      3500.0 |
-</pre><h3 id="example-5">Example 5</h3><pre><code class="clojure">(print-dataset (dt-get data [[:salary #(&lt; 0 %)] [:age #(&lt; 24 %)]] []))
+</pre><h3 id="example-5">Example 5</h3><ul><li>Select rows with <code>salary</code> &gt; 0, <code>age</code> &lt; 24</li></ul><pre><code class="clojure">(print-dataset (dt-get data [[:salary #(&lt; 0 %)] [:age #(&lt; 24 %)]] []))
 </code></pre><p>Sample output:</p><pre>
 | :age | :name | :salary |
 |-----:|-------|--------:|
 |   31 |     a |     200 |
 |   25 |     b |     500 |
 |   25 |     d |    3500 |
-</pre><h3 id="example-6">Example 6</h3><pre><code class="clojure">(print-dataset (dt-get data [[:sum :salary #(&lt; 0 %)] [:age #(&lt; 0 %)]] [:name :age :salary :sum :salary :sd :salary] [:group-by :name :age :sort-by :salary])))
+</pre><h3 id="example-6">Example 6</h3><ul><li>Select rows with sum of <code>salary</code> &gt; 0 (after grouping), <code>age</code> &gt; 0</li><li>Group rows by <code>name</code> and <code>age</code>, show <code>name</code>, <code>age</code>, <code>salary</code> (of the first record in the group), sum of <code>salary</code> and standard deviation of <code>salary</code></li><li>Sort by <code>salary</code></li></ul><pre><code class="clojure">(print-dataset (dt-get data [[:sum :salary #(&lt; 0 %)] [:age #(&lt; 0 %)]] [:name :age :salary :sum :salary :sd :salary] [:group-by :name :age :sort-by :salary])))
 </code></pre><p>Sample output:</p><pre>
 | :name | :age | :salary | :salary-sum |  :salary-sd |
 |-------|-----:|--------:|------------:|------------:|
