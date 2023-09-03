@@ -26,5 +26,5 @@ jobs:
           commit-message: ${{ github.event.head_commit.message }}
           branch: gh-pages
           single-commit: yes
-          folder: public/dature-website
+          folder: public/datajure-website
       
