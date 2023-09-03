@@ -2,15 +2,15 @@
 <html lang="en">
     <head>
         <meta charset="utf-8">
-        <title>Dature: Clojask Backend Implementation</title>
+        <title>Datajure: Clojask Backend Implementation</title>
         
 <meta name="keywords" content="">
 
-<meta name="description" content="Clojask is an open-source library for parallel computing of larger-than-memory datasets developed at HKU Business School.Clojask relies on Onyx for parallel computing. In Dature, we set the number of workers to 8, which does not support manual modification by users.">
+<meta name="description" content="Clojask is an open-source library for parallel computing of larger-than-memory datasets developed at HKU Business School.Clojask relies on Onyx for parallel computing. In Datajure, we set the number of workers to 8, which does not support manual modification by users.">
 
-<meta property="og:description" content="Clojask is an open-source library for parallel computing of larger-than-memory datasets developed at HKU Business School.Clojask relies on Onyx for parallel computing. In Dature, we set the number of workers to 8, which does not support manual modification by users.">
+<meta property="og:description" content="Clojask is an open-source library for parallel computing of larger-than-memory datasets developed at HKU Business School.Clojask relies on Onyx for parallel computing. In Datajure, we set the number of workers to 8, which does not support manual modification by users.">
 
-<meta property="og:url" content="https://clojure-finance.github.io/dature-website/dature-website/posts-output/2023-09-02-clojask-backend/" />
+<meta property="og:url" content="https://clojure-finance.github.io/datajure-website/datajure-website/posts-output/2023-09-02-clojask-backend/" />
 <meta property="og:title" content="Clojask Backend Implementation" />
 <meta property="og:type" content="article" />
 
@@ -19,9 +19,9 @@
         <link rel="shortcut icon" href="images/ico/favicon.png">
         <link href="https://fonts.googleapis.com/css2?family=Fira+Code&family=Titillium+Web:wght@400;700&display=swap" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@400;700&display=swap" rel="stylesheet">
-        <link href="/dature-website/css/normalize.css" rel="stylesheet" type="text/css" />
-        <link href="/dature-website/css/blog.css" rel="stylesheet" type="text/css" />
-        <link href="/dature-website/css/lotus-highlightjs.min.css" rel="stylesheet" type="text/css" />
+        <link href="/datajure-website/css/normalize.css" rel="stylesheet" type="text/css" />
+        <link href="/datajure-website/css/blog.css" rel="stylesheet" type="text/css" />
+        <link href="/datajure-website/css/lotus-highlightjs.min.css" rel="stylesheet" type="text/css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/default.min.css">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
@@ -31,36 +31,36 @@
     <body>
         <aside id="sidebar">
             <div id="logo">
-                <a title="Dature" href="/dature-website/">
+                <a title="Datajure" href="/datajure-website/">
                     <div class="title-text text desktop-and-tablet-only">
                         <i class="desktop-and-tablet-only fa fa-table"></i>
                         <br/><br/>
-                        Dature
+                        Datajure
                     </div>
-                    <div class="title-text text mobile-only">Dature</div>
+                    <div class="title-text text mobile-only">Datajure</div>
                 </a>
             </div> 
 
             <nav id="sidebar-links">
                 <nav id="menucont">
                     <ul class="menu">
-                        <li ><a title="Home" href="/dature-website/"><div class="menu-item-text">Home</div></a></li>
+                        <li ><a title="Home" href="/datajure-website/"><div class="menu-item-text">Home</div></a></li>
                         
                         <li >
-                            <a href="/dature-website/pages-output/docs/"><div class="menu-item-text">Docs</div></a>
+                            <a href="/datajure-website/pages-output/docs/"><div class="menu-item-text">Docs</div></a>
                         </li>
                         
                         <li >
-                            <a href="/dature-website/pages-output/examples/"><div class="menu-item-text">Examples</div></a>
+                            <a href="/datajure-website/pages-output/examples/"><div class="menu-item-text">Examples</div></a>
                         </li>
                         
-                        <li ><a title="Archives" href="/dature-website/archives/"><div class="menu-item-text">Archives</div></a></li>
+                        <li ><a title="Archives" href="/datajure-website/archives/"><div class="menu-item-text">Archives</div></a></li>
                     </ul>
                 </nav>
 
                 <nav id="socialmedia">
                     <ul>
-                        <li><a target="_blank" title="RSS" href="/dature-website/feed.xml" rel="external"><i class="icon fa-solid fa-rss"></i></a></li>
+                        <li><a target="_blank" title="RSS" href="/datajure-website/feed.xml" rel="external"><i class="icon fa-solid fa-rss"></i></a></li>
                         <li><a target="_blank" title="GitHub" href="https://github.com/clojure-finance/HKU-TDLEG-data-processing-DSL" rel="external"><i class="icon fa-brands fa-github"></i></a></li>
                     </ul>
                 </nav>
@@ -83,7 +83,7 @@
 </div>
 <div>
     <ul class="toc"><li><a href="#dataset-construction">Dataset Construction</a></li><li><a href="#row-selection">Row Selection</a></li><ul><li><a href="#row-selection-by-filter">Row Selection by Filter</a></li><li><a href="#row-selection-by-index">Row Selection by Index</a></li></ul><li><a href="#column-selection">Column Selection</a></li><li><a href="#optional-selection">Optional Selection</a></li><ul><li><a href="#group-by">Group by</a></li><li><a href="#sort-by">Sort by</a></li></ul><li><a href="#aggregate-function">Aggregate Function</a></li></ul>
-    <p>Clojask is an open-source library for parallel computing of larger-than-memory datasets developed at HKU Business School.</p><p>Clojask relies on Onyx for parallel computing. In Dature, we set the number of workers to 8, which does not support manual modification by users.</p><p>Unlike other backends that return modified datasets, Clojask's API will make modifications directly on the original dataset. In order to simplify the code logic, we always manually return the reference of the original data set when writing internal functions.</p><p>The operation of Clojask backend involves a lot of file reading and writing. Excessive file manipulation is tiring. In addition, the data type information may be lost during the file reading and writing process, and thus the data type needs to be respecified. Therefore, it is recommended to use the Clojask backend only when the dataset to be processed is larger than the memory.</p><p>For convenience, we store the temporary files generated during data processing in the <code>./.dsl/</code> directory. If these files are no longer needed, you can delete them manually.</p><p>Detailed documentations of Clojask can be found on its <a href="https://clojure-finance.github.io/clojask-website/">official website</a>.</p><h2 id="dataset-construction">Dataset Construction</h2><p>Dature provides a function <code>dataset</code> to construct a Clojask dataset from an associative map. See <a href="http://localhost:3000/dature-website/pages-output/examples/">Examples</a> for specific usage.</p><p>However, since Clojask's data operations are highly dependent on external files, constructing data directly within the program may lead to unexpected errors. Therefore, you are highly recommended to read the dataset from a file using <code>ck/dataframe</code>.</p><p><strong>Example</strong></p><pre><code class="clojure">;; defines df as a dataframe from dataframe.csv file
+    <p>Clojask is an open-source library for parallel computing of larger-than-memory datasets developed at HKU Business School.</p><p>Clojask relies on Onyx for parallel computing. In Datajure, we set the number of workers to 8, which does not support manual modification by users.</p><p>Unlike other backends that return modified datasets, Clojask's API will make modifications directly on the original dataset. In order to simplify the code logic, we always manually return the reference of the original data set when writing internal functions.</p><p>The operation of Clojask backend involves a lot of file reading and writing. Excessive file manipulation is tiring. In addition, the data type information may be lost during the file reading and writing process, and thus the data type needs to be respecified. Therefore, it is recommended to use the Clojask backend only when the dataset to be processed is larger than the memory.</p><p>For convenience, we store the temporary files generated during data processing in the <code>./.dsl/</code> directory. If these files are no longer needed, you can delete them manually.</p><p>Detailed documentations of Clojask can be found on its <a href="https://clojure-finance.github.io/clojask-website/">official website</a>.</p><h2 id="dataset-construction">Dataset Construction</h2><p>Datajure provides a function <code>dataset</code> to construct a Clojask dataset from an associative map. See <a href="/datajure-website/pages-output/examples/">Examples</a> for specific usage.</p><p>However, since Clojask's data operations are highly dependent on external files, constructing data directly within the program may lead to unexpected errors. Therefore, you are highly recommended to read the dataset from a file using <code>ck/dataframe</code>.</p><p><strong>Example</strong></p><pre><code class="clojure">;; defines df as a dataframe from dataframe.csv file
 (def df (ck/dataframe "resources/Employee.csv"))
 </code></pre><p>If customized seperators or different file formats are used, please first read and parse the file using <code>clojask-io.input/read-file</code>, and then pass it to <code>ck/dataframe</code>.</p><p><strong>Example</strong></p><pre><code class="clojure">;; define df to be a dataframe with customized seperator
 (require '[clojask-io.input :as input])
@@ -104,7 +104,7 @@
     <div class="prev"></div>
     
     
-    <a class="next" href="/dature-website/posts-output/2023-08-31-tablecloth-backend/"><div class="nav-text"">Tablecloth Backend Implementation</div><i class="fa-solid fa-circle-right"></i></a>
+    <a class="next" href="/datajure-website/posts-output/2023-08-31-tablecloth-backend/"><div class="nav-text"">Tablecloth Backend Implementation</div><i class="fa-solid fa-circle-right"></i></a>
     
 </div>
 
@@ -117,14 +117,14 @@
 
             <br/>
             <div id="footercont">
-                Copyright &copy; 2023 Dature
+                Copyright &copy; 2023 Datajure
                 <br>Powered by <a href="http://cryogenweb.org">Cryogen</a>
             </div>
         </article>
 
-        <script src="/dature-website/js/highlight.pack.js" type="application/javascript"></script>
+        <script src="/datajure-website/js/highlight.pack.js" type="application/javascript"></script>
         <script>hljs.initHighlightingOnLoad();</script>
-        <script src="/dature-website/js.dropdown.js" type="application/javascript"></script> 
+        <script src="/datajure-website/js.dropdown.js" type="application/javascript"></script> 
         
 
         

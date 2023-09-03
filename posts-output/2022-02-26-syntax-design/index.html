@@ -2,7 +2,7 @@
 <html lang="en">
     <head>
         <meta charset="utf-8">
-        <title>Dature: Syntax Design</title>
+        <title>Datajure: Syntax Design</title>
         
 <meta name="keywords" content="">
 
@@ -10,7 +10,7 @@
 
 <meta property="og:description" content="With the foundation of the query being developed, I could start working on the syntax design itself. The syntax design is flexible with the help of macros. We could develop a syntax for our DSL as long as it is recognised by the Clojure language (i.e. following some fundamental rules and syntax imposed by Clojure).Clojure has a heavy use of expressions in the language. Every expression is separated and seen as a separate object to Clojure. It could not phrase or recognise syntax like DT[, col1,col2] - Clojure cannot extract the keywords like col1 and col2 here. In other words, spacing is very important in Clojure, every expression is separated by a space. It is a fundamental syntax of Clojure. This is the biggest limitation imposed by Clojure.">
 
-<meta property="og:url" content="https://clojure-finance.github.io/dature-website/dature-website/posts-output/2022-02-26-syntax-design/" />
+<meta property="og:url" content="https://clojure-finance.github.io/datajure-website/datajure-website/posts-output/2022-02-26-syntax-design/" />
 <meta property="og:title" content="Syntax Design" />
 <meta property="og:type" content="article" />
 
@@ -19,9 +19,9 @@
         <link rel="shortcut icon" href="images/ico/favicon.png">
         <link href="https://fonts.googleapis.com/css2?family=Fira+Code&family=Titillium+Web:wght@400;700&display=swap" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@400;700&display=swap" rel="stylesheet">
-        <link href="/dature-website/css/normalize.css" rel="stylesheet" type="text/css" />
-        <link href="/dature-website/css/blog.css" rel="stylesheet" type="text/css" />
-        <link href="/dature-website/css/lotus-highlightjs.min.css" rel="stylesheet" type="text/css" />
+        <link href="/datajure-website/css/normalize.css" rel="stylesheet" type="text/css" />
+        <link href="/datajure-website/css/blog.css" rel="stylesheet" type="text/css" />
+        <link href="/datajure-website/css/lotus-highlightjs.min.css" rel="stylesheet" type="text/css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/default.min.css">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
@@ -31,36 +31,36 @@
     <body>
         <aside id="sidebar">
             <div id="logo">
-                <a title="Dature" href="/dature-website/">
+                <a title="Datajure" href="/datajure-website/">
                     <div class="title-text text desktop-and-tablet-only">
                         <i class="desktop-and-tablet-only fa fa-table"></i>
                         <br/><br/>
-                        Dature
+                        Datajure
                     </div>
-                    <div class="title-text text mobile-only">Dature</div>
+                    <div class="title-text text mobile-only">Datajure</div>
                 </a>
             </div> 
 
             <nav id="sidebar-links">
                 <nav id="menucont">
                     <ul class="menu">
-                        <li ><a title="Home" href="/dature-website/"><div class="menu-item-text">Home</div></a></li>
+                        <li ><a title="Home" href="/datajure-website/"><div class="menu-item-text">Home</div></a></li>
                         
                         <li >
-                            <a href="/dature-website/pages-output/docs/"><div class="menu-item-text">Docs</div></a>
+                            <a href="/datajure-website/pages-output/docs/"><div class="menu-item-text">Docs</div></a>
                         </li>
                         
                         <li >
-                            <a href="/dature-website/pages-output/examples/"><div class="menu-item-text">Examples</div></a>
+                            <a href="/datajure-website/pages-output/examples/"><div class="menu-item-text">Examples</div></a>
                         </li>
                         
-                        <li ><a title="Archives" href="/dature-website/archives/"><div class="menu-item-text">Archives</div></a></li>
+                        <li ><a title="Archives" href="/datajure-website/archives/"><div class="menu-item-text">Archives</div></a></li>
                     </ul>
                 </nav>
 
                 <nav id="socialmedia">
                     <ul>
-                        <li><a target="_blank" title="RSS" href="/dature-website/feed.xml" rel="external"><i class="icon fa-solid fa-rss"></i></a></li>
+                        <li><a target="_blank" title="RSS" href="/datajure-website/feed.xml" rel="external"><i class="icon fa-solid fa-rss"></i></a></li>
                         <li><a target="_blank" title="GitHub" href="https://github.com/clojure-finance/HKU-TDLEG-data-processing-DSL" rel="external"><i class="icon fa-brands fa-github"></i></a></li>
                     </ul>
                 </nav>
@@ -96,10 +96,10 @@ Here shows the final design for the DSL syntax:</p><pre><code class="clojure">dt
     
     <div id="prev-next">
     
-    <a class="prev" href="/dature-website/posts-output/2022-03-12-sort-by-function-implementation/"><i class="fa-solid fa-circle-left"></i><div class="nav-text">Sort-by Function Implementation</div></a>
+    <a class="prev" href="/datajure-website/posts-output/2022-03-12-sort-by-function-implementation/"><i class="fa-solid fa-circle-left"></i><div class="nav-text">Sort-by Function Implementation</div></a>
     
     
-    <a class="next" href="/dature-website/posts-output/2022-01-29-implementation-of-query-foundation/"><div class="nav-text"">Implementation of Query Foundation</div><i class="fa-solid fa-circle-right"></i></a>
+    <a class="next" href="/datajure-website/posts-output/2022-01-29-implementation-of-query-foundation/"><div class="nav-text"">Implementation of Query Foundation</div><i class="fa-solid fa-circle-right"></i></a>
     
 </div>
 
@@ -112,14 +112,14 @@ Here shows the final design for the DSL syntax:</p><pre><code class="clojure">dt
 
             <br/>
             <div id="footercont">
-                Copyright &copy; 2023 Dature
+                Copyright &copy; 2023 Datajure
                 <br>Powered by <a href="http://cryogenweb.org">Cryogen</a>
             </div>
         </article>
 
-        <script src="/dature-website/js/highlight.pack.js" type="application/javascript"></script>
+        <script src="/datajure-website/js/highlight.pack.js" type="application/javascript"></script>
         <script>hljs.initHighlightingOnLoad();</script>
-        <script src="/dature-website/js.dropdown.js" type="application/javascript"></script> 
+        <script src="/datajure-website/js.dropdown.js" type="application/javascript"></script> 
         
 
         
