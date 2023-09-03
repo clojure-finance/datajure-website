@@ -4,7 +4,7 @@
  :page-index 1
  :navbar? true}
 
-The following are several examples showing how to use Dature to conveniently complete various data processing operations.
+The following are several examples showing how to use Datajure to conveniently complete various data processing operations.
 
 ---  
 

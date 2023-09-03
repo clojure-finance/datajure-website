@@ -24,15 +24,15 @@ The figure below shows the overview of the evaluation process of Clojure.
 
 ![Overview of Methodology](../../img/methodology.png)
 
-Dature takes the query code written in the custom syntax as input, phrasing it into a Clojure map containing the arguments of different operations. The library functions are called according to our logical processing order, returning the data table.
+Datajure takes the query code written in the custom syntax as input, phrasing it into a Clojure map containing the arguments of different operations. The library functions are called according to our logical processing order, returning the data table.
 
 ## Logical Processing Order
 
-Simply put, Dature implemented the functionality of the `SELECT` statements in [Structured Query Language (SQL)](https://en.wikipedia.org/wiki/SQL), a declarative query language designed for managing the data in a [Relational Database Management System (RDBMS)](https://en.wikipedia.org/wiki/Relational_database), but with slightly different set of operations involved, due to the nature of our target usage scenario. Theerefore, the logical processing order of the `SELECT` statement has been adopted in Dature.
+Simply put, Datajure implemented the functionality of the `SELECT` statements in [Structured Query Language (SQL)](https://en.wikipedia.org/wiki/SQL), a declarative query language designed for managing the data in a [Relational Database Management System (RDBMS)](https://en.wikipedia.org/wiki/Relational_database), but with slightly different set of operations involved, due to the nature of our target usage scenario. Theerefore, the logical processing order of the `SELECT` statement has been adopted in Datajure.
 
-The following table compares the supported operations and their logical processing order of Dature and SQL `SELECT`.
+The following table compares the supported operations and their logical processing order of Datajure and SQL `SELECT`.
 
-|Dature Order|SQL Order|Operations|Description|
+|Datajure Order|SQL Order|Operations|Description|
 |:-:|:-:|:-:|:-:|
 ||1|`FROM`|Specifies a table, view, table variable, or derived table source, with or without an alias, to use in the Transact-SQL statement|
 ||2|`ON`|Specifies arbitrary conditions or specify columns to join|
@@ -149,9 +149,9 @@ This shows the syntax of an aggregated column. `aggregate-keyword` specifies the
 
 ## Backends
 
-Currently, Dature supports the following data processing libraries as the backend: [`tech.ml.dataset`](https://github.com/techascent/tech.ml.dataset), [Tablecloth](https://github.com/scicloj/tablecloth), [Clojask](https://github.com/clojure-finance/clojask) and [Geni](https://github.com/zero-one-group/geni).
+Currently, Datajure supports the following data processing libraries as the backend: [`tech.ml.dataset`](https://github.com/techascent/tech.ml.dataset), [Tablecloth](https://github.com/scicloj/tablecloth), [Clojask](https://github.com/clojure-finance/clojask) and [Geni](https://github.com/zero-one-group/geni).
 
-Although Dature uses Tablecloth by default, the users can still specify their preferred backend. The statement to specify the backend has the following syntax:
+Although Datajure uses Tablecloth by default, the users can still specify their preferred backend. The statement to specify the backend has the following syntax:
 
 ```clojure
 (set-backend BACKEND)

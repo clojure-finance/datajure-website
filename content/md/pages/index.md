@@ -1,10 +1,10 @@
-{:title "Welcome to Dature!"
+{:title "Welcome to Datajure!"
  :layout :page
  :page-index 0
  :navbar? true
  :home? true}
 
-Welcome to Dature! This is an open-source domain-specific language for data processing developed at HKU Business School.
+Welcome to Datajure! This is an open-source domain-specific language for data processing developed at HKU Business School.
 
 To get started, please read our [docs](pages-output/docs) and try our [examples](pages-output/examples).
 
@@ -18,5 +18,5 @@ In this project, a DSL extension to existing data processing libraries, includin
 
 ## Report Bugs 
 
-Dature is currently under active development.  
+Datajure is currently under active development.  
 If you find any bugs or errors, we would appreciate if you could help [report](https://github.com/clojure-finance/HKU-TDLEG-data-processing-DSL/issues) these issues so that we could repair them accordingly.

@@ -5,7 +5,7 @@
 
 Clojask is an open-source library for parallel computing of larger-than-memory datasets developed at HKU Business School.
 
-Clojask relies on Onyx for parallel computing. In Dature, we set the number of workers to 8, which does not support manual modification by users.
+Clojask relies on Onyx for parallel computing. In Datajure, we set the number of workers to 8, which does not support manual modification by users.
 
 Unlike other backends that return modified datasets, Clojask's API will make modifications directly on the original dataset. In order to simplify the code logic, we always manually return the reference of the original data set when writing internal functions.
 
@@ -17,7 +17,7 @@ Detailed documentations of Clojask can be found on its [official website](https:
 
 ## Dataset Construction
 
-Dature provides a function `dataset` to construct a Clojask dataset from an associative map. See [Examples](http://localhost:3000/dature-website/pages-output/examples/) for specific usage.
+Datajure provides a function `dataset` to construct a Clojask dataset from an associative map. See [Examples](/pages-output/examples/) for specific usage.
 
 However, since Clojask's data operations are highly dependent on external files, constructing data directly within the program may lead to unexpected errors. Therefore, you are highly recommended to read the dataset from a file using `ck/dataframe`.
 

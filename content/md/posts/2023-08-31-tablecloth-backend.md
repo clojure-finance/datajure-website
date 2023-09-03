@@ -3,13 +3,13 @@
  :toc :ul
  :author "YANG Ming-Tian"}
 
-Tablecloth is the default backend for Dature. It is an addition on the top of `tech.ml.dataset`, reorganising its existing functions into simple-to-use APIs.
+Tablecloth is the default backend for Datajure. It is an addition on the top of `tech.ml.dataset`, reorganising its existing functions into simple-to-use APIs.
 
 Detailed documentations of Tablecloth can be found on its [official website](https://scicloj.github.io/tablecloth/).
 
 ## Dataset Construction
 
-Dature provides a function `dataset` to construct a Tablecloth dataset from an associative map. See [Examples](http://localhost:3000/dature-website/pages-output/examples/) for specific usage.
+Datajure provides a function `dataset` to construct a Tablecloth dataset from an associative map. See [Examples](/pages-output/examples/) for specific usage.
 
 Alternatively, you can also create the dataset using the function `tc/dataset` or `tc/let-dataset` provided by Tablecloth, with which you can create a dataset from:
 

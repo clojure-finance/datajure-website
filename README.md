@@ -1,6 +1,6 @@
-# Dature Website
+# Datajure Website
 
-A documentation website for the Dature (provisional name) built with Cryogen
+A documentation website for the Datajure built with Cryogen
 
 ### Requirements
 
