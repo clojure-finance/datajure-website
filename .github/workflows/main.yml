@@ -9,22 +9,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Prepare java
-        uses: actions/setup-java@v3.12.0
+      - name: Cryogen Deploy
+        uses: skylee03/cryogen-action@v1
         with:
-          distribution: 'temurin'
-          java-version: '11'
-      - name: Install clojure tools
-        uses: DeLaGuardo/setup-clojure@11.0
-        with:
-          lein: 2.10.0
-      - name: Build site
-        run: lein run
-      - name: Publish to GitHub Pages
-        uses: JamesIves/github-pages-deploy-action@4.1.4
-        with:
-          commit-message: ${{ github.event.head_commit.message }}
-          branch: gh-pages
-          single-commit: yes
           folder: public/datajure-website
-      
