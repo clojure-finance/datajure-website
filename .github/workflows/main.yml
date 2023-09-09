@@ -1,15 +1,21 @@
-name: Publish website
+name: Publish
 on:
   push:
     branches:
       - main
 jobs:
-  build_site:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Cryogen Deploy
+      # Deploy hexo blog website.
+      - name: Deploy
         uses: skylee03/cryogen-action@v1
         with:
           folder: public/datajure-website
+          java-version: '11' # optional
+          java-distribution: 'liberica' # optional
+          lein-version: 2.10.0 # optional
+          branch: gh-pages # optional
+          single-commit: yes # optional
