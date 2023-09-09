@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Datajure: Geni Backend Implementation</title>
+        
+<meta name="keywords" content="">
+
+<meta name="description" content="Geni is a Clojure dataframe library that runs on Apache Spark. It provides an idiomatic Spark interface for Clojure without the hassle of Java or Scala interop. Therefore, this backend is actually supported by Apache Spark, while we use Geni&#39;s APIs in the implementation.For the details of Geni APIs, please refer to Geni Documentation. For the details of Apache Spark behaviour, please refer to Spark Documentation.">
+
+<meta property="og:description" content="Geni is a Clojure dataframe library that runs on Apache Spark. It provides an idiomatic Spark interface for Clojure without the hassle of Java or Scala interop. Therefore, this backend is actually supported by Apache Spark, while we use Geni&#39;s APIs in the implementation.For the details of Geni APIs, please refer to Geni Documentation. For the details of Apache Spark behaviour, please refer to Spark Documentation.">
+
+<meta property="og:url" content="https://clojure-finance.github.io/datajure-website/datajure-website/posts-output/2023-09-08-geni-backend/" />
+<meta property="og:title" content="Geni Backend Implementation" />
+<meta property="og:type" content="article" />
+
+        <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+        
+        <link rel="shortcut icon" href="images/ico/favicon.png">
+        <link href="https://fonts.googleapis.com/css2?family=Fira+Code&family=Titillium+Web:wght@400;700&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@400;700&display=swap" rel="stylesheet">
+        <link href="/datajure-website/css/normalize.css" rel="stylesheet" type="text/css" />
+        <link href="/datajure-website/css/blog.css" rel="stylesheet" type="text/css" />
+        <link href="/datajure-website/css/lotus-highlightjs.min.css" rel="stylesheet" type="text/css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/default.min.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/clojure.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/plaintext.min.js"></script>
+    </head>
+    <body>
+        <aside id="sidebar">
+            <div id="logo">
+                <a title="Datajure" href="/datajure-website/">
+                    <div class="title-text text desktop-and-tablet-only">
+                        <i class="desktop-and-tablet-only fa fa-table"></i>
+                        <br/><br/>
+                        Datajure
+                    </div>
+                    <div class="title-text text mobile-only">Datajure</div>
+                </a>
+            </div> 
+
+            <nav id="sidebar-links">
+                <nav id="menucont">
+                    <ul class="menu">
+                        <li ><a title="Home" href="/datajure-website/"><div class="menu-item-text">Home</div></a></li>
+                        
+                        <li >
+                            <a href="/datajure-website/pages-output/docs/"><div class="menu-item-text">Docs</div></a>
+                        </li>
+                        
+                        <li >
+                            <a href="/datajure-website/pages-output/examples/"><div class="menu-item-text">Examples</div></a>
+                        </li>
+                        
+                        <li ><a title="Archives" href="/datajure-website/archives/"><div class="menu-item-text">Archives</div></a></li>
+                    </ul>
+                </nav>
+
+                <nav id="socialmedia">
+                    <ul>
+                        <li><a target="_blank" title="RSS" href="/datajure-website/feed.xml" rel="external"><i class="icon fa-solid fa-rss"></i></a></li>
+                        <li><a target="_blank" title="GitHub" href="https://github.com/clojure-finance/HKU-TDLEG-data-processing-DSL" rel="external"><i class="icon fa-brands fa-github"></i></a></li>
+                    </ul>
+                </nav>
+            </nav>
+        </aside>
+
+        <article id="main">
+            
+<div id="post">
+    <div class="post-header">
+    <div id="post-meta">
+        <h1>Geni Backend Implementation</h1>
+        <div class="byline">
+            <span class="date">2023-09-08</span>
+            
+            <span class="author">By: YANG Ming-Tian</span>
+            
+        </div>
+    </div>
+</div>
+<div>
+    <ul class="toc"><li><a href="#dataset-construction">Dataset Construction</a></li><li><a href="#row-selection">Row Selection</a></li><ul><li><a href="#row-selection-by-filter">Row Selection by Filter</a></li><li><a href="#row-selection-by-index">Row Selection by Index</a></li></ul><li><a href="#column-selection">Column Selection</a></li><li><a href="#optional-selection">Optional Selection</a></li><ul><li><a href="#group-by">Group by</a></li><li><a href="#sort-by">Sort by</a></li></ul><li><a href="#aggregate-function">Aggregate Function</a></li></ul>
+    <p>Geni is a Clojure dataframe library that runs on Apache Spark. It provides an idiomatic Spark interface for Clojure without the hassle of Java or Scala interop. Therefore, this backend is actually supported by Apache Spark, while we use Geni's APIs in the implementation.</p><p>For the details of Geni APIs, please refer to <a href="https://github.com/zero-one-group/geni">Geni Documentation</a>. For the details of Apache Spark behaviour, please refer to <a href="https://spark.apache.org/docs/latest/">Spark Documentation</a>.</p><h2 id="dataset-construction">Dataset Construction</h2><p>Datajure provides a function <code>dataset</code> to construct a Geni dataset from an associative map. See <a href="/datajure-website/pages-output/examples/">Examples</a> for specific usage.</p><p>In addition, Geni also provides a variety of APIs for creating/importing dataframes or datasets, such as <code>g/to-df</code>, <code>g/create-dataframe</code>, <code>g/table-&gt;dataset</code>, <code>g/map-&gt;dataset</code>, and <code>g/records-&gt;dataset</code>.</p><p>For examples, please refer to the <a href="https://github.com/zero-one-group/geni/blob/develop/docs/manual_dataset_creation.md">official document</a> of Geni.</p><h2 id="row-selection">Row Selection</h2><p>The row selection operations are implemented with the <code>g/filter</code> function in Geni, which supports "by-filter" selection but not "by-index" selection.</p><h3 id="row-selection-by-filter">Row Selection by Filter</h3><p>The filter operation is implemented with the <code>g/filter</code> function provided by Geni. When multiple filters are provided, we use <code>reduce</code> to repeatedly apply <code>g/filter</code>. However, due to the limitations of Geni itself, the filter functions must be expressions written with Geni operators, e.g., <code>g/&lt;</code>, instead of Clojure operators such as <code>&lt;</code>.</p><p>For more information, please refer to <a href="https://github.com/zero-one-group/geni/blob/develop/docs/semantics.md">Geni Semantics</a>.</p><h3 id="row-selection-by-index">Row Selection by Index</h3><p>Since row selection by index is not natively supported by Geni and the order of the rows in the dataset is not guaranteed, the users are highly suggested to manually add a column for indices and then perform filter operations on that column.</p><h2 id="column-selection">Column Selection</h2><p>The column selection operations are implemented with the <code>g/select</code> function in Geni.</p><h2 id="optional-selection">Optional Selection</h2><h3 id="group-by">Group by</h3><p>The grouping by operation is implemented using the <code>g/group-by</code> function provided by Geni, which accepts a regular dataset and returns a grouped dataset. The grouped dataset will then be handled by the aggregate functions.</p><h3 id="sort-by">Sort by</h3><p>The sorting by operation is implemented using the <code>g/sort</code> function provided by Geni. However, due to the limitations of Geni itself, customized comparators are not supported.</p><h2 id="aggregate-function">Aggregate Function</h2><p>We use the <code>g/agg</code> function to calculate statistical data of relevant columns when performing grouping by operations. To avoid runtime errors, we require that columns participating in aggregation must be of numeric type.</p><p>The aggregation result column naming follows Geni’s default. We define the <code>get-agg-key</code> function to convert the Datajure-style column description statements in the query statement into Geni style.</p>
+</div>
+
+<br/>
+
+
+    
+    <div id="prev-next">
+    
+    <div class="prev"></div>
+    
+    
+    <a class="next" href="/datajure-website/posts-output/2023-09-02-clojask-backend/"><div class="nav-text"">Clojask Backend Implementation</div><i class="fa-solid fa-circle-right"></i></a>
+    
+</div>
+
+    
+
+    
+
+
+</div>
+
+            <br/>
+            <div id="footercont">
+                Copyright &copy; 2023 Datajure
+                <br>Powered by <a href="http://cryogenweb.org">Cryogen</a>
+            </div>
+        </article>
+
+        <script src="/datajure-website/js/highlight.pack.js" type="application/javascript"></script>
+        <script>hljs.initHighlightingOnLoad();</script>
+        <script src="/datajure-website/js.dropdown.js" type="application/javascript"></script> 
+        
+
+        
+        
+    </body>
+</html>
