@@ -52,7 +52,7 @@ The following table compares the supported operations and their logical processi
 A query statement has three sections: row selection section, column selection section and optional section. Each section is represented by a sequence of operations enclosed within `[]`.
 
 ```clojure
-(dt-get data [ROW-SELECTION-SECTION] [COLUMN-SELECTION-SECTION] [OPTIONS])
+(dtj/query data [ROW-SELECTION-SECTION] [COLUMN-SELECTION-SECTION] [OPTIONS])
 ```
 
 ### Row Selection Section
@@ -154,10 +154,10 @@ Currently, Datajure supports the following data processing libraries as the back
 Although Datajure uses Tablecloth by default, the users can still specify their preferred backend. The statement to specify the backend has the following syntax:
 
 ```clojure
-(set-backend BACKEND)
+(dtj/set-backend BACKEND)
 ```
 
-For example, we can write `(set-backend "tech.ml.dataset")` to specify `tech.ml.dataset` as the backend.
+For example, we can write `(dtj/set-backend "tech.ml.dataset")` to specify `tech.ml.dataset` as the backend.
 
 For technical details, please refer to our [posts](/archives/).
 
