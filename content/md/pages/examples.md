@@ -6,7 +6,7 @@
 
 The following are several examples showing how to use Datajure to conveniently complete various data processing operations.
 
----  
+--- 
 
 ## Backend Specification
 
@@ -48,6 +48,30 @@ Sample output:
 </pre>
 
 ## Operations
+
+<div>
+    <label for="backends">Choose a backend: </label>
+    <select name="backends" id="backends">
+        <option value="tech.ml.dataset">tech.ml.dataset</option>
+        <option value="tablecloth" selected="selected">Tablecloth</option>
+        <option value="clojask">Clojask</option>
+        <option value="geni">Geni</option>
+    </select>
+</div>
+
+<script type="text/javascript">
+    document.getElementById('backends').onchange = function() {
+        document.getElementById('tech.ml.dataset-examples').style.display = 'none';
+        document.getElementById('tablecloth-examples').style.display = 'none';
+        document.getElementById('clojask-examples').style.display = 'none';
+        document.getElementById('geni-examples').style.display = 'none';
+        document.getElementById(this.value + '-examples').style.display = 'block';
+    };
+</script>
+
+<div id="tech.ml.dataset-examples" style="display: none;">tech.ml.dataset examples...</div>
+
+<div id="tablecloth-examples" style="display: block;">
 
 ### Example 1
 
@@ -160,3 +184,9 @@ Sample output:
 |     b |   25 |     500 |       500.0 |             |
 |     d |   25 |    3500 |      3500.0 |             |
 </pre>
+
+</div>
+
+<div id="clojask-examples" style="display: none;">Clojask examples...</div>
+
+<div id="geni-examples" style="display: none;">Geni examples...</div>
