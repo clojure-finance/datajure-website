@@ -72,62 +72,286 @@
     <div id="page-header">
         <h1>Examples</h1>
     </div>
-    <ul class="toc"><li><a href="#backend-specification">Backend Specification</a></li><li><a href="#datasets-construction">Datasets Construction</a></li><li><a href="#datasets-printing">Datasets Printing</a></li><li><a href="#operations">Operations</a></li><ul><li><a href="#example-1">Example 1</a></li><li><a href="#example-2">Example 2</a></li><li><a href="#example-3">Example 3</a></li><li><a href="#example-4">Example 4</a></li><li><a href="#example-5">Example 5</a></li><li><a href="#example-6">Example 6</a></li></ul></ul>
-    <p>The following are several examples showing how to use Datajure to conveniently complete various data processing operations.</p><hr /><h2 id="backend-specification">Backend Specification</h2><p>The following code sets <code>tablecloth</code> as the backend using the function <code>set-backend</code>:</p><pre><code class="clojure">(set-backend "tablecloth")
-</code></pre><h2 id="datasets-construction">Datasets Construction</h2><p>The following code construct a dataset object <code>data</code> of the specified backend from an associative map <code>data-map</code> using the function <code>dataset</code>:</p><pre><code class="clojure">(def data-map {:age [31 25 18 18 25]
-               :name ["a" "b" "c" "c" "d"]
-               :salary [200 500 200 370 3500]})
-(def data (dataset data-map))
-</code></pre><h2 id="datasets-printing">Datasets Printing</h2><p>The following code prints the content of the dataset <code>data</code> using the function <code>print-dataset</code>:</p><pre><code class="clojure">(print-dataset data)
+    <ul class="toc"><li><a href="#backend-specification">Backend Specification</a></li><li><a href="#datasets-construction">Datasets Construction</a></li><li><a href="#datasets-printing">Datasets Printing</a></li><li><a href="#operations">Operations</a></li></ul>
+    <p>The following are several examples showing how to use Datajure to conveniently complete various data processing operations.</p><hr /><h2 id="backend-specification">Backend Specification</h2><p>The following code sets <code>tablecloth</code> as the backend using the function <code>set-backend</code>:</p><pre><code class="clojure">(dtj/set-backend "tablecloth")
+</code></pre><h2 id="datasets-construction">Datasets Construction</h2><p>The following code construct a dataset object <code>data</code> of the specified backend from an associative map <code>data-map</code> using the function <code>dataset</code>:</p><pre><code class="clojure">(def data {:age [31 25 18 18 25]
+           :name ["a" "b" "c" "c" "d"]
+           :salary [200 500 200 370 3500]})
+(dtj/dataset data)
+</code></pre><h2 id="datasets-printing">Datasets Printing</h2><p>The following code prints the content of the dataset <code>data</code> using the function <code>print-dataset</code>:</p><pre><code class="clojure">(dtj/print (dtj/dataset data))
+</code></pre><h2 id="operations">Operations</h2><div><label for="backends">Choose a backend: </label><select name="backends" id="backends"><option value="tech.ml.dataset">tech.ml.dataset</option><option value="tablecloth" selected="selected">Tablecloth</option><option value="clojask">Clojask</option><option value="geni">Geni</option></select></div><script type="text/javascript">
+    document.getElementById('backends').onchange = function() {
+        document.getElementById('tech.ml.dataset-examples').style.display = 'none';
+        document.getElementById('tablecloth-examples').style.display = 'none';
+        document.getElementById('clojask-examples').style.display = 'none';
+        document.getElementById('geni-examples').style.display = 'none';
+        document.getElementById(this.value + '-examples').style.display = 'block';
+    };
+</script><div id="tech.ml.dataset-examples" style="display: none;"><p><strong>Example 1</strong></p><ul><li>Select rows with <code>salary</code> &gt; 300, <code>age</code> &lt; 20</li></ul><pre><code class="clojure">(-&gt; data
+    (dtj/dataset)
+    (dtj/query [[:salary #(&lt; 300 %)] [:age #(&gt; 20 %)]] [])
+    (dtj/print))
 </code></pre><p>Sample output:</p><pre>
+_unnamed [1 3]:
+
 | :age | :name | :salary |
 |-----:|-------|--------:|
-|   31 |     a |     200 |
-|   25 |     b |     500 |
-|   18 |     c |     200 |
 |   18 |     c |     370 |
-|   25 |     d |    3500 |
-</pre><h2 id="operations">Operations</h2><h3 id="example-1">Example 1</h3><ul><li>Select rows with <code>salary</code> &gt; 300, <code>age</code> &lt; 20</li></ul><pre><code class="clojure">(print-dataset (dt-get data [[:salary #(&lt; 300 %)] [:age #(&gt; 20 %)]] []))
+</pre><p><strong>Example 2</strong></p><ul><li>Group rows by <code>age</code> with sum of <code>salary</code> &gt; 1000</li><li>Show <code>age</code> and sum of <code>salary</code></li></ul><pre><code class="clojure">(-&gt; data
+    (dtj/dataset)
+    (dtj/query [[:sum :salary #(&lt; 1000 %)]] [:age :sum :salary] [:group-by :age])
+    (dtj/print))
 </code></pre><p>Sample output:</p><pre>
-| :age | :name | :salary |
-|-----:|-------|--------:|
-|   18 |     c |     370 |
-</pre><h3 id="example-2">Example 2</h3><ul><li>Group rows by <code>age</code> with sum of <code>salary</code> &gt; 1000</li><li>Show <code>age</code> and sum of <code>salary</code></li></ul><pre><code class="clojure">(print-dataset (dt-get data [[:sum :salary #(&lt; 1000 %)]] [:age :sum :salary] [:group-by :age]))
-</code></pre><p>Sample output:</p><pre>
+left-outer-join [1 2]:
+
 | :age | :salary-sum |
 |-----:|------------:|
 |   25 |      4000.0 |
-</pre><h3 id="example-3">Example 3</h3><ul><li>Group rows by <code>age</code></li><li>Show <code>age</code>, sum of <code>salary</code> and standard deviation of <code>salary</code></li><li>Sort by standard deviation of <code>salary</code> in descending order</li></ul><pre><code class="clojure">(print-dataset (dt-get data [] [:age :sum :salary :sd :salary] [:group-by :age :sort-by :sd :salary &gt;]))
+</pre><p><strong>Example 3</strong></p><ul><li>Group rows by <code>age</code></li><li>Show <code>age</code>, sum of <code>salary</code> and standard deviation of <code>salary</code></li><li>Sort by standard deviation of <code>salary</code> in descending order</li></ul><pre><code class="clojure">(-&gt; data
+    (dtj/dataset)
+    (dtj/query [] [:age :sum :salary :sd :salary] [:group-by :age :sort-by :sd :salary &gt;])
+    (dtj/print))
 </code></pre><p>Sample output:</p><pre>
+left-outer-join [3 3]:
+
 | :age | :salary-sum |    :salary-sd |
 |-----:|------------:|--------------:|
 |   25 |      4000.0 | 2121.32034356 |
 |   18 |       570.0 |  120.20815280 |
 |   31 |       200.0 |               |
-</pre><h3 id="example-4">Example 4</h3><ul><li>Group rows by <code>age</code> and <code>name</code></li><li>Show <code>age</code>, <code>name</code> and sum of <code>salary</code></li></ul><pre><code class="clojure">(print-dataset (dt-get data [] [:age :name :sum :salary] [:group-by :age :name]))
+</pre><p><strong>Example 4</strong></p><ul><li>Group rows by <code>age</code> and <code>name</code></li><li>Show <code>age</code>, <code>name</code> and sum of <code>salary</code></li></ul><pre><code class="clojure">(-&gt; data
+    (dtj/dataset)
+    (dtj/query [] [:age :name :sum :salary] [:group-by :age :name])
+    (dtj/print))
 </code></pre><p>Sample output:</p><pre>
+left-outer-join [4 3]:
+
 | :age | :name | :salary-sum |
 |-----:|-------|------------:|
 |   31 |     a |       200.0 |
 |   25 |     b |       500.0 |
 |   18 |     c |       570.0 |
 |   25 |     d |      3500.0 |
-</pre><h3 id="example-5">Example 5</h3><ul><li>Select rows with <code>salary</code> &gt; 0, <code>age</code> &lt; 24</li></ul><pre><code class="clojure">(print-dataset (dt-get data [[:salary #(&lt; 0 %)] [:age #(&lt; 24 %)]] []))
+</pre><p><strong>Example 5</strong></p><ul><li>Select rows with <code>salary</code> &gt; 0, <code>age</code> &lt; 24</li></ul><pre><code class="clojure">(-&gt; data
+    (dtj/dataset)
+    (dtj/query [[:salary #(&lt; 0 %)] [:age #(&lt; 24 %)]] [])
+    (dtj/print))
 </code></pre><p>Sample output:</p><pre>
+_unnamed [3 3]:
+
 | :age | :name | :salary |
 |-----:|-------|--------:|
 |   31 |     a |     200 |
 |   25 |     b |     500 |
 |   25 |     d |    3500 |
-</pre><h3 id="example-6">Example 6</h3><ul><li>Select rows with sum of <code>salary</code> &gt; 0 (after grouping), <code>age</code> &gt; 0</li><li>Group rows by <code>name</code> and <code>age</code>, show <code>name</code>, <code>age</code>, <code>salary</code> (of the first record in the group), sum of <code>salary</code> and standard deviation of <code>salary</code></li><li>Sort by <code>salary</code></li></ul><pre><code class="clojure">(print-dataset (dt-get data [[:sum :salary #(&lt; 0 %)] [:age #(&lt; 0 %)]] [:name :age :salary :sum :salary :sd :salary] [:group-by :name :age :sort-by :salary])))
+</pre><p><strong>Example 6</strong></p><ul><li>Select rows with sum of <code>salary</code> &gt; 0 (after grouping), <code>age</code> &gt; 0</li><li>Group rows by <code>name</code> and <code>age</code>, show <code>name</code>, <code>age</code>, <code>salary</code> (of the first record in the group), sum of <code>salary</code> and standard deviation of <code>salary</code></li><li>Sort by <code>salary</code></li></ul><pre><code class="clojure">(-&gt; data
+    (dtj/dataset)
+    (dtj/query [[:sum :salary #(&lt; 0 %)] [:age #(&lt; 0 %)]] [:name :age :salary :sum :salary :sd :salary] [:group-by :name :age :sort-by :salary])
+    (dtj/print))
 </code></pre><p>Sample output:</p><pre>
+left-outer-join [4 5]:
+
 | :name | :age | :salary | :salary-sum |  :salary-sd |
 |-------|-----:|--------:|------------:|------------:|
 |     a |   31 |     200 |       200.0 |             |
 |     c |   18 |     200 |       570.0 | 120.2081528 |
 |     b |   25 |     500 |       500.0 |             |
 |     d |   25 |    3500 |      3500.0 |             |
-</pre>
+</pre></div><div id="tablecloth-examples" style="display: block;"><p><strong>Example 1</strong></p><ul><li>Select rows with <code>salary</code> &gt; 300, <code>age</code> &lt; 20</li></ul><pre><code class="clojure">(-&gt; data
+    (dtj/dataset)
+    (dtj/query [[:salary #(&lt; 300 %)] [:age #(&gt; 20 %)]] [])
+    (dtj/print))
+</code></pre><p>Sample output:</p><pre>
+_unnamed [1 3]:
+
+| :age | :name | :salary |
+|-----:|-------|--------:|
+|   18 |     c |     370 |
+</pre><p><strong>Example 2</strong></p><ul><li>Group rows by <code>age</code> with sum of <code>salary</code> &gt; 1000</li><li>Show <code>age</code> and sum of <code>salary</code></li></ul><pre><code class="clojure">(-&gt; data
+    (dtj/dataset)
+    (dtj/query [[:sum :salary #(&lt; 1000 %)]] [:age :sum :salary] [:group-by :age])
+    (dtj/print))
+</code></pre><p>Sample output:</p><pre>
+left-outer-join [1 2]:
+
+| :age | :salary-sum |
+|-----:|------------:|
+|   25 |      4000.0 |
+</pre><p><strong>Example 3</strong></p><ul><li>Group rows by <code>age</code></li><li>Show <code>age</code>, sum of <code>salary</code> and standard deviation of <code>salary</code></li><li>Sort by standard deviation of <code>salary</code> in descending order</li></ul><pre><code class="clojure">(-&gt; data
+    (dtj/dataset)
+    (dtj/query [] [:age :sum :salary :sd :salary] [:group-by :age :sort-by :sd :salary &gt;])
+    (dtj/print))
+</code></pre><p>Sample output:</p><pre>
+left-outer-join [3 3]:
+
+| :age | :salary-sum |    :salary-sd |
+|-----:|------------:|--------------:|
+|   25 |      4000.0 | 2121.32034356 |
+|   18 |       570.0 |  120.20815280 |
+|   31 |       200.0 |               |
+</pre><p><strong>Example 4</strong></p><ul><li>Group rows by <code>age</code> and <code>name</code></li><li>Show <code>age</code>, <code>name</code> and sum of <code>salary</code></li></ul><pre><code class="clojure">(-&gt; data
+    (dtj/dataset)
+    (dtj/query [] [:age :name :sum :salary] [:group-by :age :name])
+    (dtj/print))
+</code></pre><p>Sample output:</p><pre>
+left-outer-join [4 3]:
+
+| :age | :name | :salary-sum |
+|-----:|-------|------------:|
+|   31 |     a |       200.0 |
+|   25 |     b |       500.0 |
+|   18 |     c |       570.0 |
+|   25 |     d |      3500.0 |
+</pre><p><strong>Example 5</strong></p><ul><li>Select rows with <code>salary</code> &gt; 0, <code>age</code> &lt; 24</li></ul><pre><code class="clojure">(-&gt; data
+    (dtj/dataset)
+    (dtj/query [[:salary #(&lt; 0 %)] [:age #(&lt; 24 %)]] [])
+    (dtj/print))
+</code></pre><p>Sample output:</p><pre>
+_unnamed [3 3]:
+
+| :age | :name | :salary |
+|-----:|-------|--------:|
+|   31 |     a |     200 |
+|   25 |     b |     500 |
+|   25 |     d |    3500 |
+</pre><p><strong>Example 6</strong></p><ul><li>Select rows with sum of <code>salary</code> &gt; 0 (after grouping), <code>age</code> &gt; 0</li><li>Group rows by <code>name</code> and <code>age</code>, show <code>name</code>, <code>age</code>, <code>salary</code> (of the first record in the group), sum of <code>salary</code> and standard deviation of <code>salary</code></li><li>Sort by <code>salary</code></li></ul><pre><code class="clojure">(-&gt; data
+    (dtj/dataset)
+    (dtj/query [[:sum :salary #(&lt; 0 %)] [:age #(&lt; 0 %)]] [:name :age :salary :sum :salary :sd :salary] [:group-by :name :age :sort-by :salary])
+    (dtj/print))
+</code></pre><p>Sample output:</p><pre>
+left-outer-join [4 5]:
+
+| :name | :age | :salary | :salary-sum |  :salary-sd |
+|-------|-----:|--------:|------------:|------------:|
+|     a |   31 |     200 |       200.0 |             |
+|     c |   18 |     200 |       570.0 | 120.2081528 |
+|     b |   25 |     500 |       500.0 |             |
+|     d |   25 |    3500 |      3500.0 |             |
+</pre></div><div id="clojask-examples" style="display: none;"><p>For the Clojask backend, users are not encouraged to call <code>dtj/query</code> directly. Instead, users are suggested to call the lower-level data operations provided by <code>datajure.operation-ck</code>. As for the specific reasons, please refer to the <a href="../../posts-output/2023-09-02-clojask-backend/">implementation report</a>.</p><p><strong>Example 1</strong></p><ul><li>Create the dataset from a map</li></ul><pre><code class="clojure">(-&gt; data
+    (dtj/dataset)
+    (dtj/print))
+</code></pre><p>Sample output:</p><pre>
+|            age |             name |         salary |
+|----------------+------------------+----------------|
+| java.lang.Long | java.lang.String | java.lang.Long |
+|             31 |                a |            200 |
+|             25 |                b |            500 |
+|             18 |                c |            200 |
+|             18 |                c |            370 |
+|             25 |                d |           3500 |
+</pre><p><strong>Example 2</strong></p><ul><li>Create the dataset from a file</li></ul><pre><code class="clojure">(-&gt; "input.txt"
+    (ck/dataframe)
+    (ck/set-parser "salary" #(Long/parseLong %))
+    (ck/set-parser "age" #(Long/parseLong %))
+    (dtj/print))
+</code></pre><p><code>input.txt</code>:</p><pre><code>age, name, salary
+31, a, 200
+25, b, 500
+18, c, 200
+18, c, 370
+25, d, 3500
+</code></pre><p>Sample output:</p><pre>
+|            age |             name |         salary |
+|----------------+------------------+----------------|
+| java.lang.Long | java.lang.String | java.lang.Long |
+|             31 |                a |            200 |
+|             25 |                b |            500 |
+|             18 |                c |            200 |
+|             18 |                c |            370 |
+|             25 |                d |           3500 |
+</pre><p><strong>Example 3</strong></p><ul><li>Sort the dataset</li></ul><pre><code class="clojure">(let [input "input.txt"
+      output "output.txt"]
+   (op-ck/external-sort input output #(- (Integer/parseInt (.get %1 "salary")) (Integer/parseInt (.get %2 "salary")))))
+</code></pre><p><code>input.txt</code>:</p><pre><code>age,name,salary
+31,a,200
+25,b,500
+18,c,200
+18,c,370
+25,d,3500
+</code></pre><p><code>output.txt</code>:</p><pre><code>31,a,200
+18,c,370
+25,b,500
+25,d,3500
+</code></pre><p><strong>Example 4</strong></p><ul><li>Select rows with <code>salary</code> &gt; 300, <code>age</code> &lt; 20</li></ul><pre><code class="clojure">(-&gt; data
+    (dtj/dataset)
+    (op-ck/where {:where [[:salary #(&lt; 300 %)] [:age #(&gt; 20 %)]]})
+    (dtj/print))
+</code></pre><p>Sample output:</p><pre>
+|            age |             name |         salary |
+|----------------+------------------+----------------|
+| java.lang.Long | java.lang.String | java.lang.Long |
+|             18 |                c |            370 |
+</pre></div><div id="geni-examples" style="display: none;"><p><strong>Example 1</strong></p><ul><li>Select rows with <code>salary</code> &gt; 300, <code>age</code> &lt; 20</li></ul><pre><code class="clojure">(-&gt; data
+    (dtj/dataset)
+    (dtj/query [[:salary (g/&lt; (g/lit 300) :salary)] [:age (g/&gt; (g/lit 20) :age)]] [])
+    (dtj/print))
+</code></pre><p>Sample output:</p><pre>
++---+----+------+
+|age|name|salary|
++---+----+------+
+|18 |c   |370   |
++---+----+------+
+</pre><p><strong>Example 2</strong></p><ul><li>Group rows by <code>age</code> with sum of <code>salary</code> &gt; 1000</li><li>Show <code>age</code> and sum of <code>salary</code></li></ul><pre><code class="clojure">(-&gt; data
+    (dtj/dataset)
+    (dtj/query [[:sum :salary (g/&lt; (g/lit 1000) (keyword "sum(salary)"))]] [:age :sum :salary] [:group-by :age])
+    (dtj/print))
+</code></pre><p>Sample output:</p><pre>
++---+-----------+
+|age|sum(salary)|
++---+-----------+
+|25 |4000       |
++---+-----------+
+</pre><p><strong>Example 3</strong></p><ul><li>Group rows by <code>age</code></li><li>Show <code>age</code>, sum of <code>salary</code> and standard deviation of <code>salary</code></li><li>Sort by standard deviation of <code>salary</code></li></ul><pre><code class="clojure">(-&gt; data
+    (dtj/dataset)
+    (dtj/query [] [:age :sum :salary :sd :salary] [:group-by :age :sort-by :sd :salary])
+    (dtj/print))
+</code></pre><p>Sample output:</p><pre>
++---+-----------+-------------------+
+|age|sum(salary)|stddev_samp(salary)|
++---+-----------+-------------------+
+|31 |200        |null               |
+|18 |570        |120.20815280171308 |
+|25 |4000       |2121.3203435596424 |
++---+-----------+-------------------+
+</pre><p><strong>Example 4</strong></p><ul><li>Group rows by <code>age</code> and <code>name</code></li><li>Show <code>age</code>, <code>name</code> and sum of <code>salary</code></li><li>Sort by sum of <code>salary</code></li></ul><pre><code class="clojure">(-&gt; data
+    (dtj/dataset)
+    (dtj/query [] [:age :name :sum :salary] [:group-by :age :name :sort-by :sum :salary])
+    (dtj/print))
+</code></pre><p>Sample output:</p><pre>
++---+----+-----------+
+|age|name|sum(salary)|
++---+----+-----------+
+|31 |a   |200        |
+|25 |b   |500        |
+|18 |c   |570        |
+|25 |d   |3500       |
++---+----+-----------+
+</pre><p><strong>Example 5</strong></p><ul><li>Select rows with <code>salary</code> &gt; 0, <code>age</code> &lt; 24</li><li>Sort by <code>salary</code></li></ul><pre><code class="clojure">(-&gt; data
+    (dtj/dataset)
+    (dtj/query [[:salary (g/&lt; (g/lit 0) :salary)] [:age (g/&lt; (g/lit 24) :age)]] [] [:sort-by :salary])
+    (dtj/print))
+</code></pre><p>Sample output:</p><pre>
++---+----+------+
+|age|name|salary|
++---+----+------+
+|31 |a   |200   |
+|25 |b   |500   |
+|25 |d   |3500  |
++---+----+------+
+</pre><p><strong>Example 6</strong></p><ul><li>Select rows with sum of <code>salary</code> &gt; 0 (after grouping), <code>age</code> &gt; 0</li><li>Group rows by <code>name</code> and <code>age</code>, show <code>name</code>, <code>age</code>, <code>salary</code> (of the first record in the group), sum of <code>salary</code> and standard deviation of <code>salary</code></li><li>Sort by sum of <code>salary</code></li></ul><pre><code class="clojure">(-&gt; data
+    (dtj/dataset)
+    (dtj/query [[:sum :salary (g/&lt; (g/lit 0) (keyword "sum(salary)"))] [:age (g/&lt; (g/lit 0) :age)]] [:name :age :salary :sum :salary :sd :salary] [:group-by :name :age :sort-by :sum :salary])
+    (dtj/print))
+</code></pre><p>Sample output:</p><pre>
++----+---+-------------+-----------+-------------------+
+|name|age|first(salary)|sum(salary)|stddev_samp(salary)|
++----+---+-------------+-----------+-------------------+
+|a   |31 |200          |200        |null               |
+|b   |25 |500          |500        |null               |
+|c   |18 |200          |570        |120.20815280171308 |
+|d   |25 |3500         |3500       |null               |
++----+---+-------------+-----------+-------------------+
+</pre></div>
 
     
     <div id="prev-next">
