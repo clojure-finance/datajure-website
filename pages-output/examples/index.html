@@ -18,6 +18,7 @@
         <link rel="shortcut icon" href="images/ico/favicon.png">
         <link href="https://fonts.googleapis.com/css2?family=Fira+Code&family=Titillium+Web:wght@400;700&display=swap" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@400;700&display=swap" rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
         <link href="/datajure-website/css/normalize.css" rel="stylesheet" type="text/css" />
         <link href="/datajure-website/css/blog.css" rel="stylesheet" type="text/css" />
         <link href="/datajure-website/css/lotus-highlightjs.min.css" rel="stylesheet" type="text/css" />
@@ -26,6 +27,7 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/clojure.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/plaintext.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     </head>
     <body>
         <aside id="sidebar">
@@ -79,15 +81,7 @@
            :salary [200 500 200 370 3500]})
 (dtj/dataset data)
 </code></pre><h2 id="datasets-printing">Datasets Printing</h2><p>The following code prints the content of the dataset <code>data</code> using the function <code>print-dataset</code>:</p><pre><code class="clojure">(dtj/print (dtj/dataset data))
-</code></pre><h2 id="operations">Operations</h2><div><label for="backends">Choose a backend: </label><select name="backends" id="backends"><option value="tech.ml.dataset">tech.ml.dataset</option><option value="tablecloth" selected="selected">Tablecloth</option><option value="clojask">Clojask</option><option value="geni">Geni</option></select></div><script type="text/javascript">
-    document.getElementById('backends').onchange = function() {
-        document.getElementById('tech.ml.dataset-examples').style.display = 'none';
-        document.getElementById('tablecloth-examples').style.display = 'none';
-        document.getElementById('clojask-examples').style.display = 'none';
-        document.getElementById('geni-examples').style.display = 'none';
-        document.getElementById(this.value + '-examples').style.display = 'block';
-    };
-</script><div id="tech.ml.dataset-examples" style="display: none;"><p><strong>Example 1</strong></p><ul><li>Select rows with <code>salary</code> &gt; 300, <code>age</code> &lt; 20</li></ul><pre><code class="clojure">(-&gt; data
+</code></pre><h2 id="operations">Operations</h2><p>Choose a backend:</p><ul class="nav nav-tabs mb-3" id="pills-tab" role="tablist"><li class="nav-item" role="presentation"><button class="nav-link" id="pills-tmd-tab" data-bs-toggle="pill" data-bs-target="#pills-tmd" type="button" role="tab" aria-controls="pills-tmd" aria-selected="false">tech.ml.dataset</button></li><li class="nav-item" role="presentation"><button class="nav-link active" id="pills-tablecloth-tab" data-bs-toggle="pill" data-bs-target="#pills-tablecloth" type="button" role="tab" aria-controls="pills-tablecloth" aria-selected="true">Tablecloth</button></li><li class="nav-item" role="presentation"><button class="nav-link" id="pills-clojask-tab" data-bs-toggle="pill" data-bs-target="#pills-clojask" type="button" role="tab" aria-controls="pills-clojask" aria-selected="false">Clojask</button></li><li class="nav-item" role="presentation"><button class="nav-link" id="pills-geni-tab" data-bs-toggle="pill" data-bs-target="#pills-geni" type="button" role="tab" aria-controls="pills-geni" aria-selected="false">Geni</button></li></ul><div class="tab-content" id="pills-tabContent"><div class="tab-pane fade" id="pills-tmd" role="tabpanel" aria-labelledby="pills-tmd-tab"><p><strong>Example 1</strong></p><ul><li>Select rows with <code>salary</code> &gt; 300, <code>age</code> &lt; 20</li></ul><pre><code class="clojure">(-&gt; data
     (dtj/dataset)
     (dtj/query [[:salary #(&lt; 300 %)] [:age #(&gt; 20 %)]] [])
     (dtj/print))
@@ -157,7 +151,7 @@ left-outer-join [4 5]:
 |     c |   18 |     200 |       570.0 | 120.2081528 |
 |     b |   25 |     500 |       500.0 |             |
 |     d |   25 |    3500 |      3500.0 |             |
-</pre></div><div id="tablecloth-examples" style="display: block;"><p><strong>Example 1</strong></p><ul><li>Select rows with <code>salary</code> &gt; 300, <code>age</code> &lt; 20</li></ul><pre><code class="clojure">(-&gt; data
+</pre></div><div class="tab-pane fade show active" id="pills-tablecloth" role="tabpanel" aria-labelledby="pills-tablecloth-tab"><p><strong>Example 1</strong></p><ul><li>Select rows with <code>salary</code> &gt; 300, <code>age</code> &lt; 20</li></ul><pre><code class="clojure">(-&gt; data
     (dtj/dataset)
     (dtj/query [[:salary #(&lt; 300 %)] [:age #(&gt; 20 %)]] [])
     (dtj/print))
@@ -227,7 +221,7 @@ left-outer-join [4 5]:
 |     c |   18 |     200 |       570.0 | 120.2081528 |
 |     b |   25 |     500 |       500.0 |             |
 |     d |   25 |    3500 |      3500.0 |             |
-</pre></div><div id="clojask-examples" style="display: none;"><p>For the Clojask backend, users are not encouraged to call <code>dtj/query</code> directly. Instead, users are suggested to call the lower-level data operations provided by <code>datajure.operation-ck</code>. As for the specific reasons, please refer to the <a href="../../posts-output/2023-09-02-clojask-backend/">implementation report</a>.</p><p><strong>Example 1</strong></p><ul><li>Create the dataset from a map</li></ul><pre><code class="clojure">(-&gt; data
+</pre></div><div class="tab-pane fade" id="pills-clojask" role="tabpanel" aria-labelledby="pills-clojask-tab"><p>For the Clojask backend, users are not encouraged to call <code>dtj/query</code> directly. Instead, users are suggested to call the lower-level data operations provided by <code>datajure.operation-ck</code>. As for the specific reasons, please refer to the <a href="../../posts-output/2023-09-02-clojask-backend/">implementation report</a>.</p><p><strong>Example 1</strong></p><ul><li>Create the dataset from a map</li></ul><pre><code class="clojure">(-&gt; data
     (dtj/dataset)
     (dtj/print))
 </code></pre><p>Sample output:</p><pre>
@@ -281,7 +275,7 @@ left-outer-join [4 5]:
 |----------------+------------------+----------------|
 | java.lang.Long | java.lang.String | java.lang.Long |
 |             18 |                c |            370 |
-</pre></div><div id="geni-examples" style="display: none;"><p><strong>Example 1</strong></p><ul><li>Select rows with <code>salary</code> &gt; 300, <code>age</code> &lt; 20</li></ul><pre><code class="clojure">(-&gt; data
+</pre></div><div class="tab-pane fade" id="pills-geni" role="tabpanel" aria-labelledby="pills-geni-tab"><p><strong>Example 1</strong></p><ul><li>Select rows with <code>salary</code> &gt; 300, <code>age</code> &lt; 20</li></ul><pre><code class="clojure">(-&gt; data
     (dtj/dataset)
     (dtj/query [[:salary (g/&lt; (g/lit 300) :salary)] [:age (g/&gt; (g/lit 20) :age)]] [])
     (dtj/print))
@@ -351,7 +345,7 @@ left-outer-join [4 5]:
 |c   |18 |200          |570        |120.20815280171308 |
 |d   |25 |3500         |3500       |null               |
 +----+---+-------------+-----------+-------------------+
-</pre></div>
+</pre></div></div>
 
     
     <div id="prev-next">
