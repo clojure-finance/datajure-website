@@ -37,27 +37,24 @@ The following code prints the content of the dataset `data` using the function `
 
 ## Operations
 
-<div>
-    <label for="backends">Choose a backend: </label>
-    <select name="backends" id="backends">
-        <option value="tech.ml.dataset">tech.ml.dataset</option>
-        <option value="tablecloth" selected="selected">Tablecloth</option>
-        <option value="clojask">Clojask</option>
-        <option value="geni">Geni</option>
-    </select>
-</div>
+Choose a backend:
 
-<script type="text/javascript">
-    document.getElementById('backends').onchange = function() {
-        document.getElementById('tech.ml.dataset-examples').style.display = 'none';
-        document.getElementById('tablecloth-examples').style.display = 'none';
-        document.getElementById('clojask-examples').style.display = 'none';
-        document.getElementById('geni-examples').style.display = 'none';
-        document.getElementById(this.value + '-examples').style.display = 'block';
-    };
-</script>
-
-<div id="tech.ml.dataset-examples" style="display: none;">
+<ul class="nav nav-tabs mb-3" id="pills-tab" role="tablist">
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="pills-tmd-tab" data-bs-toggle="pill" data-bs-target="#pills-tmd" type="button" role="tab" aria-controls="pills-tmd" aria-selected="false">tech.ml.dataset</button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="pills-tablecloth-tab" data-bs-toggle="pill" data-bs-target="#pills-tablecloth" type="button" role="tab" aria-controls="pills-tablecloth" aria-selected="true">Tablecloth</button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="pills-clojask-tab" data-bs-toggle="pill" data-bs-target="#pills-clojask" type="button" role="tab" aria-controls="pills-clojask" aria-selected="false">Clojask</button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="pills-geni-tab" data-bs-toggle="pill" data-bs-target="#pills-geni" type="button" role="tab" aria-controls="pills-geni" aria-selected="false">Geni</button>
+    </li>
+</ul>
+<div class="tab-content" id="pills-tabContent">
+<div class="tab-pane fade" id="pills-tmd" role="tabpanel" aria-labelledby="pills-tmd-tab">
 
 **Example 1**
 
@@ -202,8 +199,7 @@ left-outer-join [4 5]:
 </pre>
 
 </div>
-
-<div id="tablecloth-examples" style="display: block;">
+<div class="tab-pane fade show active" id="pills-tablecloth" role="tabpanel" aria-labelledby="pills-tablecloth-tab">
 
 **Example 1**
 
@@ -348,9 +344,8 @@ left-outer-join [4 5]:
 </pre>
 
 </div>
-
-<div id="clojask-examples" style="display: none;">
-
+<div class="tab-pane fade" id="pills-clojask" role="tabpanel" aria-labelledby="pills-clojask-tab">
+    
 For the Clojask backend, users are not encouraged to call `dtj/query` directly. Instead, users are suggested to call the lower-level data operations provided by `datajure.operation-ck`. As for the specific reasons, please refer to the [implementation report](../../posts-output/2023-09-02-clojask-backend/).
 
 **Example 1**
@@ -463,9 +458,8 @@ Sample output:
 </pre>
 
 </div>
-
-<div id="geni-examples" style="display: none;">
-
+<div class="tab-pane fade" id="pills-geni" role="tabpanel" aria-labelledby="pills-geni-tab">
+    
 **Example 1**
 
 - Select rows with `salary` > 300, `age` < 20
@@ -610,4 +604,5 @@ Sample output:
 +----+---+-------------+-----------+-------------------+
 </pre>
 
+</div>
 </div>
