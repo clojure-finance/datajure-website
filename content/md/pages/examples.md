@@ -1,7 +1,7 @@
 {:title "Examples"
  :layout :page
  :toc :ul
- :page-index 1
+ :page-index 3
  :navbar? true}
 
 The following are several examples showing how to use Datajure to conveniently complete various data processing operations.

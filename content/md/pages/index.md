@@ -5,11 +5,12 @@
  :home? true}
 
 [![Build Status](https://github.com/clojure-finance/datajure/actions/workflows/test.yml/badge.svg)](https://github.com/clojure-finance/datajure/actions/workflows/test.yml)
-[![Clojars Project](https://img.shields.io/clojars/v/com.github.clojure-finance/datajure.svg)](https://clojars.org/com.github.clojure-finance/datajure)
+
+[![Clojars Project](https://clojars.org/com.github.clojure-finance/datajure/latest-version.svg)](https://clojars.org/com.github.clojure-finance/datajure)
 
 Welcome to Datajure! This is an open-source domain-specific language for data processing developed at HKU Business School.
 
-To get started, please read our [docs](pages-output/docs) and try our [examples](pages-output/examples).
+To get started, please go through the [quick start](pages-output/quick-start) instructions, read our [docs](pages-output/docs) and try our [examples](pages-output/examples).
 
 To know more about our design and implementation ideas, please read our [posts](archives).
 
