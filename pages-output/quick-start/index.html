@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Datajure: Quick Start</title>
+        
+
+<meta name="description" content="Currently, users can use Datajure in two ways: as a library, or via the REPL.Using Datajure as a Library">
+
+<meta property="og:description" content="Currently, users can use Datajure in two ways: as a library, or via the REPL.Using Datajure as a Library">
+
+<meta property="og:url" content="https://clojure-finance.github.io/datajure-website/datajure-website/pages-output/quick-start/" />
+<meta property="og:title" content="Quick Start" />
+<meta property="og:type" content="article" />
+
+        <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+        
+        <link rel="shortcut icon" href="images/ico/favicon.png">
+        <link href="https://fonts.googleapis.com/css2?family=Fira+Code&family=Titillium+Web:wght@400;700&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@400;700&display=swap" rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+        <link href="/datajure-website/css/normalize.css" rel="stylesheet" type="text/css" />
+        <link href="/datajure-website/css/blog.css" rel="stylesheet" type="text/css" />
+        <link href="/datajure-website/css/lotus-highlightjs.min.css" rel="stylesheet" type="text/css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/default.min.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    </head>
+    <body>
+        <aside id="sidebar">
+            <div id="logo">
+                <a title="Datajure" href="/datajure-website/">
+                    <div class="title-text text desktop-and-tablet-only">
+                        <i class="desktop-and-tablet-only fa fa-table"></i>
+                        <br/><br/>
+                        Datajure
+                    </div>
+                    <div class="title-text text mobile-only">Datajure</div>
+                </a>
+            </div> 
+
+            <nav id="sidebar-links">
+                <nav id="menucont">
+                    <ul class="menu">
+                        <li ><a title="Home" href="/datajure-website/"><div class="menu-item-text">Home</div></a></li>
+                        
+                        <li  class="active" >
+                            <a href="/datajure-website/pages-output/quick-start/"><div class="menu-item-text">Quick Start</div></a>
+                        </li>
+                        
+                        <li >
+                            <a href="/datajure-website/pages-output/docs/"><div class="menu-item-text">Docs</div></a>
+                        </li>
+                        
+                        <li >
+                            <a href="/datajure-website/pages-output/examples/"><div class="menu-item-text">Examples</div></a>
+                        </li>
+                        
+                        <li ><a title="Archives" href="/datajure-website/archives/"><div class="menu-item-text">Archives</div></a></li>
+                    </ul>
+                </nav>
+
+                <nav id="socialmedia">
+                    <ul>
+                        <li><a target="_blank" title="RSS" href="/datajure-website/feed.xml" rel="external"><i class="icon fa-solid fa-rss"></i></a></li>
+                        <li><a target="_blank" title="GitHub" href="https://github.com/clojure-finance/datajure" rel="external"><i class="icon fa-brands fa-github"></i></a></li>
+                    </ul>
+                </nav>
+            </nav>
+        </aside>
+
+        <article id="main">
+            
+<div id="custom-page">
+    <div id="page-header">
+        <h1>Quick Start</h1>
+    </div>
+    <ul class="toc"><li><a href="#using-datajure-as-a-library">Using Datajure as a Library</a></li><li><a href="#using-datajure-via-the-repl">Using Datajure via the REPL</a></li></ul>
+    <p>Currently, users can use Datajure in two ways: <a href="#using-datajure-as-a-library">as a library</a>, or <a href="#using-datajure-via-the-repl">via the REPL</a>.</p><h2 id="using-datajure-as-a-library">Using Datajure as a Library</h2><p>To use Datajure as a library in your Clojure project, you should include Datajure and all other required dependencies based on the build tool you're using.</p><p>For instance, if you're using Leiningen, add the following code snippet to the <code>project.clj</code> file:</p><pre><code>  :dependencies [[com.fasterxml.jackson.core/jackson-core "2.15.3"]
+                 [com.github.clojure-finance/datajure "1.0.1"]
+                 [metrics-clojure "2.10.0"]
+                 [org.apache.arrow/arrow-memory-core "4.0.0"]
+                 [org.apache.arrow/arrow-vector "4.0.0"
+                  :exclusions [commons-codec com.fasterxml.jackson.core/jackson-databind]]
+                 [org.apache.spark/spark-avro_2.12 "3.3.3"]
+                 [org.apache.spark/spark-core_2.12 "3.3.3"
+                  :exclusions [org.apache.logging.log4j/log4j-slf4j-impl]]
+                 [org.apache.spark/spark-hive_2.12 "3.3.3"]
+                 [org.apache.spark/spark-mllib_2.12 "3.3.3"]
+                 [org.apache.spark/spark-sql_2.12 "3.3.3"]
+                 [org.apache.spark/spark-streaming_2.12 "3.3.3"]
+                 [org.clojure/clojure "1.10.3"]]
+</code></pre><p>If you are using Java 17 or newer versions, you should also specify the following JVM options in the <code>project.clj</code> file:</p><pre><code class="clojure">  :jvm-opts ["--add-opens=java.base/java.nio=ALL-UNNAMED"
+             "--add-opens=java.base/java.net=ALL-UNNAMED"
+             "--add-opens=java.base/java.lang=ALL-UNNAMED"
+             "--add-opens=java.base/java.util=ALL-UNNAMED"
+             "--add-opens=java.base/java.util.concurrent=ALL-UNNAMED"
+             "--add-opens=java.base/sun.nio.ch=ALL-UNNAMED"]
+</code></pre><p>Then, use the following code snippet in your source code to access the Datajure APIs:</p><pre><code class="clojure">(require '[datajure.dsl :as dtj])
+</code></pre><p>For detailed information, refer to our <a href="pages-output/docs">documentation</a> and try our <a href="pages-output/examples">examples</a>.</p><h2 id="using-datajure-via-the-repl">Using Datajure via the REPL</h2><p>To use Datajure as a standalone REPL tool, you need to download the launcher based on the operating system you are using. The following table describes the launchers based on the operating system:</p><table><thead><tr><th align="center">OS</th><th align="center">Launcher</th></tr></thead><tbody><tr><td align="center"><i class="fa-brands fa-linux"></i> Linux / <i class="fa-brands fa-apple"></i> macOS</td><td align="center"><a href="https://raw.githubusercontent.com/clojure-finance/datajure/main/scripts/datajure"><code>datajure</code></a></td></tr><tr><td align="center"><i class="fa-brands fa-windows"></i> Windows</td><td align="center"><a href="https://raw.githubusercontent.com/clojure-finance/datajure/main/scripts/datajure.ps1"><code>datajure.ps1</code></a></td></tr></tbody></table><p>The launcher downloads the latest release of Datajure REPL if it is not found and runs the Datajure REPL.</p><p>For Windows users, the launcher automatically checks and downloads the <a href="https://github.com/cdarlint/winutils">Windows Utilities for Hadoop</a> to ensure that it runs smoothly.</p><p>Optionally, Linux users can install the Datajure launcher to <code>/usr/local/bin</code> by running the following commands:</p><pre><code class="bash">wget https://raw.githubusercontent.com/clojure-finance/datajure/main/scripts/datajure
+chmod a+x datajure
+sudo mv datajure /usr/local/bin/
+</code></pre><p>Usage:</p><pre><code>datajure [&lt;path&gt;] [--force-download] [--proxy &lt;https-proxy&gt;] [--help]
+</code></pre><p><code>&lt;path&gt;</code> is an optional input file that should be a Datajure source file (<code>.dtj</code> suffix).</p><p>For detailed information, refer to our <a href="pages-output/docs">documentation</a> and try our <a href="pages-output/examples">examples</a>.</p>
+
+    
+    <div id="prev-next">
+    
+    <div class="prev"></div>
+    
+    
+    <a class="next" href="/datajure-website/pages-output/docs/"><div class="nav-text"">Docs</div><i class="fa-solid fa-circle-right"></i></a>
+    
+</div>
+
+    
+
+</div>
+
+            <br/>
+            <div id="footercont">
+                Copyright &copy; 2024 Datajure
+                <br>Powered by <a href="http://cryogenweb.org">Cryogen</a>
+            </div>
+        </article>
+
+        <script src="/datajure-website/js/highlight.pack.js" type="application/javascript"></script>
+        <script>hljs.initHighlightingOnLoad();</script>
+        <script src="/datajure-website/js.dropdown.js" type="application/javascript"></script> 
+        
+
+        
+        
+    </body>
+</html>

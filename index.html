@@ -5,10 +5,6 @@
         <title>Datajure: Welcome to Datajure!</title>
         
 
-<meta name="description" content="Welcome to Datajure! This is an open-source domain-specific language for data processing developed at HKU Business School.">
-
-<meta property="og:description" content="Welcome to Datajure! This is an open-source domain-specific language for data processing developed at HKU Business School.">
-
 <meta property="og:url" content="https://clojure-finance.github.io/datajure-website/datajure-website/" />
 <meta property="og:title" content="Welcome to Datajure!" />
 <meta property="og:type" content="article" />
@@ -25,8 +21,6 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/default.min.css">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/clojure.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/plaintext.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     </head>
     <body>
@@ -46,6 +40,10 @@
                 <nav id="menucont">
                     <ul class="menu">
                         <li  class="active" ><a title="Home" href="/datajure-website/"><div class="menu-item-text">Home</div></a></li>
+                        
+                        <li >
+                            <a href="/datajure-website/pages-output/quick-start/"><div class="menu-item-text">Quick Start</div></a>
+                        </li>
                         
                         <li >
                             <a href="/datajure-website/pages-output/docs/"><div class="menu-item-text">Docs</div></a>
@@ -75,7 +73,7 @@
         <h1>Welcome to Datajure!</h1>
     </div>
     
-    <p><a href="https://github.com/clojure-finance/datajure/actions/workflows/test.yml"><img src="https://github.com/clojure-finance/datajure/actions/workflows/test.yml/badge.svg" alt="Build Status" /></a><a href="https://clojars.org/com.github.clojure-finance/datajure"><img src="https://img.shields.io/clojars/v/com.github.clojure-finance/datajure.svg" alt="Clojars Project" /></a></p><p>Welcome to Datajure! This is an open-source domain-specific language for data processing developed at HKU Business School.</p><p>To get started, please read our <a href="pages-output/docs">docs</a> and try our <a href="pages-output/examples">examples</a>.</p><p>To know more about our design and implementation ideas, please read our <a href="archives">posts</a>.</p><h2 id="about">About</h2><p>Domain Specific Language (DSL) is a computer language, declared syntax or grammar that is specialised to a specific application. In contrast to General-Purpose Language, implemenation of DSL is designed with specific goals in that application domain. The use of macros in Lisp dialects enables developers to rewrite source code at compile time, making implementation of DSL more convenient. As one of the Lisp dialects, Clojure also inheriates such advantage. In addition to macros, the heavy use of core data literals in Clojure also gives an extensive developing opportunity in implementing DSLs.</p><p>In this project, a DSL extension to existing data processing libraries, including <a href="https://github.com/techascent/tech.ml.dataset"><code>tech.ml.dataset</code></a>, <a href="https://github.com/scicloj/tablecloth"><code>tablecloth</code></a>, <a href="https://github.com/clojure-finance/clojask"><code>clojask</code></a> and <a href="https://github.com/zero-one-group/geni"><code>geni</code></a>, will be developed. A generic query using core data literal serves as the foundation of the DSL. This enables huge flexibility in defining the syntax, subject to Clojure’s limitation.</p><h2 id="report-bugs">Report Bugs</h2><p>Datajure is currently under active development.<br />
+    <p><a href="https://github.com/clojure-finance/datajure/actions/workflows/test.yml"><img src="https://github.com/clojure-finance/datajure/actions/workflows/test.yml/badge.svg" alt="Build Status" /></a></p><p><a href="https://clojars.org/com.github.clojure-finance/datajure"><img src="https://clojars.org/com.github.clojure-finance/datajure/latest-version.svg" alt="Clojars Project" /></a></p><p>Welcome to Datajure! This is an open-source domain-specific language for data processing developed at HKU Business School.</p><p>To get started, please go through the <a href="pages-output/quick-start">quick start</a> instructions, read our <a href="pages-output/docs">docs</a> and try our <a href="pages-output/examples">examples</a>.</p><p>To know more about our design and implementation ideas, please read our <a href="archives">posts</a>.</p><h2 id="about">About</h2><p>Domain Specific Language (DSL) is a computer language, declared syntax or grammar that is specialised to a specific application. In contrast to General-Purpose Language, implemenation of DSL is designed with specific goals in that application domain. The use of macros in Lisp dialects enables developers to rewrite source code at compile time, making implementation of DSL more convenient. As one of the Lisp dialects, Clojure also inheriates such advantage. In addition to macros, the heavy use of core data literals in Clojure also gives an extensive developing opportunity in implementing DSLs.</p><p>In this project, a DSL extension to existing data processing libraries, including <a href="https://github.com/techascent/tech.ml.dataset"><code>tech.ml.dataset</code></a>, <a href="https://github.com/scicloj/tablecloth"><code>tablecloth</code></a>, <a href="https://github.com/clojure-finance/clojask"><code>clojask</code></a> and <a href="https://github.com/zero-one-group/geni"><code>geni</code></a>, will be developed. A generic query using core data literal serves as the foundation of the DSL. This enables huge flexibility in defining the syntax, subject to Clojure’s limitation.</p><h2 id="report-bugs">Report Bugs</h2><p>Datajure is currently under active development.<br />
 If you find any bugs or errors, we would appreciate if you could help <a href="https://github.com/clojure-finance/datajure/issues">report</a> these issues so that we could repair them accordingly.</p>
 
     
@@ -94,7 +92,7 @@ If you find any bugs or errors, we would appreciate if you could help <a href="h
 
             <br/>
             <div id="footercont">
-                Copyright &copy; 2023 Datajure
+                Copyright &copy; 2024 Datajure
                 <br>Powered by <a href="http://cryogenweb.org">Cryogen</a>
             </div>
         </article>
