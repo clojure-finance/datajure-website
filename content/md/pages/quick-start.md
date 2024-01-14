@@ -13,20 +13,9 @@ To use Datajure as a library in your Clojure project, you should include Datajur
 For instance, if you're using Leiningen, add the following code snippet to the `project.clj` file:
 
 ```
-  :dependencies [[com.fasterxml.jackson.core/jackson-core "2.15.3"]
-                 [com.github.clojure-finance/datajure "1.0.1"]
-                 [metrics-clojure "2.10.0"]
-                 [org.apache.arrow/arrow-memory-core "4.0.0"]
-                 [org.apache.arrow/arrow-vector "4.0.0"
-                  :exclusions [commons-codec com.fasterxml.jackson.core/jackson-databind]]
-                 [org.apache.spark/spark-avro_2.12 "3.3.3"]
-                 [org.apache.spark/spark-core_2.12 "3.3.3"
-                  :exclusions [org.apache.logging.log4j/log4j-slf4j-impl]]
-                 [org.apache.spark/spark-hive_2.12 "3.3.3"]
-                 [org.apache.spark/spark-mllib_2.12 "3.3.3"]
-                 [org.apache.spark/spark-sql_2.12 "3.3.3"]
-                 [org.apache.spark/spark-streaming_2.12 "3.3.3"]
-                 [org.clojure/clojure "1.10.3"]]
+  :dependencies [[com.github.clojure-finance/datajure "1.1.0"]
+                 [org.apache.logging.log4j/log4j-core "2.21.0"]
+                 [org.clojure/clojure "1.11.1"]]
 ```
 
 If you are using Java 17 or newer versions, you should also specify the following JVM options in the `project.clj` file:
