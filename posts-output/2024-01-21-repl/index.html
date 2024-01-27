@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Datajure: Datajure REPL Implementation</title>
+        
+<meta name="keywords" content="">
+
+<meta name="description" content="Starting from v1.1.0, each version of Datajure will come with a standalone REPL, which can run independently on devices with Java Runtime Environment (JRE) installed. In addition to including Datajure as a library into projects, users can also use Datajure REPL for data processing.The Datajure REPL consists of two components:">
+
+<meta property="og:description" content="Starting from v1.1.0, each version of Datajure will come with a standalone REPL, which can run independently on devices with Java Runtime Environment (JRE) installed. In addition to including Datajure as a library into projects, users can also use Datajure REPL for data processing.The Datajure REPL consists of two components:">
+
+<meta property="og:url" content="https://clojure-finance.github.io/datajure-website/datajure-website/posts-output/2024-01-21-repl/" />
+<meta property="og:title" content="Datajure REPL Implementation" />
+<meta property="og:type" content="article" />
+
+        <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+        
+        <link rel="shortcut icon" href="images/ico/favicon.png">
+        <link href="https://fonts.googleapis.com/css2?family=Fira+Code&family=Titillium+Web:wght@400;700&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@400;700&display=swap" rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+        <link href="/datajure-website/css/normalize.css" rel="stylesheet" type="text/css" />
+        <link href="/datajure-website/css/blog.css" rel="stylesheet" type="text/css" />
+        <link href="/datajure-website/css/lotus-highlightjs.min.css" rel="stylesheet" type="text/css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/default.min.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    </head>
+    <body>
+        <aside id="sidebar">
+            <div id="logo">
+                <a title="Datajure" href="/datajure-website/">
+                    <div class="title-text text desktop-and-tablet-only">
+                        <i class="desktop-and-tablet-only fa fa-table"></i>
+                        <br/><br/>
+                        Datajure
+                    </div>
+                    <div class="title-text text mobile-only">Datajure</div>
+                </a>
+            </div> 
+
+            <nav id="sidebar-links">
+                <nav id="menucont">
+                    <ul class="menu">
+                        <li ><a title="Home" href="/datajure-website/"><div class="menu-item-text">Home</div></a></li>
+                        
+                        <li >
+                            <a href="/datajure-website/pages-output/quick-start/"><div class="menu-item-text">Quick Start</div></a>
+                        </li>
+                        
+                        <li >
+                            <a href="/datajure-website/pages-output/docs/"><div class="menu-item-text">Docs</div></a>
+                        </li>
+                        
+                        <li >
+                            <a href="/datajure-website/pages-output/examples/"><div class="menu-item-text">Examples</div></a>
+                        </li>
+                        
+                        <li ><a title="Archives" href="/datajure-website/archives/"><div class="menu-item-text">Archives</div></a></li>
+                    </ul>
+                </nav>
+
+                <nav id="socialmedia">
+                    <ul>
+                        <li><a target="_blank" title="RSS" href="/datajure-website/feed.xml" rel="external"><i class="icon fa-solid fa-rss"></i></a></li>
+                        <li><a target="_blank" title="GitHub" href="https://github.com/clojure-finance/datajure" rel="external"><i class="icon fa-brands fa-github"></i></a></li>
+                    </ul>
+                </nav>
+            </nav>
+        </aside>
+
+        <article id="main">
+            
+<div id="post">
+    <div class="post-header">
+    <div id="post-meta">
+        <h1>Datajure REPL Implementation</h1>
+        <div class="byline">
+            <span class="date">2024-01-21</span>
+            
+            <span class="author">By: YANG Ming-Tian</span>
+            
+        </div>
+    </div>
+</div>
+<div>
+    <ul class="toc"><li><a href="#uberjar-server-and-client">Uberjar Server and Client</a></li><li><a href="#shell-launcher">Shell Launcher</a></li></ul>
+    <p>Starting from v1.1.0, each version of Datajure will come with a standalone <a href="https://en.wikipedia.org/wiki/Read%E2%80%93eval%E2%80%93print_loop">REPL</a>, which can run independently on devices with Java Runtime Environment (JRE) installed. In addition to including Datajure as a library into projects, users can also use Datajure REPL for data processing.</p><p>The Datajure REPL consists of two components:</p><ul><li>Uberjar Server and Client</li><li>Shell Launcher</li></ul><h2 id="uberjar-server-and-client">Uberjar Server and Client</h2><p>The core functionality of the server and client is provided by REPL-y and nREPL, of which Datajure REPL has only limited customization. The relevant source codes are written in <code>repl.dtj</code> and <code>dsl.dtj</code>.</p><p>Datajure REPL does the following:</p><ul><li>Prints a welcome note.</li><li>Launches an nREPL server, which writes to <code>.nrepl-port</code> for a text editor to connect to.</li><li>Starts a REPL(-y).</li></ul><p>After that, the function <code>init-eval</code> defined in <code>dsl.clj</code> will be called. It will require all the needed libraries and put their APIs to the corresponding namespaces named after their standard abbreviations. The library name and the corresponding namespace correspond as follows:</p><table><thead><tr><th align="center">Library</th><th align="center">Namespace</th></tr></thead><tbody><tr><td align="center"><code>tech.v3.dataset</code></td><td align="center"><code>ds</code></td></tr><tr><td align="center"><code>tablecloth.api</code></td><td align="center"><code>tc</code></td></tr><tr><td align="center"><code>clojask.dataframe</code></td><td align="center"><code>ck</code></td></tr><tr><td align="center"><code>zero-one.geni.core</code></td><td align="center"><code>g</code></td></tr><tr><td align="center"><code>datajure.dsl</code></td><td align="center"><code>dtj</code></td></tr></tbody></table><p>By default, the APIs of each backend are also introduced. This is to facilitate users to use Datajure syntax while also calling the more basic API provided by the backend. However, users can also choose to cancel them manually.</p><p>In its command line parameters, the Datajure REPL accepts files with the suffix <code>.dtj</code> that contain Datajure statements. Technically, this is implemented as input stream redirection.</p><h2 id="shell-launcher">Shell Launcher</h2><p>We provide users with shell scripts to automatically download and launch the Datajure REPL. It is divided into Linux/macOS version and Windows version. The former is implemented based on Bash, but it is also compatible with most other shells; the latter is implemented based on PowerShell, and it is not compatible with <code>cmd.exe</code>.</p><p>The launcher scripts are stored in the <a href="https://github.com/clojure-finance/datajure/tree/main/scripts"><code>scripts</code></a> folder of the main repository.</p><p>When the launcher is run, it will first try to parse parameters, defined by the following syntax:</p><pre><code class="bash">datajure [&lt;path&gt;] [--force-download] [--proxy &lt;https-proxy&gt;] [--help]
+</code></pre><p><code>&lt;path&gt;</code> is an optional input file that should be a Datajure source file (<code>.dtj</code> suffix).</p><p>Afterwards, it will call the <code>get_latest_release()</code> fucntion to check the latest update.</p><p>If no Datajure REPL Uberjar is found on the local device, or the <code>--force-download</code> flag is specified, the launcher will download the latest version from GitHub releases.</p><p>In particular, if the <code>--proxy</code> parameter is specified, all network communications above will be conducted through the proxy. This will be convenient for users in special network environments.</p><p>Thereafter, Datajure will run the Datajure REPL using <code>java</code> in the system path. For compatibility with newer JRE versions, the following JVM options are specified:</p><pre><code class="bash">--add-opens=java.base/java.nio=ALL-UNNAMED
+--add-opens=java.base/java.net=ALL-UNNAMED
+--add-opens=java.base/java.lang=ALL-UNNAMED
+--add-opens=java.base/java.util=ALL-UNNAMED
+--add-opens=java.base/java.util.concurrent=ALL-UNNAMED
+--add-opens=java.base/sun.nio.ch=ALL-UNNAMED
+</code></pre><p>The launcher for Windows will also automatically checks and downloads the <a href="https://github.com/cdarlint/winutils">Windows Utilities for Hadoop</a> to ensure that the Datajure REPL runs smoothly.</p>
+</div>
+
+<br/>
+
+
+    
+    <div id="prev-next">
+    
+    <div class="prev"></div>
+    
+    
+    <a class="next" href="/datajure-website/posts-output/2023-09-11-tech.ml.dataset-backend/"><div class="nav-text"">tech.ml.dataset Backend Implementation</div><i class="fa-solid fa-circle-right"></i></a>
+    
+</div>
+
+    
+
+    
+
+
+</div>
+
+            <br/>
+            <div id="footercont">
+                Copyright &copy; 2024 Datajure
+                <br>Powered by <a href="http://cryogenweb.org">Cryogen</a>
+            </div>
+        </article>
+
+        <script src="/datajure-website/js/highlight.pack.js" type="application/javascript"></script>
+        <script>hljs.initHighlightingOnLoad();</script>
+        <script src="/datajure-website/js.dropdown.js" type="application/javascript"></script> 
+        
+
+        
+        
+    </body>
+</html>
