@@ -8,6 +8,8 @@ Currently, users can use Datajure in two ways: [as a library](#using-datajure-as
 
 ## Using Datajure as a Library
 
+### In an Existing Project
+
 To use Datajure as a library in your Clojure project, you should include Datajure and all other required dependencies based on the build tool you're using.
 
 For instance, if you're using Leiningen, add the following code snippet to the `project.clj` file:
@@ -36,6 +38,16 @@ Then, use the following code snippet in your source code to access the Datajure 
 ```
 
 For detailed information, refer to our [documentation](pages-output/docs) and try our [examples](pages-output/examples).
+
+### In a New Project
+
+If you wish to create a new Clojure project with Datajure as a dependency, you can to create the project simply from the Leiningen template using the following command:
+
+```bash
+lein new com.github.clojure-finance/datajure <project-name>
+```
+
+The templated project contains the latest Datajure with all other necessary dependencies, and also includes a simple example of data operation. To run the project, you can `cd` into the project directory and do `lein run`.
 
 ## Using Datajure via the REPL
 
