@@ -181,6 +181,10 @@ Example:
 (ck/dataframe "example.csv")
 ```
 
+In addition, it is important for users to be aware that Clojask offers mutable data structures, whereas other backends provide immutable data structures. While our development team could have implemented certain measures to make the Clojask backend align more closely with the behavior of other backends, we ultimately chose not to pursue this path due to inefficiencies. For instance, one approach we considered was creating a copy of the dataset before making modifications, but it proved to be inefficient.
+
+Therefore, users should take into account this inconsistency. We advise users to primarily utilize Clojask's native API and complement it with Datajure's operations.
+
 For more information, please refer to the [API Docs](https://clojure-finance.github.io/clojask-website/posts-output/API/) of Clojask.
 
 ### Geni
