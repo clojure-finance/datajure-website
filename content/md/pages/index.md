@@ -6,6 +6,7 @@
 
 [![Clojars Project](https://img.shields.io/clojars/v/com.github.clojure-finance/datajure.svg)](https://clojars.org/com.github.clojure-finance/datajure)
 [![CI](https://github.com/clojure-finance/datajure/actions/workflows/tests.yml/badge.svg)](https://github.com/clojure-finance/datajure/actions/workflows/tests.yml)
+[![cljdoc](https://cljdoc.org/badge/com.github.clojure-finance/datajure)](https://cljdoc.org/d/com.github.clojure-finance/datajure/CURRENT)
 
 **One function. Seven keywords. Two expression modes.**
 
@@ -35,7 +36,7 @@ Datajure is a Clojure data manipulation library built on [tech.ml.dataset](https
 
 Datajure is a syntax layer, not an engine. It compiles `#dt/e` expressions to vectorized operations and leaves all computation to tech.ml.dataset, so every result is a standard dataset that works with tablecloth, Clerk, Clay, and the rest of the Scicloj ecosystem.
 
-To get started, go through the [quick start](/pages-output/quick-start/), read the [docs](/pages-output/docs/) and try the [examples](/pages-output/examples/). The complete reference is the [README](https://github.com/clojure-finance/datajure#readme).
+To get started, go through the [quick start](/pages-output/quick-start/), read the [docs](/pages-output/docs/) and try the [examples](/pages-output/examples/). The complete reference is the [README](https://github.com/clojure-finance/datajure#readme), with API docs on [cljdoc](https://cljdoc.org/d/com.github.clojure-finance/datajure/CURRENT).
 
 ## Why Datajure
 

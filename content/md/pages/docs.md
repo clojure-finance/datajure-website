@@ -4,7 +4,7 @@
  :page-index 2
  :navbar? true}
 
-This page explains how Datajure queries work. The snippets use the `prices` dataset from the [quick start](/pages-output/quick-start/); the [examples](/pages-output/examples/) show their output. Every option is covered in the [README](https://github.com/clojure-finance/datajure#readme).
+This page explains how Datajure queries work. The snippets use the `prices` dataset from the [quick start](/pages-output/quick-start/); the [examples](/pages-output/examples/) show their output. Every option is covered in the [README](https://github.com/clojure-finance/datajure#readme), and the API docs are on [cljdoc](https://cljdoc.org/d/com.github.clojure-finance/datajure/CURRENT).
 
 ## The `dt` Function
 

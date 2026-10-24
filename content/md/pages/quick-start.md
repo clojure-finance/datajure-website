@@ -101,4 +101,4 @@ For notebooks, `datajure.clay` and `datajure.clerk` render datasets, `#dt/e` exp
 
 - The [docs](/pages-output/docs/) explain the `dt` keywords, expressions, and the other namespaces.
 - The [examples](/pages-output/examples/) walk through common operations on the dataset above, with output.
-- The [README](https://github.com/clojure-finance/datajure#readme) is the complete reference.
+- The [README](https://github.com/clojure-finance/datajure#readme) is the complete reference, and [cljdoc](https://cljdoc.org/d/com.github.clojure-finance/datajure/CURRENT) has the API docs.
