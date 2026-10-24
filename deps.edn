@@ -3,13 +3,15 @@
         ring/ring-devel {:mvn/version "1.8.2"}
         compojure/compojure {:mvn/version "1.6.2"}
         cryogen-flexmark/cryogen-flexmark {:mvn/version "0.1.4"}
-        cryogen-core/cryogen-core {:mvn/version "0.4.0"}
-        enlive/enlive-core {:mvn/version "1.1.6"}}
- :aliases {;; Run with `clojure -M:build`
+        cryogen-core/cryogen-core {:mvn/version "0.4.0"}}
+ :aliases {;; Build the site into public/: `clojure -M:build`
            :build {:main-opts ["-m" "cryogen.core"]}
-           ;; Start a server serving the blog: `clojure -X:serve`
-           ;; (requires tools-deps 0.9.745+)
+           ;; Serve with live reload at http://localhost:3000/datajure-website/:
+           ;; `clojure -X:serve`
            :serve {:exec-fn   cryogen.server/serve
                    :exec-args {:port 3000}}
            :serve-fast {:exec-fn   cryogen.server/serve
-                        :exec-args {:port 3000, :fast true}}}}
+                        :exec-args {:port 3000, :fast true}}
+           ;; nREPL on an ephemeral port (written to .nrepl-port): `clojure -M:nrepl`
+           :nrepl {:extra-deps {nrepl/nrepl {:mvn/version "1.7.0"}}
+                   :main-opts ["-m" "nrepl.cmdline" "--port" "0"]}}}
