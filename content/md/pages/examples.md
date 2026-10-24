@@ -4,7 +4,7 @@
  :page-index 3
  :navbar? true}
 
-These examples walk through common operations on a small dataset of daily prices. Every output below comes from running the code with Datajure 2.7.8. The [docs](/pages-output/docs/) explain the concepts.
+These examples walk through common operations on a small dataset of daily prices. Every output below comes from running the code with Datajure 2.7.9. The [docs](/pages-output/docs/) explain the concepts.
 
 ## Sample Data
 
@@ -355,6 +355,33 @@ _unnamed [2 3]:
 | MSFT | 0.01165150 | 0.01888828 |
 ```
 
+## Reusable Expressions
+
+Store expressions in vars and build on them. Here `log-ret` uses `ret`, and both are computed within each symbol:
+
+```clojure
+(def ret     #dt/e (- (win/ratio :price) 1))
+(def log-ret #dt/e (log (+ 1 ret)))
+
+(dt prices :by [:sym] :within-order [(asc :date)]
+    :set {:ret ret :log-ret log-ret})
+```
+
+```text
+_unnamed [8 6]:
+
+|      :date | :sym | :price | :volume |        :ret |    :log-ret |
+|------------|------|-------:|--------:|------------:|------------:|
+| 2024-01-02 | AAPL |  100.0 |    1200 |             |             |
+| 2024-01-03 | AAPL |  102.0 |    1500 |  0.02000000 |  0.01980263 |
+| 2024-01-04 | AAPL |   99.0 |         | -0.02941176 | -0.02985296 |
+| 2024-01-05 | AAPL |  104.0 |    1800 |  0.05050505 |  0.04927105 |
+| 2024-01-02 | MSFT |  200.0 |     900 |             |             |
+| 2024-01-03 | MSFT |  198.0 |    1100 | -0.01000000 | -0.01005034 |
+| 2024-01-04 | MSFT |  202.0 |    1000 |  0.02020202 |  0.02000067 |
+| 2024-01-05 | MSFT |  207.0 |    1300 |  0.02475248 |  0.02445110 |
+```
+
 ## Runtime Values
 
 `#dt/e` cannot see local variables. Data-forms can:
@@ -468,7 +495,8 @@ Mistakes are reported as `ex-info` exceptions with a `:dt/error` key and, where 
 
 ```text
 Unknown column(s) #{:prcie} in :set :value expression
-#:dt{:error :unknown-column, :columns #{:prcie}, :context ":set :value", :available [:date :price :sym :volume], :closest {:prcie [:price]}}
+Did you mean: :price (edit distance 1)
+Available: :date :price :sym :volume
 ```
 
 A misspelled keyword:

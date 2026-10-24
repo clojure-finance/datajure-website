@@ -180,6 +180,16 @@ An `#dt/e` expression is a value. Store it in a var and use it in several querie
 (dt prices :by [:sym] :agg {:avg-value #dt/e (mn value)})
 ```
 
+This works for window functions too, which build a shared vocabulary of returns and other time-series measures:
+
+```clojure
+(def ret     #dt/e (- (win/ratio :price) 1))
+(def log-ret #dt/e (log (+ 1 ret)))
+
+(dt prices :by [:sym] :within-order [(asc :date)]
+    :set {:ret ret :log-ret log-ret})
+```
+
 ## Selecting Columns
 
 `:select` accepts several forms:
@@ -254,12 +264,13 @@ See [joins](https://github.com/clojure-finance/datajure#joins), [as-of joins](ht
 
 ## Errors
 
-Errors are `ex-info` exceptions whose data has a `:dt/error` key for handling them in code. Many include a suggestion, such as the closest column names for a misspelled column (under `:closest`) or the intended keyword for a misspelled `dt` keyword:
+Errors are `ex-info` exceptions whose data has a `:dt/error` key for handling them in code. Many suggest a fix, such as the closest column name for a misspelled column or the intended keyword for a misspelled `dt` keyword:
 
 ```clojure
 (dt prices :set {:value #dt/e (* :prcie :volume)})
 ;; Unknown column(s) #{:prcie} in :set :value expression
-;; ex-data includes :dt/error :unknown-column, :closest {:prcie [:price]}
+;; Did you mean: :price (edit distance 1)
+;; Available: :date :price :sym :volume
 ```
 
 See the [examples](/pages-output/examples/#errors) for more.

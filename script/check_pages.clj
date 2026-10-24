@@ -76,7 +76,7 @@
               actual (if error (str error "\n" (pr-str data)) out)]
           (cond
             (and error (nil? expected))
-            (when-not (str/includes? body error)
+            (when-not (every? #(str/includes? body %) (str/split-lines error))
               (fail! body "\nthrew:" error))
 
             (nil? expected) nil
