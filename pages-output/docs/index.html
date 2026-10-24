@@ -5,9 +5,9 @@
         <title>Datajure: Docs</title>
         
 
-<meta name="description" content="This page explains how Datajure queries work. The snippets use the prices dataset from the quick start; the examples show their output. Every option is covered in the README.The dt Function">
+<meta name="description" content="This page explains how Datajure queries work. The snippets use the prices dataset from the quick start; the examples show their output. Every option is covered in the README, and the API docs are on cljdoc.The dt Function">
 
-<meta property="og:description" content="This page explains how Datajure queries work. The snippets use the prices dataset from the quick start; the examples show their output. Every option is covered in the README.The dt Function">
+<meta property="og:description" content="This page explains how Datajure queries work. The snippets use the prices dataset from the quick start; the examples show their output. Every option is covered in the README, and the API docs are on cljdoc.The dt Function">
 
 <meta property="og:url" content="https://clojure-finance.github.io/datajure-website/pages-output/docs/" />
 <meta property="og:title" content="Docs" />
@@ -77,7 +77,7 @@
         <h1>Docs</h1>
     </div>
     <ul class="toc"><li><a href="#the-dt-function">The <code>dt</code> Function</a></li><ul><li><a href="#evaluation-order">Evaluation Order</a></li><li><a href="#by-with-set-or-agg"><code>:by</code> with <code>:set</code> or <code>:agg</code></a></li><li><a href="#columns-built-in-order">Columns Built in Order</a></li></ul><li><a href="#expressions">Expressions</a></li><ul><li><a href="#dte-and-plain-functions"><code>#dt/e</code> and Plain Functions</a></li><li><a href="#operations">Operations</a></li><li><a href="#missing-values">Missing Values</a></li><li><a href="#runtime-values-and-data-forms">Runtime Values and Data-Forms</a></li><li><a href="#reusable-expressions">Reusable Expressions</a></li></ul><li><a href="#selecting-columns">Selecting Columns</a></li><li><a href="#grouping">Grouping</a></li><li><a href="#joins">Joins</a></li><li><a href="#reshaping">Reshaping</a></li><li><a href="#other-namespaces">Other Namespaces</a></li><li><a href="#errors">Errors</a></li></ul>
-    <p>This page explains how Datajure queries work. The snippets use the <code>prices</code> dataset from the <a href="/datajure-website/pages-output/quick-start/">quick start</a>; the <a href="/datajure-website/pages-output/examples/">examples</a> show their output. Every option is covered in the <a href="https://github.com/clojure-finance/datajure#readme">README</a>.</p><h2 id="the-dt-function">The <code>dt</code> Function</h2><p>Every query is a call to <code>dt</code> with a dataset and keyword arguments:</p><pre><code class="clojure">(require '[datajure.core :refer [dt dt1 nrow asc desc]])
+    <p>This page explains how Datajure queries work. The snippets use the <code>prices</code> dataset from the <a href="/datajure-website/pages-output/quick-start/">quick start</a>; the <a href="/datajure-website/pages-output/examples/">examples</a> show their output. Every option is covered in the <a href="https://github.com/clojure-finance/datajure#readme">README</a>, and the API docs are on <a href="https://cljdoc.org/d/com.github.clojure-finance/datajure/CURRENT">cljdoc</a>.</p><h2 id="the-dt-function">The <code>dt</code> Function</h2><p>Every query is a call to <code>dt</code> with a dataset and keyword arguments:</p><pre><code class="clojure">(require '[datajure.core :refer [dt dt1 nrow asc desc]])
 
 (dt prices
     :where #dt/e (&gt; :price 100)
