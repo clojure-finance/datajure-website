@@ -5,11 +5,11 @@
         <title>Datajure: Quick Start</title>
         
 
-<meta name="description" content="Currently, users can use Datajure in two ways: as a library, or via the REPL.Using Datajure as a Library">
+<meta name="description" content="InstallationDatajure requires Java 21+ and Clojure 1.12+.">
 
-<meta property="og:description" content="Currently, users can use Datajure in two ways: as a library, or via the REPL.Using Datajure as a Library">
+<meta property="og:description" content="InstallationDatajure requires Java 21+ and Clojure 1.12+.">
 
-<meta property="og:url" content="https://clojure-finance.github.io/datajure-website/datajure-website/pages-output/quick-start/" />
+<meta property="og:url" content="https://clojure-finance.github.io/datajure-website/pages-output/quick-start/" />
 <meta property="og:title" content="Quick Start" />
 <meta property="og:type" content="article" />
 
@@ -76,23 +76,40 @@
     <div id="page-header">
         <h1>Quick Start</h1>
     </div>
-    <ul class="toc"><li><a href="#using-datajure-as-a-library">Using Datajure as a Library</a></li><ul><li><a href="#in-an-existing-project">In an Existing Project</a></li><li><a href="#in-a-new-project">In a New Project</a></li></ul><li><a href="#using-datajure-via-the-repl">Using Datajure via the REPL</a></li></ul>
-    <p>Currently, users can use Datajure in two ways: <a href="#using-datajure-as-a-library">as a library</a>, or <a href="#using-datajure-via-the-repl">via the REPL</a>.</p><h2 id="using-datajure-as-a-library">Using Datajure as a Library</h2><h3 id="in-an-existing-project">In an Existing Project</h3><p>To use Datajure as a library in your Clojure project, you should include Datajure and all other required dependencies based on the build tool you're using.</p><p>For instance, if you're using Leiningen, add the following code snippet to the <code>project.clj</code> file:</p><pre><code>  :dependencies [[com.github.clojure-finance/datajure "1.1.0"]
-                 [org.apache.logging.log4j/log4j-core "2.21.0"]
-                 [org.clojure/clojure "1.11.1"]]
-</code></pre><p>If you are using Java 17 or newer versions, you should also specify the following JVM options in the <code>project.clj</code> file:</p><pre><code class="clojure">  :jvm-opts ["--add-opens=java.base/java.nio=ALL-UNNAMED"
-             "--add-opens=java.base/java.net=ALL-UNNAMED"
-             "--add-opens=java.base/java.lang=ALL-UNNAMED"
-             "--add-opens=java.base/java.util=ALL-UNNAMED"
-             "--add-opens=java.base/java.util.concurrent=ALL-UNNAMED"
-             "--add-opens=java.base/sun.nio.ch=ALL-UNNAMED"]
-</code></pre><p>Then, use the following code snippet in your source code to access the Datajure APIs:</p><pre><code class="clojure">(require '[datajure.dsl :as dtj])
-</code></pre><p>For detailed information, refer to our <a href="pages-output/docs">documentation</a> and try our <a href="pages-output/examples">examples</a>.</p><h3 id="in-a-new-project">In a New Project</h3><p>If you wish to create a new Clojure project with Datajure as a dependency, you can to create the project simply from the Leiningen template using the following command:</p><pre><code class="bash">lein new com.github.clojure-finance/datajure &lt;project-name&gt;
-</code></pre><p>The templated project contains the latest Datajure with all other necessary dependencies, and also includes a simple example of data operation. To run the project, you can <code>cd</code> into the project directory and do <code>lein run</code>.</p><h2 id="using-datajure-via-the-repl">Using Datajure via the REPL</h2><p>To use Datajure as a standalone REPL tool, you need to download the launcher based on the operating system you are using. The following table describes the launchers based on the operating system:</p><table><thead><tr><th align="center">OS</th><th align="center">Launcher</th></tr></thead><tbody><tr><td align="center"><i class="fa-brands fa-linux"></i> Linux / <i class="fa-brands fa-apple"></i> macOS</td><td align="center"><a href="https://raw.githubusercontent.com/clojure-finance/datajure/main/scripts/datajure"><code>datajure</code></a></td></tr><tr><td align="center"><i class="fa-brands fa-windows"></i> Windows</td><td align="center"><a href="https://raw.githubusercontent.com/clojure-finance/datajure/main/scripts/datajure.ps1"><code>datajure.ps1</code></a></td></tr></tbody></table><p>The launcher downloads the latest release of Datajure REPL if it is not found and runs the Datajure REPL.</p><p>For Windows users, the launcher automatically checks and downloads the <a href="https://github.com/cdarlint/winutils">Windows Utilities for Hadoop</a> to ensure that it runs smoothly.</p><p>Optionally, Linux users can install the Datajure launcher to <code>/usr/local/bin</code> by running the following commands:</p><pre><code class="bash">wget https://raw.githubusercontent.com/clojure-finance/datajure/main/scripts/datajure
-chmod a+x datajure
-sudo mv datajure /usr/local/bin/
-</code></pre><p>Usage:</p><pre><code>datajure [&lt;path&gt;] [--force-download] [--proxy &lt;https-proxy&gt;] [--help]
-</code></pre><p><code>&lt;path&gt;</code> is an optional input file that should be a Datajure source file (<code>.dtj</code> suffix).</p><p>For detailed information, refer to our <a href="pages-output/docs">documentation</a> and try our <a href="pages-output/examples">examples</a>.</p>
+    <ul class="toc"><li><a href="#installation">Installation</a></li><li><a href="#a-first-query">A First Query</a></li><li><a href="#reading-files">Reading Files</a></li><li><a href="#repl-and-notebooks">REPL and Notebooks</a></li><li><a href="#next-steps">Next Steps</a></li></ul>
+    <h2 id="installation">Installation</h2><p>Datajure requires Java 21+ and Clojure 1.12+.</p><p>With the Clojure CLI, add Datajure to <code>deps.edn</code>:</p><pre><code class="clojure">{:deps {com.github.clojure-finance/datajure {:mvn/version "2.7.8"}}}
+</code></pre><p>With Leiningen, add it to <code>:dependencies</code> in <code>project.clj</code>:</p><pre><code class="clojure">[com.github.clojure-finance/datajure "2.7.8"]
+</code></pre><p>The <a href="https://clojars.org/com.github.clojure-finance/datajure">Clojars page</a> always shows the latest version, and the <a href="https://github.com/clojure-finance/datajure/blob/main/CHANGELOG.md">changelog</a> lists what changed in each release.</p><p>To try Datajure without creating a project, start a REPL with it on the classpath:</p><pre><code class="bash">clj -Sdeps '{:deps {com.github.clojure-finance/datajure {:mvn/version "2.7.8"}}}'
+</code></pre><h2 id="a-first-query">A First Query</h2><p>Datajure works on <a href="https://github.com/techascent/tech.ml.dataset">tech.ml.dataset</a> datasets, which it brings in as a dependency. Create one from a map of columns:</p><pre><code class="clojure">(require '[datajure.core :refer [dt dt1 nrow asc desc]]
+         '[tech.v3.dataset :as ds])
+
+(def prices
+  (ds/-&gt;dataset
+   {:date   (map #(java.time.LocalDate/parse %)
+                 ["2024-01-02" "2024-01-03" "2024-01-04" "2024-01-05"
+                  "2024-01-02" "2024-01-03" "2024-01-04" "2024-01-05"])
+    :sym    ["AAPL" "AAPL" "AAPL" "AAPL" "MSFT" "MSFT" "MSFT" "MSFT"]
+    :price  [100.0 102.0 99.0 104.0 200.0 198.0 202.0 207.0]
+    :volume [1200 1500 nil 1800 900 1100 1000 1300]}))
+</code></pre><p>Then query it with <code>dt</code>. Average price and total volume per symbol:</p><pre><code class="clojure">(dt prices
+    :by [:sym]
+    :agg {:n         nrow
+          :avg-price #dt/e (mn :price)
+          :total-vol #dt/e (sm :volume)})
+</code></pre><pre><code class="text">_unnamed [2 4]:
+
+| :sym | :n | :avg-price | :total-vol |
+|------|---:|-----------:|-----------:|
+| AAPL |  4 |     101.25 |     4500.0 |
+| MSFT |  4 |     201.75 |     4300.0 |
+</code></pre><p><code>#dt/e</code> is a reader tag: inside it, bare keywords such as <code>:price</code> refer to columns, and <code>mn</code> and <code>sm</code> are the mean and sum. The missing volume is skipped. The result is an ordinary dataset, so it can be passed to the next <code>dt</code> call, to tech.ml.dataset, or to tablecloth.</p><p>The first time a query does something worth knowing about, such as aggregating over the whole dataset, Datajure prints a one-time <code>[datajure] NOTE:</code> line explaining it.</p><h2 id="reading-files">Reading Files</h2><p><code>datajure.io</code> reads and writes files based on their extension:</p><pre><code class="clojure">(require '[datajure.io :as dio])
+
+(def ds (dio/read "data.csv"))    ;; also .tsv, .json, .jsonl, .parquet, .arrow, .xlsx, gzipped variants
+(dio/write ds "output.csv")
+</code></pre><p>Column names are read as keywords. Parquet, Arrow and Excel need the optional tech.ml.dataset libraries for those formats; see <a href="https://github.com/clojure-finance/datajure#file-io">File I/O</a> in the README.</p><h2 id="repl-and-notebooks">REPL and Notebooks</h2><p>With nREPL, the middleware <code>datajure.nrepl/wrap-dt</code> binds <code>datajure.core/*dt*</code> to the last dataset a form returned, similar to <code>*1</code>. Enable it in <code>.nrepl.edn</code>:</p><pre><code class="clojure">{:middleware [datajure.nrepl/wrap-dt]}
+</code></pre><p>For notebooks, <code>datajure.clay</code> and <code>datajure.clerk</code> render datasets, <code>#dt/e</code> expressions and <code>describe</code> output. Call <code>install!</code> from the one you use (with Clay or Clerk on the classpath):</p><pre><code class="clojure">(require '[datajure.clay :as dc])
+(dc/install!)
+</code></pre><h2 id="next-steps">Next Steps</h2><ul><li>The <a href="/datajure-website/pages-output/docs/">docs</a> explain the <code>dt</code> keywords, expressions, and the other namespaces.</li><li>The <a href="/datajure-website/pages-output/examples/">examples</a> walk through common operations on the dataset above, with output.</li><li>The <a href="https://github.com/clojure-finance/datajure#readme">README</a> is the complete reference.</li></ul>
 
     
     <div id="prev-next">

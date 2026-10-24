@@ -6,11 +6,11 @@
         
 <meta name="keywords" content="">
 
-<meta name="description" content="With the basic foundation and design implemented, we try to add more query options. One of the common options is the sort-by function.To implement the sort-by option, the query foundation is updated. For the syntax design, the third section has been changed to option section, including group-by, sort-by and future options. However, for the query to differentiate different options, keywords for different options are included. The sort-by syntax is as follows:">
+<meta name="description" content="This post describes Datajure v1 (1.x). Datajure v2 replaced it in March 2026 with a different API; see the docs. The v1 code is on the v1 branch.With the basic foundation and design implemented, we try to add more query options. One of the common options is the sort-by function.">
 
-<meta property="og:description" content="With the basic foundation and design implemented, we try to add more query options. One of the common options is the sort-by function.To implement the sort-by option, the query foundation is updated. For the syntax design, the third section has been changed to option section, including group-by, sort-by and future options. However, for the query to differentiate different options, keywords for different options are included. The sort-by syntax is as follows:">
+<meta property="og:description" content="This post describes Datajure v1 (1.x). Datajure v2 replaced it in March 2026 with a different API; see the docs. The v1 code is on the v1 branch.With the basic foundation and design implemented, we try to add more query options. One of the common options is the sort-by function.">
 
-<meta property="og:url" content="https://clojure-finance.github.io/datajure-website/datajure-website/posts-output/2022-03-12-sort-by-function-implementation/" />
+<meta property="og:url" content="https://clojure-finance.github.io/datajure-website/posts-output/2022-03-12-sort-by-function-implementation/" />
 <meta property="og:title" content="Sort-by Function Implementation" />
 <meta property="og:type" content="article" />
 
@@ -87,7 +87,7 @@
 </div>
 <div>
     
-    <p>With the basic foundation and design implemented, we try to add more query options. One of the common options is the sort-by function.</p><p>To implement the sort-by option, the query foundation is updated. For the syntax design, the third section has been changed to option section, including group-by, sort-by and future options. However, for the query to differentiate different options, keywords for different options are included. The sort-by syntax is as follows:</p><pre><code class="clojure">:sort-by col comparable-operator
+    <blockquote><p>This post describes Datajure v1 (1.x). Datajure v2 replaced it in March 2026 with a different API; see the <a href="/datajure-website/pages-output/docs/">docs</a>. The v1 code is on the <a href="https://github.com/clojure-finance/datajure/tree/v1"><code>v1</code> branch</a>.</p></blockquote><p>With the basic foundation and design implemented, we try to add more query options. One of the common options is the sort-by function.</p><p>To implement the sort-by option, the query foundation is updated. For the syntax design, the third section has been changed to option section, including group-by, sort-by and future options. However, for the query to differentiate different options, keywords for different options are included. The sort-by syntax is as follows:</p><pre><code class="clojure">:sort-by col comparable-operator
 </code></pre><p>The <em>comparable-operator</em> may be one of:</p><ul><li>Clojure operator like &lt; or &gt;</li><li>tech.numerics/&gt;, tech.numerics/&lt;</li><li>clojure.core/compare</li><li>custome java.util.Comparator
 (It will be set to &lt; if nothing is passed.)</li></ul><p>The new syntax requires the user to use a corresponding keyword of the function. Here shows the new design:</p><pre><code class="clojure">dt-get DT '[[col1 filtering_function1] [agg_keyword col2 filtering_function2] &amp; col1 agg_keyword col2 &amp; :group-by col1 col2 :sort-by col1]
 

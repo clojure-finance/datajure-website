@@ -5,11 +5,11 @@
         <title>Datajure: Examples</title>
         
 
-<meta name="description" content="The following are several examples showing how to use Datajure to conveniently complete various data processing operations.">
+<meta name="description" content="These examples walk through common operations on a small dataset of daily prices. Every output below comes from running the code with Datajure 2.7.8. The docs explain the concepts.Sample Data">
 
-<meta property="og:description" content="The following are several examples showing how to use Datajure to conveniently complete various data processing operations.">
+<meta property="og:description" content="These examples walk through common operations on a small dataset of daily prices. Every output below comes from running the code with Datajure 2.7.8. The docs explain the concepts.Sample Data">
 
-<meta property="og:url" content="https://clojure-finance.github.io/datajure-website/datajure-website/pages-output/examples/" />
+<meta property="og:url" content="https://clojure-finance.github.io/datajure-website/pages-output/examples/" />
 <meta property="og:title" content="Examples" />
 <meta property="og:type" content="article" />
 
@@ -76,278 +76,272 @@
     <div id="page-header">
         <h1>Examples</h1>
     </div>
-    <ul class="toc"><li><a href="#backend-specification">Backend Specification</a></li><li><a href="#datasets-construction">Datasets Construction</a></li><li><a href="#datasets-printing">Datasets Printing</a></li><li><a href="#operations">Operations</a></li></ul>
-    <p>The following are several examples showing how to use Datajure to conveniently complete various data processing operations.</p><hr /><h2 id="backend-specification">Backend Specification</h2><p>The following code sets <code>tablecloth</code> as the backend using the function <code>set-backend</code>:</p><pre><code class="clojure">(dtj/set-backend "tablecloth")
-</code></pre><h2 id="datasets-construction">Datasets Construction</h2><p>The following code construct a dataset object <code>data</code> of the specified backend from an associative map <code>data-map</code> using the function <code>dataset</code>:</p><pre><code class="clojure">(def data {:age [31 25 18 18 25]
-           :name ["a" "b" "c" "c" "d"]
-           :salary [200 500 200 370 3500]})
-(dtj/dataset data)
-</code></pre><h2 id="datasets-printing">Datasets Printing</h2><p>The following code prints the content of the dataset <code>data</code> using the function <code>print-dataset</code>:</p><pre><code class="clojure">(dtj/print (dtj/dataset data))
-</code></pre><h2 id="operations">Operations</h2><p>Choose a backend:</p><ul class="nav nav-tabs mb-3" id="pills-tab" role="tablist"><li class="nav-item" role="presentation"><button class="nav-link" id="pills-tmd-tab" data-bs-toggle="pill" data-bs-target="#pills-tmd" type="button" role="tab" aria-controls="pills-tmd" aria-selected="false">tech.ml.dataset</button></li><li class="nav-item" role="presentation"><button class="nav-link active" id="pills-tablecloth-tab" data-bs-toggle="pill" data-bs-target="#pills-tablecloth" type="button" role="tab" aria-controls="pills-tablecloth" aria-selected="true">Tablecloth</button></li><li class="nav-item" role="presentation"><button class="nav-link" id="pills-clojask-tab" data-bs-toggle="pill" data-bs-target="#pills-clojask" type="button" role="tab" aria-controls="pills-clojask" aria-selected="false">Clojask</button></li><li class="nav-item" role="presentation"><button class="nav-link" id="pills-geni-tab" data-bs-toggle="pill" data-bs-target="#pills-geni" type="button" role="tab" aria-controls="pills-geni" aria-selected="false">Geni</button></li></ul><div class="tab-content" id="pills-tabContent"><div class="tab-pane fade" id="pills-tmd" role="tabpanel" aria-labelledby="pills-tmd-tab"><p><strong>Example 1</strong></p><ul><li>Select rows with <code>salary</code> &gt; 300, <code>age</code> &lt; 20</li></ul><pre><code class="clojure">(-&gt; data
-    (dtj/dataset)
-    (dtj/query [[:salary #(&lt; 300 %)] [:age #(&gt; 20 %)]] [])
-    (dtj/print))
-</code></pre><p>Sample output:</p><pre>
-_unnamed [1 3]:
+    <ul class="toc"><li><a href="#sample-data">Sample Data</a></li><li><a href="#filtering-rows">Filtering Rows</a></li><li><a href="#adding-columns">Adding Columns</a></li><li><a href="#grouping-and-aggregating">Grouping and Aggregating</a></li><li><a href="#sorting-limiting-and-selecting">Sorting, Limiting and Selecting</a></li><li><a href="#window-functions">Window Functions</a></li><li><a href="#multi-step-pipelines">Multi-Step Pipelines</a></li><li><a href="#runtime-values">Runtime Values</a></li><li><a href="#joins">Joins</a></li><li><a href="#reshaping">Reshaping</a></li><li><a href="#errors">Errors</a></li></ul>
+    <p>These examples walk through common operations on a small dataset of daily prices. Every output below comes from running the code with Datajure 2.7.8. The <a href="/datajure-website/pages-output/docs/">docs</a> explain the concepts.</p><h2 id="sample-data">Sample Data</h2><pre><code class="clojure">(require '[datajure.core :refer [dt dt1 nrow asc desc]]
+         '[tech.v3.dataset :as ds])
 
-| :age | :name | :salary |
-|-----:|-------|--------:|
-|   18 |     c |     370 |
-</pre><p><strong>Example 2</strong></p><ul><li>Group rows by <code>age</code> with sum of <code>salary</code> &gt; 1000</li><li>Show <code>age</code> and sum of <code>salary</code></li></ul><pre><code class="clojure">(-&gt; data
-    (dtj/dataset)
-    (dtj/query [[:sum :salary #(&lt; 1000 %)]] [:age :sum :salary] [:group-by :age])
-    (dtj/print))
-</code></pre><p>Sample output:</p><pre>
-left-outer-join [1 2]:
+(def prices
+  (ds/-&gt;dataset
+   {:date   (map #(java.time.LocalDate/parse %)
+                 ["2024-01-02" "2024-01-03" "2024-01-04" "2024-01-05"
+                  "2024-01-02" "2024-01-03" "2024-01-04" "2024-01-05"])
+    :sym    ["AAPL" "AAPL" "AAPL" "AAPL" "MSFT" "MSFT" "MSFT" "MSFT"]
+    :price  [100.0 102.0 99.0 104.0 200.0 198.0 202.0 207.0]
+    :volume [1200 1500 nil 1800 900 1100 1000 1300]}))
+</code></pre><pre><code class="text">_unnamed [8 4]:
 
-| :age | :salary-sum |
-|-----:|------------:|
-|   25 |      4000.0 |
-</pre><p><strong>Example 3</strong></p><ul><li>Group rows by <code>age</code></li><li>Show <code>age</code>, sum of <code>salary</code> and standard deviation of <code>salary</code></li><li>Sort by standard deviation of <code>salary</code> in descending order</li></ul><pre><code class="clojure">(-&gt; data
-    (dtj/dataset)
-    (dtj/query [] [:age :sum :salary :sd :salary] [:group-by :age :sort-by :sd :salary &gt;])
-    (dtj/print))
-</code></pre><p>Sample output:</p><pre>
-left-outer-join [3 3]:
+|      :date | :sym | :price | :volume |
+|------------|------|-------:|--------:|
+| 2024-01-02 | AAPL |  100.0 |    1200 |
+| 2024-01-03 | AAPL |  102.0 |    1500 |
+| 2024-01-04 | AAPL |   99.0 |         |
+| 2024-01-05 | AAPL |  104.0 |    1800 |
+| 2024-01-02 | MSFT |  200.0 |     900 |
+| 2024-01-03 | MSFT |  198.0 |    1100 |
+| 2024-01-04 | MSFT |  202.0 |    1000 |
+| 2024-01-05 | MSFT |  207.0 |    1300 |
+</code></pre><p>The AAPL volume on 2024-01-04 is missing.</p><h2 id="filtering-rows">Filtering Rows</h2><p>Rows with a price above 150:</p><pre><code class="clojure">(dt prices :where #dt/e (&gt; :price 150))
+</code></pre><pre><code class="text">_unnamed [4 4]:
 
-| :age | :salary-sum |    :salary-sd |
-|-----:|------------:|--------------:|
-|   25 |      4000.0 | 2121.32034356 |
-|   18 |       570.0 |  120.20815280 |
-|   31 |       200.0 |               |
-</pre><p><strong>Example 4</strong></p><ul><li>Group rows by <code>age</code> and <code>name</code></li><li>Show <code>age</code>, <code>name</code> and sum of <code>salary</code></li></ul><pre><code class="clojure">(-&gt; data
-    (dtj/dataset)
-    (dtj/query [] [:age :name :sum :salary] [:group-by :age :name])
-    (dtj/print))
-</code></pre><p>Sample output:</p><pre>
-left-outer-join [4 3]:
+|      :date | :sym | :price | :volume |
+|------------|------|-------:|--------:|
+| 2024-01-02 | MSFT |  200.0 |     900 |
+| 2024-01-03 | MSFT |  198.0 |    1100 |
+| 2024-01-04 | MSFT |  202.0 |    1000 |
+| 2024-01-05 | MSFT |  207.0 |    1300 |
+</code></pre><p>Conditions combine with <code>and</code>, <code>or</code> and <code>not</code>:</p><pre><code class="clojure">(dt prices :where #dt/e (and (= :sym "AAPL") (&gt; :price 100)))
+</code></pre><pre><code class="text">_unnamed [2 4]:
 
-| :age | :name | :salary-sum |
-|-----:|-------|------------:|
-|   31 |     a |       200.0 |
-|   25 |     b |       500.0 |
-|   18 |     c |       570.0 |
-|   25 |     d |      3500.0 |
-</pre><p><strong>Example 5</strong></p><ul><li>Select rows with <code>salary</code> &gt; 0, <code>age</code> &lt; 24</li></ul><pre><code class="clojure">(-&gt; data
-    (dtj/dataset)
-    (dtj/query [[:salary #(&lt; 0 %)] [:age #(&lt; 24 %)]] [])
-    (dtj/print))
-</code></pre><p>Sample output:</p><pre>
-_unnamed [3 3]:
+|      :date | :sym | :price | :volume |
+|------------|------|-------:|--------:|
+| 2024-01-03 | AAPL |  102.0 |    1500 |
+| 2024-01-05 | AAPL |  104.0 |    1800 |
+</code></pre><p>A comparison with a missing value is false, so the row with no volume is dropped rather than causing an error:</p><pre><code class="clojure">(dt prices :where #dt/e (&gt; :volume 1200))
+</code></pre><pre><code class="text">_unnamed [3 4]:
 
-| :age | :name | :salary |
-|-----:|-------|--------:|
-|   31 |     a |     200 |
-|   25 |     b |     500 |
-|   25 |     d |    3500 |
-</pre><p><strong>Example 6</strong></p><ul><li>Select rows with sum of <code>salary</code> &gt; 0 (after grouping), <code>age</code> &gt; 0</li><li>Group rows by <code>name</code> and <code>age</code>, show <code>name</code>, <code>age</code>, <code>salary</code> (of the first record in the group), sum of <code>salary</code> and standard deviation of <code>salary</code></li><li>Sort by <code>salary</code></li></ul><pre><code class="clojure">(-&gt; data
-    (dtj/dataset)
-    (dtj/query [[:sum :salary #(&lt; 0 %)] [:age #(&lt; 0 %)]] [:name :age :salary :sum :salary :sd :salary] [:group-by :name :age :sort-by :salary])
-    (dtj/print))
-</code></pre><p>Sample output:</p><pre>
-left-outer-join [4 5]:
+|      :date | :sym | :price | :volume |
+|------------|------|-------:|--------:|
+| 2024-01-03 | AAPL |  102.0 |    1500 |
+| 2024-01-05 | AAPL |  104.0 |    1800 |
+| 2024-01-05 | MSFT |  207.0 |    1300 |
+</code></pre><h2 id="adding-columns">Adding Columns</h2><p><code>:set</code> adds columns and keeps every row. Arithmetic on a missing value gives a missing value:</p><pre><code class="clojure">(dt prices :set {:value #dt/e (* :price :volume)})
+</code></pre><pre><code class="text">_unnamed [8 5]:
 
-| :name | :age | :salary | :salary-sum |  :salary-sd |
-|-------|-----:|--------:|------------:|------------:|
-|     a |   31 |     200 |       200.0 |             |
-|     c |   18 |     200 |       570.0 | 120.2081528 |
-|     b |   25 |     500 |       500.0 |             |
-|     d |   25 |    3500 |      3500.0 |             |
-</pre></div><div class="tab-pane fade show active" id="pills-tablecloth" role="tabpanel" aria-labelledby="pills-tablecloth-tab"><p><strong>Example 1</strong></p><ul><li>Select rows with <code>salary</code> &gt; 300, <code>age</code> &lt; 20</li></ul><pre><code class="clojure">(-&gt; data
-    (dtj/dataset)
-    (dtj/query [[:salary #(&lt; 300 %)] [:age #(&gt; 20 %)]] [])
-    (dtj/print))
-</code></pre><p>Sample output:</p><pre>
-_unnamed [1 3]:
+|      :date | :sym | :price | :volume |   :value |
+|------------|------|-------:|--------:|---------:|
+| 2024-01-02 | AAPL |  100.0 |    1200 | 120000.0 |
+| 2024-01-03 | AAPL |  102.0 |    1500 | 153000.0 |
+| 2024-01-04 | AAPL |   99.0 |         |          |
+| 2024-01-05 | AAPL |  104.0 |    1800 | 187200.0 |
+| 2024-01-02 | MSFT |  200.0 |     900 | 180000.0 |
+| 2024-01-03 | MSFT |  198.0 |    1100 | 217800.0 |
+| 2024-01-04 | MSFT |  202.0 |    1000 | 202000.0 |
+| 2024-01-05 | MSFT |  207.0 |    1300 | 269100.0 |
+</code></pre><p>With a sequence of pairs, later columns can use earlier ones:</p><pre><code class="clojure">(dt prices :set [[:value #dt/e (* :price :volume)]
+                 [:big?  #dt/e (&gt; :value 200000)]])
+</code></pre><pre><code class="text">_unnamed [8 6]:
 
-| :age | :name | :salary |
-|-----:|-------|--------:|
-|   18 |     c |     370 |
-</pre><p><strong>Example 2</strong></p><ul><li>Group rows by <code>age</code> with sum of <code>salary</code> &gt; 1000</li><li>Show <code>age</code> and sum of <code>salary</code></li></ul><pre><code class="clojure">(-&gt; data
-    (dtj/dataset)
-    (dtj/query [[:sum :salary #(&lt; 1000 %)]] [:age :sum :salary] [:group-by :age])
-    (dtj/print))
-</code></pre><p>Sample output:</p><pre>
-left-outer-join [1 2]:
+|      :date | :sym | :price | :volume |   :value | :big? |
+|------------|------|-------:|--------:|---------:|-------|
+| 2024-01-02 | AAPL |  100.0 |    1200 | 120000.0 | false |
+| 2024-01-03 | AAPL |  102.0 |    1500 | 153000.0 | false |
+| 2024-01-04 | AAPL |   99.0 |         |          | false |
+| 2024-01-05 | AAPL |  104.0 |    1800 | 187200.0 | false |
+| 2024-01-02 | MSFT |  200.0 |     900 | 180000.0 | false |
+| 2024-01-03 | MSFT |  198.0 |    1100 | 217800.0 |  true |
+| 2024-01-04 | MSFT |  202.0 |    1000 | 202000.0 |  true |
+| 2024-01-05 | MSFT |  207.0 |    1300 | 269100.0 |  true |
+</code></pre><p>Replace missing values with <code>coalesce</code>:</p><pre><code class="clojure">(dt prices :set {:volume #dt/e (coalesce :volume 0)})
+</code></pre><pre><code class="text">_unnamed [8 4]:
 
-| :age | :salary-sum |
-|-----:|------------:|
-|   25 |      4000.0 |
-</pre><p><strong>Example 3</strong></p><ul><li>Group rows by <code>age</code></li><li>Show <code>age</code>, sum of <code>salary</code> and standard deviation of <code>salary</code></li><li>Sort by standard deviation of <code>salary</code> in descending order</li></ul><pre><code class="clojure">(-&gt; data
-    (dtj/dataset)
-    (dtj/query [] [:age :sum :salary :sd :salary] [:group-by :age :sort-by :sd :salary &gt;])
-    (dtj/print))
-</code></pre><p>Sample output:</p><pre>
-left-outer-join [3 3]:
+|      :date | :sym | :price | :volume |
+|------------|------|-------:|--------:|
+| 2024-01-02 | AAPL |  100.0 |    1200 |
+| 2024-01-03 | AAPL |  102.0 |    1500 |
+| 2024-01-04 | AAPL |   99.0 |       0 |
+| 2024-01-05 | AAPL |  104.0 |    1800 |
+| 2024-01-02 | MSFT |  200.0 |     900 |
+| 2024-01-03 | MSFT |  198.0 |    1100 |
+| 2024-01-04 | MSFT |  202.0 |    1000 |
+| 2024-01-05 | MSFT |  207.0 |    1300 |
+</code></pre><p>Use <code>cond</code> for several cases:</p><pre><code class="clojure">(dt prices :set {:size #dt/e (cond (&gt; :price 200) "large"
+                                   (&gt; :price 100) "medium"
+                                   :else          "small")})
+</code></pre><pre><code class="text">_unnamed [8 5]:
 
-| :age | :salary-sum |    :salary-sd |
-|-----:|------------:|--------------:|
-|   25 |      4000.0 | 2121.32034356 |
-|   18 |       570.0 |  120.20815280 |
-|   31 |       200.0 |               |
-</pre><p><strong>Example 4</strong></p><ul><li>Group rows by <code>age</code> and <code>name</code></li><li>Show <code>age</code>, <code>name</code> and sum of <code>salary</code></li></ul><pre><code class="clojure">(-&gt; data
-    (dtj/dataset)
-    (dtj/query [] [:age :name :sum :salary] [:group-by :age :name])
-    (dtj/print))
-</code></pre><p>Sample output:</p><pre>
-left-outer-join [4 3]:
+|      :date | :sym | :price | :volume |  :size |
+|------------|------|-------:|--------:|--------|
+| 2024-01-02 | AAPL |  100.0 |    1200 |  small |
+| 2024-01-03 | AAPL |  102.0 |    1500 | medium |
+| 2024-01-04 | AAPL |   99.0 |         |  small |
+| 2024-01-05 | AAPL |  104.0 |    1800 | medium |
+| 2024-01-02 | MSFT |  200.0 |     900 | medium |
+| 2024-01-03 | MSFT |  198.0 |    1100 | medium |
+| 2024-01-04 | MSFT |  202.0 |    1000 |  large |
+| 2024-01-05 | MSFT |  207.0 |    1300 |  large |
+</code></pre><h2 id="grouping-and-aggregating">Grouping and Aggregating</h2><p>One row per symbol. The sum skips the missing volume:</p><pre><code class="clojure">(dt prices :by [:sym]
+    :agg {:n         nrow
+          :avg-price #dt/e (mn :price)
+          :total-vol #dt/e (sm :volume)})
+</code></pre><pre><code class="text">_unnamed [2 4]:
 
-| :age | :name | :salary-sum |
-|-----:|-------|------------:|
-|   31 |     a |       200.0 |
-|   25 |     b |       500.0 |
-|   18 |     c |       570.0 |
-|   25 |     d |      3500.0 |
-</pre><p><strong>Example 5</strong></p><ul><li>Select rows with <code>salary</code> &gt; 0, <code>age</code> &lt; 24</li></ul><pre><code class="clojure">(-&gt; data
-    (dtj/dataset)
-    (dtj/query [[:salary #(&lt; 0 %)] [:age #(&lt; 24 %)]] [])
-    (dtj/print))
-</code></pre><p>Sample output:</p><pre>
-_unnamed [3 3]:
+| :sym | :n | :avg-price | :total-vol |
+|------|---:|-----------:|-----------:|
+| AAPL |  4 |     101.25 |     4500.0 |
+| MSFT |  4 |     201.75 |     4300.0 |
+</code></pre><p>Without <code>:by</code>, <code>:agg</code> summarizes the whole dataset. <code>dt1</code> returns that single row as a map:</p><pre><code class="clojure">(dt1 prices :agg {:n nrow :avg-price #dt/e (mn :price)})
+</code></pre><pre><code class="text">{:n 8, :avg-price 151.5}
+</code></pre><p>Aggregations can be generated with data-forms, here the maximum of each listed column:</p><pre><code class="clojure">(dt prices :by [:sym]
+    :agg (into {} (for [c [:price :volume]]
+                    [(keyword (str "max-" (name c))) [:mx c]])))
+</code></pre><pre><code class="text">_unnamed [2 3]:
 
-| :age | :name | :salary |
-|-----:|-------|--------:|
-|   31 |     a |     200 |
-|   25 |     b |     500 |
-|   25 |     d |    3500 |
-</pre><p><strong>Example 6</strong></p><ul><li>Select rows with sum of <code>salary</code> &gt; 0 (after grouping), <code>age</code> &gt; 0</li><li>Group rows by <code>name</code> and <code>age</code>, show <code>name</code>, <code>age</code>, <code>salary</code> (of the first record in the group), sum of <code>salary</code> and standard deviation of <code>salary</code></li><li>Sort by <code>salary</code></li></ul><pre><code class="clojure">(-&gt; data
-    (dtj/dataset)
-    (dtj/query [[:sum :salary #(&lt; 0 %)] [:age #(&lt; 0 %)]] [:name :age :salary :sum :salary :sd :salary] [:group-by :name :age :sort-by :salary])
-    (dtj/print))
-</code></pre><p>Sample output:</p><pre>
-left-outer-join [4 5]:
+| :sym | :max-price | :max-volume |
+|------|-----------:|------------:|
+| AAPL |      104.0 |        1800 |
+| MSFT |      207.0 |        1300 |
+</code></pre><h2 id="sorting-limiting-and-selecting">Sorting, Limiting and Selecting</h2><p>The three highest prices:</p><pre><code class="clojure">(dt prices :order-by [(desc :price)] :take 3)
+</code></pre><pre><code class="text">_unnamed [3 4]:
 
-| :name | :age | :salary | :salary-sum |  :salary-sd |
-|-------|-----:|--------:|------------:|------------:|
-|     a |   31 |     200 |       200.0 |             |
-|     c |   18 |     200 |       570.0 | 120.2081528 |
-|     b |   25 |     500 |       500.0 |             |
-|     d |   25 |    3500 |      3500.0 |             |
-</pre></div><div class="tab-pane fade" id="pills-clojask" role="tabpanel" aria-labelledby="pills-clojask-tab"><p>For the Clojask backend, users are not encouraged to call <code>dtj/query</code> directly. Instead, users are suggested to call the lower-level data operations provided by <code>datajure.operation-ck</code>. As for the specific reasons, please refer to the <a href="../../posts-output/2023-09-02-clojask-backend/">implementation report</a>.</p><p><strong>Example 1</strong></p><ul><li>Create the dataset from a map</li></ul><pre><code class="clojure">(-&gt; data
-    (dtj/dataset)
-    (dtj/print))
-</code></pre><p>Sample output:</p><pre>
-|            age |             name |         salary |
-|----------------+------------------+----------------|
-| java.lang.Long | java.lang.String | java.lang.Long |
-|             31 |                a |            200 |
-|             25 |                b |            500 |
-|             18 |                c |            200 |
-|             18 |                c |            370 |
-|             25 |                d |           3500 |
-</pre><p><strong>Example 2</strong></p><ul><li>Create the dataset from a file</li></ul><pre><code class="clojure">(-&gt; "input.txt"
-    (ck/dataframe)
-    (ck/set-parser "salary" #(Long/parseLong %))
-    (ck/set-parser "age" #(Long/parseLong %))
-    (dtj/print))
-</code></pre><p><code>input.txt</code>:</p><pre><code>age, name, salary
-31, a, 200
-25, b, 500
-18, c, 200
-18, c, 370
-25, d, 3500
-</code></pre><p>Sample output:</p><pre>
-|            age |             name |         salary |
-|----------------+------------------+----------------|
-| java.lang.Long | java.lang.String | java.lang.Long |
-|             31 |                a |            200 |
-|             25 |                b |            500 |
-|             18 |                c |            200 |
-|             18 |                c |            370 |
-|             25 |                d |           3500 |
-</pre><p><strong>Example 3</strong></p><ul><li>Sort the dataset</li></ul><pre><code class="clojure">(let [input "input.txt"
-      output "output.txt"]
-   (op-ck/external-sort input output #(- (Integer/parseInt (.get %1 "salary")) (Integer/parseInt (.get %2 "salary")))))
-</code></pre><p><code>input.txt</code>:</p><pre><code>age,name,salary
-31,a,200
-25,b,500
-18,c,200
-18,c,370
-25,d,3500
-</code></pre><p><code>output.txt</code>:</p><pre><code>31,a,200
-18,c,370
-25,b,500
-25,d,3500
-</code></pre><p><strong>Example 4</strong></p><ul><li>Select rows with <code>salary</code> &gt; 300, <code>age</code> &lt; 20</li></ul><pre><code class="clojure">(-&gt; data
-    (dtj/dataset)
-    (op-ck/where {:where [[:salary #(&lt; 300 %)] [:age #(&gt; 20 %)]]})
-    (dtj/print))
-</code></pre><p>Sample output:</p><pre>
-|            age |             name |         salary |
-|----------------+------------------+----------------|
-| java.lang.Long | java.lang.String | java.lang.Long |
-|             18 |                c |            370 |
-</pre></div><div class="tab-pane fade" id="pills-geni" role="tabpanel" aria-labelledby="pills-geni-tab"><p><strong>Example 1</strong></p><ul><li>Select rows with <code>salary</code> &gt; 300, <code>age</code> &lt; 20</li></ul><pre><code class="clojure">(-&gt; data
-    (dtj/dataset)
-    (dtj/query [[:salary (g/&lt; (g/lit 300) :salary)] [:age (g/&gt; (g/lit 20) :age)]] [])
-    (dtj/print))
-</code></pre><p>Sample output:</p><pre>
-+---+----+------+
-|age|name|salary|
-+---+----+------+
-|18 |c   |370   |
-+---+----+------+
-</pre><p><strong>Example 2</strong></p><ul><li>Group rows by <code>age</code> with sum of <code>salary</code> &gt; 1000</li><li>Show <code>age</code> and sum of <code>salary</code></li></ul><pre><code class="clojure">(-&gt; data
-    (dtj/dataset)
-    (dtj/query [[:sum :salary (g/&lt; (g/lit 1000) (keyword "sum(salary)"))]] [:age :sum :salary] [:group-by :age])
-    (dtj/print))
-</code></pre><p>Sample output:</p><pre>
-+---+-----------+
-|age|sum(salary)|
-+---+-----------+
-|25 |4000       |
-+---+-----------+
-</pre><p><strong>Example 3</strong></p><ul><li>Group rows by <code>age</code></li><li>Show <code>age</code>, sum of <code>salary</code> and standard deviation of <code>salary</code></li><li>Sort by standard deviation of <code>salary</code></li></ul><pre><code class="clojure">(-&gt; data
-    (dtj/dataset)
-    (dtj/query [] [:age :sum :salary :sd :salary] [:group-by :age :sort-by :sd :salary])
-    (dtj/print))
-</code></pre><p>Sample output:</p><pre>
-+---+-----------+-------------------+
-|age|sum(salary)|stddev_samp(salary)|
-+---+-----------+-------------------+
-|31 |200        |null               |
-|18 |570        |120.20815280171308 |
-|25 |4000       |2121.3203435596424 |
-+---+-----------+-------------------+
-</pre><p><strong>Example 4</strong></p><ul><li>Group rows by <code>age</code> and <code>name</code></li><li>Show <code>age</code>, <code>name</code> and sum of <code>salary</code></li><li>Sort by sum of <code>salary</code></li></ul><pre><code class="clojure">(-&gt; data
-    (dtj/dataset)
-    (dtj/query [] [:age :name :sum :salary] [:group-by :age :name :sort-by :sum :salary])
-    (dtj/print))
-</code></pre><p>Sample output:</p><pre>
-+---+----+-----------+
-|age|name|sum(salary)|
-+---+----+-----------+
-|31 |a   |200        |
-|25 |b   |500        |
-|18 |c   |570        |
-|25 |d   |3500       |
-+---+----+-----------+
-</pre><p><strong>Example 5</strong></p><ul><li>Select rows with <code>salary</code> &gt; 0, <code>age</code> &lt; 24</li><li>Sort by <code>salary</code></li></ul><pre><code class="clojure">(-&gt; data
-    (dtj/dataset)
-    (dtj/query [[:salary (g/&lt; (g/lit 0) :salary)] [:age (g/&lt; (g/lit 24) :age)]] [] [:sort-by :salary])
-    (dtj/print))
-</code></pre><p>Sample output:</p><pre>
-+---+----+------+
-|age|name|salary|
-+---+----+------+
-|31 |a   |200   |
-|25 |b   |500   |
-|25 |d   |3500  |
-+---+----+------+
-</pre><p><strong>Example 6</strong></p><ul><li>Select rows with sum of <code>salary</code> &gt; 0 (after grouping), <code>age</code> &gt; 0</li><li>Group rows by <code>name</code> and <code>age</code>, show <code>name</code>, <code>age</code>, <code>salary</code> (of the first record in the group), sum of <code>salary</code> and standard deviation of <code>salary</code></li><li>Sort by sum of <code>salary</code></li></ul><pre><code class="clojure">(-&gt; data
-    (dtj/dataset)
-    (dtj/query [[:sum :salary (g/&lt; (g/lit 0) (keyword "sum(salary)"))] [:age (g/&lt; (g/lit 0) :age)]] [:name :age :salary :sum :salary :sd :salary] [:group-by :name :age :sort-by :sum :salary])
-    (dtj/print))
-</code></pre><p>Sample output:</p><pre>
-+----+---+-------------+-----------+-------------------+
-|name|age|first(salary)|sum(salary)|stddev_samp(salary)|
-+----+---+-------------+-----------+-------------------+
-|a   |31 |200          |200        |null               |
-|b   |25 |500          |500        |null               |
-|c   |18 |200          |570        |120.20815280171308 |
-|d   |25 |3500         |3500       |null               |
-+----+---+-------------+-----------+-------------------+
-</pre></div></div>
+|      :date | :sym | :price | :volume |
+|------------|------|-------:|--------:|
+| 2024-01-05 | MSFT |  207.0 |    1300 |
+| 2024-01-04 | MSFT |  202.0 |    1000 |
+| 2024-01-02 | MSFT |  200.0 |     900 |
+</code></pre><p>Select and rename columns with a map:</p><pre><code class="clojure">(dt prices :select {:sym :ticker :price :close} :take 3)
+</code></pre><pre><code class="text">_unnamed [3 2]:
+
+| :ticker | :close |
+|---------|-------:|
+|    AAPL |  100.0 |
+|    AAPL |  102.0 |
+|    AAPL |   99.0 |
+</code></pre><h2 id="window-functions">Window Functions</h2><p>With <code>:by</code> and <code>:within-order</code>, window functions run within each symbol in date order. Here the daily return, the previous price and the cumulative volume:</p><pre><code class="clojure">(dt prices
+    :by [:sym]
+    :within-order [(asc :date)]
+    :set {:ret     #dt/e (- (win/ratio :price) 1)
+          :prev    #dt/e (win/lag :price 1)
+          :cum-vol #dt/e (win/cumsum :volume)})
+</code></pre><pre><code class="text">_unnamed [8 7]:
+
+|      :date | :sym | :price | :volume |        :ret | :prev | :cum-vol |
+|------------|------|-------:|--------:|------------:|------:|---------:|
+| 2024-01-02 | AAPL |  100.0 |    1200 |             |       |   1200.0 |
+| 2024-01-03 | AAPL |  102.0 |    1500 |  0.02000000 | 100.0 |   2700.0 |
+| 2024-01-04 | AAPL |   99.0 |         | -0.02941176 | 102.0 |   2700.0 |
+| 2024-01-05 | AAPL |  104.0 |    1800 |  0.05050505 |  99.0 |   4500.0 |
+| 2024-01-02 | MSFT |  200.0 |     900 |             |       |    900.0 |
+| 2024-01-03 | MSFT |  198.0 |    1100 | -0.01000000 | 200.0 |   2000.0 |
+| 2024-01-04 | MSFT |  202.0 |    1000 |  0.02020202 | 198.0 |   3000.0 |
+| 2024-01-05 | MSFT |  207.0 |    1300 |  0.02475248 | 202.0 |   4300.0 |
+</code></pre><p>A two-day moving average and the rank of each price within its symbol. Moving windows are shorter at the start of each group:</p><pre><code class="clojure">(dt prices
+    :by [:sym]
+    :within-order [(asc :date)]
+    :set {:ma-2 #dt/e (win/mavg :price 2)
+          :rank #dt/e (win/rank :price)})
+</code></pre><pre><code class="text">_unnamed [8 6]:
+
+|      :date | :sym | :price | :volume | :ma-2 | :rank |
+|------------|------|-------:|--------:|------:|------:|
+| 2024-01-02 | AAPL |  100.0 |    1200 | 100.0 |     1 |
+| 2024-01-03 | AAPL |  102.0 |    1500 | 101.0 |     2 |
+| 2024-01-04 | AAPL |   99.0 |         | 100.5 |     3 |
+| 2024-01-05 | AAPL |  104.0 |    1800 | 101.5 |     4 |
+| 2024-01-02 | MSFT |  200.0 |     900 | 200.0 |     1 |
+| 2024-01-03 | MSFT |  198.0 |    1100 | 199.0 |     2 |
+| 2024-01-04 | MSFT |  202.0 |    1000 | 200.0 |     3 |
+| 2024-01-05 | MSFT |  207.0 |    1300 | 204.5 |     4 |
+</code></pre><p>Carry the last known volume forward:</p><pre><code class="clojure">(dt prices :by [:sym] :within-order [(asc :date)]
+    :set {:volume #dt/e (win/fills :volume)})
+</code></pre><pre><code class="text">_unnamed [8 4]:
+
+|      :date | :sym | :price | :volume |
+|------------|------|-------:|--------:|
+| 2024-01-02 | AAPL |  100.0 |    1200 |
+| 2024-01-03 | AAPL |  102.0 |    1500 |
+| 2024-01-04 | AAPL |   99.0 |    1500 |
+| 2024-01-05 | AAPL |  104.0 |    1800 |
+| 2024-01-02 | MSFT |  200.0 |     900 |
+| 2024-01-03 | MSFT |  198.0 |    1100 |
+| 2024-01-04 | MSFT |  202.0 |    1000 |
+| 2024-01-05 | MSFT |  207.0 |    1300 |
+</code></pre><h2 id="multi-step-pipelines">Multi-Step Pipelines</h2><p>Thread <code>dt</code> calls with <code>-&gt;</code>: compute daily returns, summarize them per symbol, then sort:</p><pre><code class="clojure">(-&gt; prices
+    (dt :by [:sym] :within-order [(asc :date)]
+        :set {:ret #dt/e (- (win/ratio :price) 1)})
+    (dt :by [:sym] :agg {:mean-ret #dt/e (mn :ret) :vol #dt/e (sd :ret)})
+    (dt :order-by [(desc :mean-ret)]))
+</code></pre><pre><code class="text">_unnamed [2 3]:
+
+| :sym |  :mean-ret |       :vol |
+|------|-----------:|-----------:|
+| AAPL | 0.01369776 | 0.04032943 |
+| MSFT | 0.01165150 | 0.01888828 |
+</code></pre><h2 id="runtime-values">Runtime Values</h2><p><code>#dt/e</code> cannot see local variables. Data-forms can:</p><pre><code class="clojure">(let [ticker "MSFT" lo 199]
+  (dt prices :where [:and [:= :sym ticker] [:&gt; :price lo]]))
+</code></pre><pre><code class="text">_unnamed [3 4]:
+
+|      :date | :sym | :price | :volume |
+|------------|------|-------:|--------:|
+| 2024-01-02 | MSFT |  200.0 |     900 |
+| 2024-01-04 | MSFT |  202.0 |    1000 |
+| 2024-01-05 | MSFT |  207.0 |    1300 |
+</code></pre><p>A whole query can be a single map:</p><pre><code class="clojure">(dt prices {:where [:&gt; :price 100] :by [:sym] :agg {:n [:nrow]}})
+</code></pre><pre><code class="text">_unnamed [2 2]:
+
+| :sym | :n |
+|------|---:|
+| AAPL |  2 |
+| MSFT |  4 |
+</code></pre><h2 id="joins">Joins</h2><p>Add each symbol's sector, then average prices by sector. <code>:validate :m:1</code> checks that each symbol appears only once in <code>sectors</code>:</p><pre><code class="clojure">(require '[datajure.join :refer [join]])
+
+(def sectors
+  (ds/-&gt;dataset {:sym    ["AAPL" "MSFT"]
+                 :sector ["Hardware" "Software"]}))
+
+(-&gt; (join prices sectors :on :sym :how :left :validate :m:1)
+    (dt :by [:sector] :agg {:avg-price #dt/e (mn :price)}))
+</code></pre><pre><code class="text">_unnamed [2 2]:
+
+|  :sector | :avg-price |
+|----------|-----------:|
+| Hardware |     101.25 |
+| Software |     201.75 |
+</code></pre><p>An as-of join gives each trade the latest quote for the same symbol at or before the trade's time:</p><pre><code class="clojure">(def trades (ds/-&gt;dataset {:sym  ["AAPL" "AAPL" "MSFT"]
+                           :time [10 25 30]
+                           :qty  [100 50 75]}))
+
+(def quotes (ds/-&gt;dataset {:sym  ["AAPL" "AAPL" "AAPL" "MSFT"]
+                           :time [5 20 30 28]
+                           :bid  [99.5 100.5 101.0 201.0]}))
+
+(join trades quotes :on [:sym :time] :how :asof)
+</code></pre><pre><code class="text">_unnamed [3 4]:
+
+| :sym | :time | :qty |  :bid |
+|------|------:|-----:|------:|
+| AAPL |    10 |  100 |  99.5 |
+| AAPL |    25 |   50 | 100.5 |
+| MSFT |    30 |   75 | 201.0 |
+</code></pre><h2 id="reshaping">Reshaping</h2><p><code>cast</code> turns long data into wide, one column per symbol:</p><pre><code class="clojure">(require '[datajure.reshape :as reshape])
+
+(reshape/cast prices {:id [:date] :from :sym :value :price})
+</code></pre><pre><code class="text">_unnamed [4 3]:
+
+|      :date | :AAPL | :MSFT |
+|------------|------:|------:|
+| 2024-01-02 | 100.0 | 200.0 |
+| 2024-01-03 | 102.0 | 198.0 |
+| 2024-01-04 |  99.0 | 202.0 |
+| 2024-01-05 | 104.0 | 207.0 |
+</code></pre><h2 id="errors">Errors</h2><p>Mistakes are reported as <code>ex-info</code> exceptions with a <code>:dt/error</code> key and, where possible, a suggestion. A misspelled column:</p><pre><code class="clojure">(dt prices :set {:value #dt/e (* :prcie :volume)})
+</code></pre><pre><code class="text">Unknown column(s) #{:prcie} in :set :value expression
+#:dt{:error :unknown-column, :columns #{:prcie}, :context ":set :value", :available [:date :price :sym :volume], :closest {:prcie [:price]}}
+</code></pre><p>A misspelled keyword:</p><pre><code class="clojure">(dt prices :wehre #dt/e (&gt; :price 100))
+</code></pre><pre><code class="text">Unknown dt query key(s) [:wehre]. Did you mean: :wehre -&gt; :where? Supported: [:agg :by :off-heap :order-by :select :set :take :where :within-order].
+</code></pre><p>A map-form <code>:set</code> whose columns refer to each other:</p><pre><code class="clojure">(dt prices :set {:value #dt/e (* :price :volume)
+                 :big?  #dt/e (&gt; :value 200000)})
+</code></pre><pre><code class="text">In map-form :set, column :big? references #{:value}, which are being derived in the same map. Map semantics are simultaneous — use vector-of-pairs [[:col1 expr1] [:col2 expr2]] for sequential derivation.
+</code></pre>
 
     
     <div id="prev-next">

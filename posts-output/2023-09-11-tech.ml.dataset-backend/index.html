@@ -6,19 +6,21 @@
         
 <meta name="keywords" content="">
 
-<meta name="description" content="​
+<meta name="description" content="This post describes Datajure v1 (1.x). Datajure v2 replaced it in March 2026 with a different API; see the docs. The v1 code is on the v1 branch.
+​
 tech.ml.dataset is a Clojure library for tabular data processing similar to Python&#39;s Pandas, or R&#39;s data.table. It supports pragmatic data-intensive work on the JVM by providing powerful abstractions that simplify implementing efficient solutions to real problems.
 ​
 Detailed documentations of tech.ml.dataset can be found on its official website.
 ​Dataset Construction">
 
-<meta property="og:description" content="​
+<meta property="og:description" content="This post describes Datajure v1 (1.x). Datajure v2 replaced it in March 2026 with a different API; see the docs. The v1 code is on the v1 branch.
+​
 tech.ml.dataset is a Clojure library for tabular data processing similar to Python&#39;s Pandas, or R&#39;s data.table. It supports pragmatic data-intensive work on the JVM by providing powerful abstractions that simplify implementing efficient solutions to real problems.
 ​
 Detailed documentations of tech.ml.dataset can be found on its official website.
 ​Dataset Construction">
 
-<meta property="og:url" content="https://clojure-finance.github.io/datajure-website/datajure-website/posts-output/2023-09-11-tech.ml.dataset-backend/" />
+<meta property="og:url" content="https://clojure-finance.github.io/datajure-website/posts-output/2023-09-11-tech.ml.dataset-backend/" />
 <meta property="og:title" content="tech.ml.dataset Backend Implementation" />
 <meta property="og:type" content="article" />
 
@@ -95,11 +97,12 @@ Detailed documentations of tech.ml.dataset can be found on its official website.
 </div>
 <div>
     <ul class="toc"><li><a href="#dataset-construction">Dataset Construction</a></li><li><a href="#row-selection">Row Selection</a></li><li><a href="#column-selection">Column Selection</a></li><li><a href="#optional-selection">Optional Selection</a></li><ul><li><a href="#group-by">Group by</a></li><li><a href="#sort-by">Sort by</a></li></ul><li><a href="#aggregate-function">Aggregate Function</a></li></ul>
-    <p>​
+    <blockquote><p>This post describes Datajure v1 (1.x). Datajure v2 replaced it in March 2026 with a different API; see the <a href="/datajure-website/pages-output/docs/">docs</a>. The v1 code is on the <a href="https://github.com/clojure-finance/datajure/tree/v1"><code>v1</code> branch</a>.
+​
 tech.ml.dataset is a Clojure library for tabular data processing similar to Python's Pandas, or R's data.table. It supports pragmatic data-intensive work on the JVM by providing powerful abstractions that simplify implementing efficient solutions to real problems.
 ​
 Detailed documentations of tech.ml.dataset can be found on its <a href="https://github.com/techascent/tech.ml.dataset">official website</a>.
-​</p><h2 id="dataset-construction">Dataset Construction</h2><p>​
+​</p></blockquote><h2 id="dataset-construction">Dataset Construction</h2><p>​
 Alternatively, you can also create the dataset using the function <code>ds/-&gt;dataset</code> provided by tech.ml.dataset, with which you can create a dataset from:
 ​</p><ul><li>common file types(e.g. csv, tsv, xls(x), json)taken from local - file system or URL</li><li>sequence of maps
 ​
