@@ -19,3 +19,13 @@ clojure -X:serve-fast  # same, but recompile only changed files
 clojure -M:build       # build the site into public/
 clojure -M:nrepl       # start an nREPL server (port written to .nrepl-port)
 ```
+
+## Checking the Examples
+
+The code on the pages runs against a small sample dataset, and the outputs shown are real. To check that every snippet still runs and prints what the page says:
+
+```bash
+clojure -M:check content/md/pages/*.md
+```
+
+It uses the Datajure version in the `:check` alias of `deps.edn`. For a new Datajure release, bump that version and the one in `content/md/pages/quick-start.md` (and the version mentioned in `examples.md`), run the check, and update any output that changed.

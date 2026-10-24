@@ -14,4 +14,10 @@
                         :exec-args {:port 3000, :fast true}}
            ;; nREPL on an ephemeral port (written to .nrepl-port): `clojure -M:nrepl`
            :nrepl {:extra-deps {nrepl/nrepl {:mvn/version "1.7.0"}}
-                   :main-opts ["-m" "nrepl.cmdline" "--port" "0"]}}}
+                   :main-opts ["-m" "nrepl.cmdline" "--port" "0"]}
+           ;; Run the snippets on the pages against this Datajure version and
+           ;; compare their printed output: `clojure -M:check content/md/pages/*.md`
+           :check {:replace-deps {org.clojure/clojure {:mvn/version "1.12.4"}
+                                  com.github.clojure-finance/datajure {:mvn/version "2.7.8"}}
+                   :replace-paths []
+                   :main-opts ["script/check_pages.clj"]}}}

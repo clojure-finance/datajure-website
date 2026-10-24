@@ -2,6 +2,8 @@
  :layout :post
  :author "Parry CHOI Chong Hing"}
 
+> This post describes Datajure v1 (1.x). Datajure v2 replaced it in March 2026 with a different API; see the [docs](/pages-output/docs/). The v1 code is on the [`v1` branch](https://github.com/clojure-finance/datajure/tree/v1).
+
 The implementation of the DSL query foundation went well. The biggest problem I have encountered was the group by operation. This is mainly due to the difference in the output results of the generic query and the tech.ml.dataset. The group by function in tech.ml.dataset outputs a map with the column values (or indices) to the corresponding datatable; while our query would be outputting a single datatable, similar to SQL query. The library also does not support multiple column group-by operation.
 
 To solve the difference in output, a table join between the first item in group-by datatable and the descriptive table is made. This combines all the aggregated columns and the original columns, forming a table with all columns.

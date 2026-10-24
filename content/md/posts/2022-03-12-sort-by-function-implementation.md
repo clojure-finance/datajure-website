@@ -2,6 +2,8 @@
  :layout :post
  :author "Parry CHOI Chong Hing"}
 
+> This post describes Datajure v1 (1.x). Datajure v2 replaced it in March 2026 with a different API; see the [docs](/pages-output/docs/). The v1 code is on the [`v1` branch](https://github.com/clojure-finance/datajure/tree/v1).
+
 With the basic foundation and design implemented, we try to add more query options. One of the common options is the sort-by function.
 
 To implement the sort-by option, the query foundation is updated. For the syntax design, the third section has been changed to option section, including group-by, sort-by and future options. However, for the query to differentiate different options, keywords for different options are included. The sort-by syntax is as follows:

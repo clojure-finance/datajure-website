@@ -3,13 +3,15 @@
  :toc :ul
  :author "YANG Ming-Tian"}
 
+> This post describes Datajure v1 (1.x). Datajure v2 replaced it in March 2026 with a different API; see the [docs](/pages-output/docs/). The v1 code is on the [`v1` branch](https://github.com/clojure-finance/datajure/tree/v1).
+
 Geni is a Clojure dataframe library that runs on Apache Spark. It provides an idiomatic Spark interface for Clojure without the hassle of Java or Scala interop. Therefore, this backend is actually supported by Apache Spark, while we use Geni's APIs in the implementation.
 
 For the details of Geni APIs, please refer to [Geni Documentation](https://github.com/zero-one-group/geni). For the details of Apache Spark behaviour, please refer to [Spark Documentation](https://spark.apache.org/docs/latest/).
 
 ## Dataset Construction
 
-Datajure provides a function `dataset` to construct a Geni dataset from an associative map. See [Examples](/pages-output/examples/) for specific usage.
+Datajure provides a function `dataset` to construct a Geni dataset from an associative map. See the [v1 examples](https://github.com/clojure-finance/datajure-website/blob/559361a/content/md/pages/examples.md) for specific usage.
 
 In addition, Geni also provides a variety of APIs for creating/importing dataframes or datasets, such as `g/to-df`, `g/create-dataframe`, `g/table->dataset`, `g/map->dataset `, and `g/records->dataset`.
 

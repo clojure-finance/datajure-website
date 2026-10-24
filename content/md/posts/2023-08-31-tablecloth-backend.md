@@ -3,13 +3,15 @@
  :toc :ul
  :author "YANG Ming-Tian"}
 
+> This post describes Datajure v1 (1.x). Datajure v2 replaced it in March 2026 with a different API; see the [docs](/pages-output/docs/). The v1 code is on the [`v1` branch](https://github.com/clojure-finance/datajure/tree/v1).
+
 Tablecloth is the default backend for Datajure. It is an addition on the top of `tech.ml.dataset`, reorganising its existing functions into simple-to-use APIs.
 
 Detailed documentations of Tablecloth can be found on its [official website](https://scicloj.github.io/tablecloth/).
 
 ## Dataset Construction
 
-Datajure provides a function `dataset` to construct a Tablecloth dataset from an associative map. See [Examples](/pages-output/examples/) for specific usage.
+Datajure provides a function `dataset` to construct a Tablecloth dataset from an associative map. See the [v1 examples](https://github.com/clojure-finance/datajure-website/blob/559361a/content/md/pages/examples.md) for specific usage.
 
 Alternatively, you can also create the dataset using the function `tc/dataset` or `tc/let-dataset` provided by Tablecloth, with which you can create a dataset from:
 

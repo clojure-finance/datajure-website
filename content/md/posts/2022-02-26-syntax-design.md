@@ -2,6 +2,8 @@
  :layout :post
  :author "Parry CHOI Chong Hing"}
 
+> This post describes Datajure v1 (1.x). Datajure v2 replaced it in March 2026 with a different API; see the [docs](/pages-output/docs/). The v1 code is on the [`v1` branch](https://github.com/clojure-finance/datajure/tree/v1).
+
 With the foundation of the query being developed, I could start working on the syntax design itself. The syntax design is flexible with the help of macros. We could develop a syntax for our DSL as long as it is recognised by the Clojure language (i.e. following some fundamental rules and syntax imposed by Clojure). 
 
 Clojure has a heavy use of expressions in the language. Every expression is separated and seen as a separate object to Clojure. It could not phrase or recognise syntax like ```DT[, col1,col2]``` - Clojure cannot extract the keywords like ```col1``` and ```col2``` here. In other words, spacing is very important in Clojure, every expression is separated by a space. It is a fundamental syntax of Clojure. This is the biggest limitation imposed by Clojure. 

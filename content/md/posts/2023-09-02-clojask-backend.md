@@ -3,6 +3,8 @@
  :toc :ul
  :author "YANG Ming-Tian"}
 
+> This post describes Datajure v1 (1.x). Datajure v2 replaced it in March 2026 with a different API; see the [docs](/pages-output/docs/). The v1 code is on the [`v1` branch](https://github.com/clojure-finance/datajure/tree/v1).
+
 Clojask is an open-source library for parallel computing of larger-than-memory datasets developed at HKU Business School.
 
 Clojask relies on Onyx for parallel computing. In Datajure, we set the number of workers to 8, which does not support manual modification by users.
@@ -17,7 +19,7 @@ Detailed documentations of Clojask can be found on its [official website](https:
 
 ## Dataset Construction
 
-Datajure provides a function `dataset` to construct a Clojask dataset from an associative map. See [Examples](/pages-output/examples/) for specific usage.
+Datajure provides a function `dataset` to construct a Clojask dataset from an associative map. See the [v1 examples](https://github.com/clojure-finance/datajure-website/blob/559361a/content/md/pages/examples.md) for specific usage.
 
 However, since Clojask's data operations are highly dependent on external files, constructing data directly within the program may lead to unexpected errors. Therefore, you are highly recommended to read the dataset from a file using `ck/dataframe`.
 

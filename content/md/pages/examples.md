@@ -4,605 +4,490 @@
  :page-index 3
  :navbar? true}
 
-The following are several examples showing how to use Datajure to conveniently complete various data processing operations.
+These examples walk through common operations on a small dataset of daily prices. Every output below comes from running the code with Datajure 2.7.8. The [docs](/pages-output/docs/) explain the concepts.
 
---- 
-
-## Backend Specification
-
-The following code sets `tablecloth` as the backend using the function `set-backend`:
+## Sample Data
 
 ```clojure
-(dtj/set-backend "tablecloth")
+(require '[datajure.core :refer [dt dt1 nrow asc desc]]
+         '[tech.v3.dataset :as ds])
+
+(def prices
+  (ds/->dataset
+   {:date   (map #(java.time.LocalDate/parse %)
+                 ["2024-01-02" "2024-01-03" "2024-01-04" "2024-01-05"
+                  "2024-01-02" "2024-01-03" "2024-01-04" "2024-01-05"])
+    :sym    ["AAPL" "AAPL" "AAPL" "AAPL" "MSFT" "MSFT" "MSFT" "MSFT"]
+    :price  [100.0 102.0 99.0 104.0 200.0 198.0 202.0 207.0]
+    :volume [1200 1500 nil 1800 900 1100 1000 1300]}))
 ```
 
-## Datasets Construction
+```text
+_unnamed [8 4]:
 
-The following code construct a dataset object `data` of the specified backend from an associative map `data-map` using the function `dataset`:
+|      :date | :sym | :price | :volume |
+|------------|------|-------:|--------:|
+| 2024-01-02 | AAPL |  100.0 |    1200 |
+| 2024-01-03 | AAPL |  102.0 |    1500 |
+| 2024-01-04 | AAPL |   99.0 |         |
+| 2024-01-05 | AAPL |  104.0 |    1800 |
+| 2024-01-02 | MSFT |  200.0 |     900 |
+| 2024-01-03 | MSFT |  198.0 |    1100 |
+| 2024-01-04 | MSFT |  202.0 |    1000 |
+| 2024-01-05 | MSFT |  207.0 |    1300 |
+```
+
+The AAPL volume on 2024-01-04 is missing.
+
+## Filtering Rows
+
+Rows with a price above 150:
 
 ```clojure
-(def data {:age [31 25 18 18 25]
-           :name ["a" "b" "c" "c" "d"]
-           :salary [200 500 200 370 3500]})
-(dtj/dataset data)
+(dt prices :where #dt/e (> :price 150))
 ```
 
-## Datasets Printing
+```text
+_unnamed [4 4]:
 
-The following code prints the content of the dataset `data` using the function `print-dataset`:
+|      :date | :sym | :price | :volume |
+|------------|------|-------:|--------:|
+| 2024-01-02 | MSFT |  200.0 |     900 |
+| 2024-01-03 | MSFT |  198.0 |    1100 |
+| 2024-01-04 | MSFT |  202.0 |    1000 |
+| 2024-01-05 | MSFT |  207.0 |    1300 |
+```
+
+Conditions combine with `and`, `or` and `not`:
 
 ```clojure
-(dtj/print (dtj/dataset data))
+(dt prices :where #dt/e (and (= :sym "AAPL") (> :price 100)))
 ```
 
-## Operations
+```text
+_unnamed [2 4]:
 
-Choose a backend:
+|      :date | :sym | :price | :volume |
+|------------|------|-------:|--------:|
+| 2024-01-03 | AAPL |  102.0 |    1500 |
+| 2024-01-05 | AAPL |  104.0 |    1800 |
+```
 
-<ul class="nav nav-tabs mb-3" id="pills-tab" role="tablist">
-    <li class="nav-item" role="presentation">
-        <button class="nav-link" id="pills-tmd-tab" data-bs-toggle="pill" data-bs-target="#pills-tmd" type="button" role="tab" aria-controls="pills-tmd" aria-selected="false">tech.ml.dataset</button>
-    </li>
-    <li class="nav-item" role="presentation">
-        <button class="nav-link active" id="pills-tablecloth-tab" data-bs-toggle="pill" data-bs-target="#pills-tablecloth" type="button" role="tab" aria-controls="pills-tablecloth" aria-selected="true">Tablecloth</button>
-    </li>
-    <li class="nav-item" role="presentation">
-        <button class="nav-link" id="pills-clojask-tab" data-bs-toggle="pill" data-bs-target="#pills-clojask" type="button" role="tab" aria-controls="pills-clojask" aria-selected="false">Clojask</button>
-    </li>
-    <li class="nav-item" role="presentation">
-        <button class="nav-link" id="pills-geni-tab" data-bs-toggle="pill" data-bs-target="#pills-geni" type="button" role="tab" aria-controls="pills-geni" aria-selected="false">Geni</button>
-    </li>
-</ul>
-<div class="tab-content" id="pills-tabContent">
-<div class="tab-pane fade" id="pills-tmd" role="tabpanel" aria-labelledby="pills-tmd-tab">
-
-**Example 1**
-
-- Select rows with `salary` > 300, `age` < 20
+A comparison with a missing value is false, so the row with no volume is dropped rather than causing an error:
 
 ```clojure
-(-> data
-    (dtj/dataset)
-    (dtj/query [[:salary #(< 300 %)] [:age #(> 20 %)]] [])
-    (dtj/print))
+(dt prices :where #dt/e (> :volume 1200))
 ```
 
-Sample output:
+```text
+_unnamed [3 4]:
 
-<pre>
-_unnamed [1 3]:
+|      :date | :sym | :price | :volume |
+|------------|------|-------:|--------:|
+| 2024-01-03 | AAPL |  102.0 |    1500 |
+| 2024-01-05 | AAPL |  104.0 |    1800 |
+| 2024-01-05 | MSFT |  207.0 |    1300 |
+```
 
-| :age | :name | :salary |
-|-----:|-------|--------:|
-|   18 |     c |     370 |
-</pre>
+## Adding Columns
 
-**Example 2**
-
-- Group rows by `age` with sum of `salary` > 1000
-- Show `age` and sum of `salary`
+`:set` adds columns and keeps every row. Arithmetic on a missing value gives a missing value:
 
 ```clojure
-(-> data
-    (dtj/dataset)
-    (dtj/query [[:sum :salary #(< 1000 %)]] [:age :sum :salary] [:group-by :age])
-    (dtj/print))
+(dt prices :set {:value #dt/e (* :price :volume)})
 ```
 
-Sample output:
+```text
+_unnamed [8 5]:
 
-<pre>
-left-outer-join [1 2]:
+|      :date | :sym | :price | :volume |   :value |
+|------------|------|-------:|--------:|---------:|
+| 2024-01-02 | AAPL |  100.0 |    1200 | 120000.0 |
+| 2024-01-03 | AAPL |  102.0 |    1500 | 153000.0 |
+| 2024-01-04 | AAPL |   99.0 |         |          |
+| 2024-01-05 | AAPL |  104.0 |    1800 | 187200.0 |
+| 2024-01-02 | MSFT |  200.0 |     900 | 180000.0 |
+| 2024-01-03 | MSFT |  198.0 |    1100 | 217800.0 |
+| 2024-01-04 | MSFT |  202.0 |    1000 | 202000.0 |
+| 2024-01-05 | MSFT |  207.0 |    1300 | 269100.0 |
+```
 
-| :age | :salary-sum |
-|-----:|------------:|
-|   25 |      4000.0 |
-</pre>
-
-**Example 3**
-
-- Group rows by `age`
-- Show `age`, sum of `salary` and standard deviation of `salary`
-- Sort by standard deviation of `salary` in descending order
+With a sequence of pairs, later columns can use earlier ones:
 
 ```clojure
-(-> data
-    (dtj/dataset)
-    (dtj/query [] [:age :sum :salary :sd :salary] [:group-by :age :sort-by :sd :salary >])
-    (dtj/print))
+(dt prices :set [[:value #dt/e (* :price :volume)]
+                 [:big?  #dt/e (> :value 200000)]])
 ```
 
-Sample output:
+```text
+_unnamed [8 6]:
 
-<pre>
-left-outer-join [3 3]:
+|      :date | :sym | :price | :volume |   :value | :big? |
+|------------|------|-------:|--------:|---------:|-------|
+| 2024-01-02 | AAPL |  100.0 |    1200 | 120000.0 | false |
+| 2024-01-03 | AAPL |  102.0 |    1500 | 153000.0 | false |
+| 2024-01-04 | AAPL |   99.0 |         |          | false |
+| 2024-01-05 | AAPL |  104.0 |    1800 | 187200.0 | false |
+| 2024-01-02 | MSFT |  200.0 |     900 | 180000.0 | false |
+| 2024-01-03 | MSFT |  198.0 |    1100 | 217800.0 |  true |
+| 2024-01-04 | MSFT |  202.0 |    1000 | 202000.0 |  true |
+| 2024-01-05 | MSFT |  207.0 |    1300 | 269100.0 |  true |
+```
 
-| :age | :salary-sum |    :salary-sd |
-|-----:|------------:|--------------:|
-|   25 |      4000.0 | 2121.32034356 |
-|   18 |       570.0 |  120.20815280 |
-|   31 |       200.0 |               |
-</pre>
-
-**Example 4**
-
-- Group rows by `age` and `name`
-- Show `age`, `name` and sum of `salary`
+Replace missing values with `coalesce`:
 
 ```clojure
-(-> data
-    (dtj/dataset)
-    (dtj/query [] [:age :name :sum :salary] [:group-by :age :name])
-    (dtj/print))
+(dt prices :set {:volume #dt/e (coalesce :volume 0)})
 ```
 
-Sample output:
+```text
+_unnamed [8 4]:
 
-<pre>
-left-outer-join [4 3]:
+|      :date | :sym | :price | :volume |
+|------------|------|-------:|--------:|
+| 2024-01-02 | AAPL |  100.0 |    1200 |
+| 2024-01-03 | AAPL |  102.0 |    1500 |
+| 2024-01-04 | AAPL |   99.0 |       0 |
+| 2024-01-05 | AAPL |  104.0 |    1800 |
+| 2024-01-02 | MSFT |  200.0 |     900 |
+| 2024-01-03 | MSFT |  198.0 |    1100 |
+| 2024-01-04 | MSFT |  202.0 |    1000 |
+| 2024-01-05 | MSFT |  207.0 |    1300 |
+```
 
-| :age | :name | :salary-sum |
-|-----:|-------|------------:|
-|   31 |     a |       200.0 |
-|   25 |     b |       500.0 |
-|   18 |     c |       570.0 |
-|   25 |     d |      3500.0 |
-</pre>
-
-**Example 5**
-
-- Select rows with `salary` > 0, `age` < 24
+Use `cond` for several cases:
 
 ```clojure
-(-> data
-    (dtj/dataset)
-    (dtj/query [[:salary #(< 0 %)] [:age #(< 24 %)]] [])
-    (dtj/print))
+(dt prices :set {:size #dt/e (cond (> :price 200) "large"
+                                   (> :price 100) "medium"
+                                   :else          "small")})
 ```
 
-Sample output:
+```text
+_unnamed [8 5]:
 
-<pre>
-_unnamed [3 3]:
+|      :date | :sym | :price | :volume |  :size |
+|------------|------|-------:|--------:|--------|
+| 2024-01-02 | AAPL |  100.0 |    1200 |  small |
+| 2024-01-03 | AAPL |  102.0 |    1500 | medium |
+| 2024-01-04 | AAPL |   99.0 |         |  small |
+| 2024-01-05 | AAPL |  104.0 |    1800 | medium |
+| 2024-01-02 | MSFT |  200.0 |     900 | medium |
+| 2024-01-03 | MSFT |  198.0 |    1100 | medium |
+| 2024-01-04 | MSFT |  202.0 |    1000 |  large |
+| 2024-01-05 | MSFT |  207.0 |    1300 |  large |
+```
 
-| :age | :name | :salary |
-|-----:|-------|--------:|
-|   31 |     a |     200 |
-|   25 |     b |     500 |
-|   25 |     d |    3500 |
-</pre>
+## Grouping and Aggregating
 
-**Example 6**
-
-- Select rows with sum of `salary` > 0 (after grouping), `age` > 0
-- Group rows by `name` and `age`, show `name`, `age`, `salary` (of the first record in the group), sum of `salary` and standard deviation of `salary`
-- Sort by `salary`
+One row per symbol. The sum skips the missing volume:
 
 ```clojure
-(-> data
-    (dtj/dataset)
-    (dtj/query [[:sum :salary #(< 0 %)] [:age #(< 0 %)]] [:name :age :salary :sum :salary :sd :salary] [:group-by :name :age :sort-by :salary])
-    (dtj/print))
+(dt prices :by [:sym]
+    :agg {:n         nrow
+          :avg-price #dt/e (mn :price)
+          :total-vol #dt/e (sm :volume)})
 ```
 
-Sample output:
+```text
+_unnamed [2 4]:
 
-<pre>
-left-outer-join [4 5]:
+| :sym | :n | :avg-price | :total-vol |
+|------|---:|-----------:|-----------:|
+| AAPL |  4 |     101.25 |     4500.0 |
+| MSFT |  4 |     201.75 |     4300.0 |
+```
 
-| :name | :age | :salary | :salary-sum |  :salary-sd |
-|-------|-----:|--------:|------------:|------------:|
-|     a |   31 |     200 |       200.0 |             |
-|     c |   18 |     200 |       570.0 | 120.2081528 |
-|     b |   25 |     500 |       500.0 |             |
-|     d |   25 |    3500 |      3500.0 |             |
-</pre>
-
-</div>
-<div class="tab-pane fade show active" id="pills-tablecloth" role="tabpanel" aria-labelledby="pills-tablecloth-tab">
-
-**Example 1**
-
-- Select rows with `salary` > 300, `age` < 20
+Without `:by`, `:agg` summarizes the whole dataset. `dt1` returns that single row as a map:
 
 ```clojure
-(-> data
-    (dtj/dataset)
-    (dtj/query [[:salary #(< 300 %)] [:age #(> 20 %)]] [])
-    (dtj/print))
+(dt1 prices :agg {:n nrow :avg-price #dt/e (mn :price)})
 ```
 
-Sample output:
+```text
+{:n 8, :avg-price 151.5}
+```
 
-<pre>
-_unnamed [1 3]:
-
-| :age | :name | :salary |
-|-----:|-------|--------:|
-|   18 |     c |     370 |
-</pre>
-
-**Example 2**
-
-- Group rows by `age` with sum of `salary` > 1000
-- Show `age` and sum of `salary`
+Aggregations can be generated with data-forms, here the maximum of each listed column:
 
 ```clojure
-(-> data
-    (dtj/dataset)
-    (dtj/query [[:sum :salary #(< 1000 %)]] [:age :sum :salary] [:group-by :age])
-    (dtj/print))
+(dt prices :by [:sym]
+    :agg (into {} (for [c [:price :volume]]
+                    [(keyword (str "max-" (name c))) [:mx c]])))
 ```
 
-Sample output:
+```text
+_unnamed [2 3]:
 
-<pre>
-left-outer-join [1 2]:
+| :sym | :max-price | :max-volume |
+|------|-----------:|------------:|
+| AAPL |      104.0 |        1800 |
+| MSFT |      207.0 |        1300 |
+```
 
-| :age | :salary-sum |
-|-----:|------------:|
-|   25 |      4000.0 |
-</pre>
+## Sorting, Limiting and Selecting
 
-**Example 3**
-
-- Group rows by `age`
-- Show `age`, sum of `salary` and standard deviation of `salary`
-- Sort by standard deviation of `salary` in descending order
+The three highest prices:
 
 ```clojure
-(-> data
-    (dtj/dataset)
-    (dtj/query [] [:age :sum :salary :sd :salary] [:group-by :age :sort-by :sd :salary >])
-    (dtj/print))
+(dt prices :order-by [(desc :price)] :take 3)
 ```
 
-Sample output:
+```text
+_unnamed [3 4]:
 
-<pre>
-left-outer-join [3 3]:
+|      :date | :sym | :price | :volume |
+|------------|------|-------:|--------:|
+| 2024-01-05 | MSFT |  207.0 |    1300 |
+| 2024-01-04 | MSFT |  202.0 |    1000 |
+| 2024-01-02 | MSFT |  200.0 |     900 |
+```
 
-| :age | :salary-sum |    :salary-sd |
-|-----:|------------:|--------------:|
-|   25 |      4000.0 | 2121.32034356 |
-|   18 |       570.0 |  120.20815280 |
-|   31 |       200.0 |               |
-</pre>
-
-**Example 4**
-
-- Group rows by `age` and `name`
-- Show `age`, `name` and sum of `salary`
+Select and rename columns with a map:
 
 ```clojure
-(-> data
-    (dtj/dataset)
-    (dtj/query [] [:age :name :sum :salary] [:group-by :age :name])
-    (dtj/print))
+(dt prices :select {:sym :ticker :price :close} :take 3)
 ```
 
-Sample output:
+```text
+_unnamed [3 2]:
 
-<pre>
-left-outer-join [4 3]:
+| :ticker | :close |
+|---------|-------:|
+|    AAPL |  100.0 |
+|    AAPL |  102.0 |
+|    AAPL |   99.0 |
+```
 
-| :age | :name | :salary-sum |
-|-----:|-------|------------:|
-|   31 |     a |       200.0 |
-|   25 |     b |       500.0 |
-|   18 |     c |       570.0 |
-|   25 |     d |      3500.0 |
-</pre>
+## Window Functions
 
-**Example 5**
-
-- Select rows with `salary` > 0, `age` < 24
+With `:by` and `:within-order`, window functions run within each symbol in date order. Here the daily return, the previous price and the cumulative volume:
 
 ```clojure
-(-> data
-    (dtj/dataset)
-    (dtj/query [[:salary #(< 0 %)] [:age #(< 24 %)]] [])
-    (dtj/print))
+(dt prices
+    :by [:sym]
+    :within-order [(asc :date)]
+    :set {:ret     #dt/e (- (win/ratio :price) 1)
+          :prev    #dt/e (win/lag :price 1)
+          :cum-vol #dt/e (win/cumsum :volume)})
 ```
 
-Sample output:
+```text
+_unnamed [8 7]:
 
-<pre>
-_unnamed [3 3]:
+|      :date | :sym | :price | :volume |        :ret | :prev | :cum-vol |
+|------------|------|-------:|--------:|------------:|------:|---------:|
+| 2024-01-02 | AAPL |  100.0 |    1200 |             |       |   1200.0 |
+| 2024-01-03 | AAPL |  102.0 |    1500 |  0.02000000 | 100.0 |   2700.0 |
+| 2024-01-04 | AAPL |   99.0 |         | -0.02941176 | 102.0 |   2700.0 |
+| 2024-01-05 | AAPL |  104.0 |    1800 |  0.05050505 |  99.0 |   4500.0 |
+| 2024-01-02 | MSFT |  200.0 |     900 |             |       |    900.0 |
+| 2024-01-03 | MSFT |  198.0 |    1100 | -0.01000000 | 200.0 |   2000.0 |
+| 2024-01-04 | MSFT |  202.0 |    1000 |  0.02020202 | 198.0 |   3000.0 |
+| 2024-01-05 | MSFT |  207.0 |    1300 |  0.02475248 | 202.0 |   4300.0 |
+```
 
-| :age | :name | :salary |
-|-----:|-------|--------:|
-|   31 |     a |     200 |
-|   25 |     b |     500 |
-|   25 |     d |    3500 |
-</pre>
-
-**Example 6**
-
-- Select rows with sum of `salary` > 0 (after grouping), `age` > 0
-- Group rows by `name` and `age`, show `name`, `age`, `salary` (of the first record in the group), sum of `salary` and standard deviation of `salary`
-- Sort by `salary`
+A two-day moving average and the rank of each price within its symbol. Moving windows are shorter at the start of each group:
 
 ```clojure
-(-> data
-    (dtj/dataset)
-    (dtj/query [[:sum :salary #(< 0 %)] [:age #(< 0 %)]] [:name :age :salary :sum :salary :sd :salary] [:group-by :name :age :sort-by :salary])
-    (dtj/print))
+(dt prices
+    :by [:sym]
+    :within-order [(asc :date)]
+    :set {:ma-2 #dt/e (win/mavg :price 2)
+          :rank #dt/e (win/rank :price)})
 ```
 
-Sample output:
+```text
+_unnamed [8 6]:
 
-<pre>
-left-outer-join [4 5]:
+|      :date | :sym | :price | :volume | :ma-2 | :rank |
+|------------|------|-------:|--------:|------:|------:|
+| 2024-01-02 | AAPL |  100.0 |    1200 | 100.0 |     1 |
+| 2024-01-03 | AAPL |  102.0 |    1500 | 101.0 |     2 |
+| 2024-01-04 | AAPL |   99.0 |         | 100.5 |     3 |
+| 2024-01-05 | AAPL |  104.0 |    1800 | 101.5 |     4 |
+| 2024-01-02 | MSFT |  200.0 |     900 | 200.0 |     1 |
+| 2024-01-03 | MSFT |  198.0 |    1100 | 199.0 |     2 |
+| 2024-01-04 | MSFT |  202.0 |    1000 | 200.0 |     3 |
+| 2024-01-05 | MSFT |  207.0 |    1300 | 204.5 |     4 |
+```
 
-| :name | :age | :salary | :salary-sum |  :salary-sd |
-|-------|-----:|--------:|------------:|------------:|
-|     a |   31 |     200 |       200.0 |             |
-|     c |   18 |     200 |       570.0 | 120.2081528 |
-|     b |   25 |     500 |       500.0 |             |
-|     d |   25 |    3500 |      3500.0 |             |
-</pre>
-
-</div>
-<div class="tab-pane fade" id="pills-clojask" role="tabpanel" aria-labelledby="pills-clojask-tab">
-    
-For the Clojask backend, users are not encouraged to call `dtj/query` directly. Instead, users are suggested to call the lower-level data operations provided by `datajure.operation-ck`. As for the specific reasons, please refer to the [implementation report](../../posts-output/2023-09-02-clojask-backend/).
-
-**Example 1**
-
-- Create the dataset from a map
+Carry the last known volume forward:
 
 ```clojure
-(-> data
-    (dtj/dataset)
-    (dtj/print))
+(dt prices :by [:sym] :within-order [(asc :date)]
+    :set {:volume #dt/e (win/fills :volume)})
 ```
 
-Sample output:
+```text
+_unnamed [8 4]:
 
-<pre>
-|            age |             name |         salary |
-|----------------+------------------+----------------|
-| java.lang.Long | java.lang.String | java.lang.Long |
-|             31 |                a |            200 |
-|             25 |                b |            500 |
-|             18 |                c |            200 |
-|             18 |                c |            370 |
-|             25 |                d |           3500 |
-</pre>
+|      :date | :sym | :price | :volume |
+|------------|------|-------:|--------:|
+| 2024-01-02 | AAPL |  100.0 |    1200 |
+| 2024-01-03 | AAPL |  102.0 |    1500 |
+| 2024-01-04 | AAPL |   99.0 |    1500 |
+| 2024-01-05 | AAPL |  104.0 |    1800 |
+| 2024-01-02 | MSFT |  200.0 |     900 |
+| 2024-01-03 | MSFT |  198.0 |    1100 |
+| 2024-01-04 | MSFT |  202.0 |    1000 |
+| 2024-01-05 | MSFT |  207.0 |    1300 |
+```
 
-**Example 2**
+## Multi-Step Pipelines
 
-- Create the dataset from a file
+Thread `dt` calls with `->`: compute daily returns, summarize them per symbol, then sort:
 
 ```clojure
-(-> "input.txt"
-    (ck/dataframe)
-    (ck/set-parser "salary" #(Long/parseLong %))
-    (ck/set-parser "age" #(Long/parseLong %))
-    (dtj/print))
+(-> prices
+    (dt :by [:sym] :within-order [(asc :date)]
+        :set {:ret #dt/e (- (win/ratio :price) 1)})
+    (dt :by [:sym] :agg {:mean-ret #dt/e (mn :ret) :vol #dt/e (sd :ret)})
+    (dt :order-by [(desc :mean-ret)]))
 ```
 
-`input.txt`:
+```text
+_unnamed [2 3]:
 
-```
-age, name, salary
-31, a, 200
-25, b, 500
-18, c, 200
-18, c, 370
-25, d, 3500
+| :sym |  :mean-ret |       :vol |
+|------|-----------:|-----------:|
+| AAPL | 0.01369776 | 0.04032943 |
+| MSFT | 0.01165150 | 0.01888828 |
 ```
 
-Sample output:
+## Runtime Values
 
-<pre>
-|            age |             name |         salary |
-|----------------+------------------+----------------|
-| java.lang.Long | java.lang.String | java.lang.Long |
-|             31 |                a |            200 |
-|             25 |                b |            500 |
-|             18 |                c |            200 |
-|             18 |                c |            370 |
-|             25 |                d |           3500 |
-</pre>
-
-**Example 3**
-
-- Sort the dataset
+`#dt/e` cannot see local variables. Data-forms can:
 
 ```clojure
-(let [input "input.txt"
-      output "output.txt"]
-   (op-ck/external-sort input output #(- (Integer/parseInt (.get %1 "salary")) (Integer/parseInt (.get %2 "salary")))))
+(let [ticker "MSFT" lo 199]
+  (dt prices :where [:and [:= :sym ticker] [:> :price lo]]))
 ```
 
-`input.txt`:
+```text
+_unnamed [3 4]:
 
-```
-age,name,salary
-31,a,200
-25,b,500
-18,c,200
-18,c,370
-25,d,3500
-```
-
-`output.txt`:
-
-```
-31,a,200
-18,c,370
-25,b,500
-25,d,3500
+|      :date | :sym | :price | :volume |
+|------------|------|-------:|--------:|
+| 2024-01-02 | MSFT |  200.0 |     900 |
+| 2024-01-04 | MSFT |  202.0 |    1000 |
+| 2024-01-05 | MSFT |  207.0 |    1300 |
 ```
 
-**Example 4**
-
-- Select rows with `salary` > 300, `age` < 20
+A whole query can be a single map:
 
 ```clojure
-(-> data
-    (dtj/dataset)
-    (op-ck/where {:where [[:salary #(< 300 %)] [:age #(> 20 %)]]})
-    (dtj/print))
+(dt prices {:where [:> :price 100] :by [:sym] :agg {:n [:nrow]}})
 ```
 
-Sample output:
+```text
+_unnamed [2 2]:
 
-<pre>
-|            age |             name |         salary |
-|----------------+------------------+----------------|
-| java.lang.Long | java.lang.String | java.lang.Long |
-|             18 |                c |            370 |
-</pre>
+| :sym | :n |
+|------|---:|
+| AAPL |  2 |
+| MSFT |  4 |
+```
 
-</div>
-<div class="tab-pane fade" id="pills-geni" role="tabpanel" aria-labelledby="pills-geni-tab">
-    
-**Example 1**
+## Joins
 
-- Select rows with `salary` > 300, `age` < 20
+Add each symbol's sector, then average prices by sector. `:validate :m:1` checks that each symbol appears only once in `sectors`:
 
 ```clojure
-(-> data
-    (dtj/dataset)
-    (dtj/query [[:salary (g/< (g/lit 300) :salary)] [:age (g/> (g/lit 20) :age)]] [])
-    (dtj/print))
+(require '[datajure.join :refer [join]])
+
+(def sectors
+  (ds/->dataset {:sym    ["AAPL" "MSFT"]
+                 :sector ["Hardware" "Software"]}))
+
+(-> (join prices sectors :on :sym :how :left :validate :m:1)
+    (dt :by [:sector] :agg {:avg-price #dt/e (mn :price)}))
 ```
 
-Sample output:
+```text
+_unnamed [2 2]:
 
-<pre>
-+---+----+------+
-|age|name|salary|
-+---+----+------+
-|18 |c   |370   |
-+---+----+------+
-</pre>
+|  :sector | :avg-price |
+|----------|-----------:|
+| Hardware |     101.25 |
+| Software |     201.75 |
+```
 
-**Example 2**
-
-- Group rows by `age` with sum of `salary` > 1000
-- Show `age` and sum of `salary`
+An as-of join gives each trade the latest quote for the same symbol at or before the trade's time:
 
 ```clojure
-(-> data
-    (dtj/dataset)
-    (dtj/query [[:sum :salary (g/< (g/lit 1000) (keyword "sum(salary)"))]] [:age :sum :salary] [:group-by :age])
-    (dtj/print))
+(def trades (ds/->dataset {:sym  ["AAPL" "AAPL" "MSFT"]
+                           :time [10 25 30]
+                           :qty  [100 50 75]}))
+
+(def quotes (ds/->dataset {:sym  ["AAPL" "AAPL" "AAPL" "MSFT"]
+                           :time [5 20 30 28]
+                           :bid  [99.5 100.5 101.0 201.0]}))
+
+(join trades quotes :on [:sym :time] :how :asof)
 ```
 
-Sample output:
+```text
+_unnamed [3 4]:
 
-<pre>
-+---+-----------+
-|age|sum(salary)|
-+---+-----------+
-|25 |4000       |
-+---+-----------+
-</pre>
+| :sym | :time | :qty |  :bid |
+|------|------:|-----:|------:|
+| AAPL |    10 |  100 |  99.5 |
+| AAPL |    25 |   50 | 100.5 |
+| MSFT |    30 |   75 | 201.0 |
+```
 
-**Example 3**
+## Reshaping
 
-- Group rows by `age`
-- Show `age`, sum of `salary` and standard deviation of `salary`
-- Sort by standard deviation of `salary`
+`cast` turns long data into wide, one column per symbol:
 
 ```clojure
-(-> data
-    (dtj/dataset)
-    (dtj/query [] [:age :sum :salary :sd :salary] [:group-by :age :sort-by :sd :salary])
-    (dtj/print))
+(require '[datajure.reshape :as reshape])
+
+(reshape/cast prices {:id [:date] :from :sym :value :price})
 ```
 
-Sample output:
+```text
+_unnamed [4 3]:
 
-<pre>
-+---+-----------+-------------------+
-|age|sum(salary)|stddev_samp(salary)|
-+---+-----------+-------------------+
-|31 |200        |null               |
-|18 |570        |120.20815280171308 |
-|25 |4000       |2121.3203435596424 |
-+---+-----------+-------------------+
-</pre>
+|      :date | :AAPL | :MSFT |
+|------------|------:|------:|
+| 2024-01-02 | 100.0 | 200.0 |
+| 2024-01-03 | 102.0 | 198.0 |
+| 2024-01-04 |  99.0 | 202.0 |
+| 2024-01-05 | 104.0 | 207.0 |
+```
 
-**Example 4**
+## Errors
 
-- Group rows by `age` and `name`
-- Show `age`, `name` and sum of `salary`
-- Sort by sum of `salary`
+Mistakes are reported as `ex-info` exceptions with a `:dt/error` key and, where possible, a suggestion. A misspelled column:
 
 ```clojure
-(-> data
-    (dtj/dataset)
-    (dtj/query [] [:age :name :sum :salary] [:group-by :age :name :sort-by :sum :salary])
-    (dtj/print))
+(dt prices :set {:value #dt/e (* :prcie :volume)})
 ```
 
-Sample output:
+```text
+Unknown column(s) #{:prcie} in :set :value expression
+#:dt{:error :unknown-column, :columns #{:prcie}, :context ":set :value", :available [:date :price :sym :volume], :closest {:prcie [:price]}}
+```
 
-<pre>
-+---+----+-----------+
-|age|name|sum(salary)|
-+---+----+-----------+
-|31 |a   |200        |
-|25 |b   |500        |
-|18 |c   |570        |
-|25 |d   |3500       |
-+---+----+-----------+
-</pre>
-
-**Example 5**
-
-- Select rows with `salary` > 0, `age` < 24
-- Sort by `salary`
+A misspelled keyword:
 
 ```clojure
-(-> data
-    (dtj/dataset)
-    (dtj/query [[:salary (g/< (g/lit 0) :salary)] [:age (g/< (g/lit 24) :age)]] [] [:sort-by :salary])
-    (dtj/print))
+(dt prices :wehre #dt/e (> :price 100))
 ```
 
-Sample output:
+```text
+Unknown dt query key(s) [:wehre]. Did you mean: :wehre -> :where? Supported: [:agg :by :off-heap :order-by :select :set :take :where :within-order].
+```
 
-<pre>
-+---+----+------+
-|age|name|salary|
-+---+----+------+
-|31 |a   |200   |
-|25 |b   |500   |
-|25 |d   |3500  |
-+---+----+------+
-</pre>
-
-**Example 6**
-
-- Select rows with sum of `salary` > 0 (after grouping), `age` > 0
-- Group rows by `name` and `age`, show `name`, `age`, `salary` (of the first record in the group), sum of `salary` and standard deviation of `salary`
-- Sort by sum of `salary`
+A map-form `:set` whose columns refer to each other:
 
 ```clojure
-(-> data
-    (dtj/dataset)
-    (dtj/query [[:sum :salary (g/< (g/lit 0) (keyword "sum(salary)"))] [:age (g/< (g/lit 0) :age)]] [:name :age :salary :sum :salary :sd :salary] [:group-by :name :age :sort-by :sum :salary])
-    (dtj/print))
+(dt prices :set {:value #dt/e (* :price :volume)
+                 :big?  #dt/e (> :value 200000)})
 ```
 
-Sample output:
-
-<pre>
-+----+---+-------------+-----------+-------------------+
-|name|age|first(salary)|sum(salary)|stddev_samp(salary)|
-+----+---+-------------+-----------+-------------------+
-|a   |31 |200          |200        |null               |
-|b   |25 |500          |500        |null               |
-|c   |18 |200          |570        |120.20815280171308 |
-|d   |25 |3500         |3500       |null               |
-+----+---+-------------+-----------+-------------------+
-</pre>
-
-</div>
-</div>
+```text
+In map-form :set, column :big? references #{:value}, which are being derived in the same map. Map semantics are simultaneous — use vector-of-pairs [[:col1 expr1] [:col2 expr2]] for sequential derivation.
+```
