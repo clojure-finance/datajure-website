@@ -116,6 +116,11 @@
 
 (dt prices :set {:value value})
 (dt prices :by [:sym] :agg {:avg-value #dt/e (mn value)})
+</code></pre><p>This works for window functions too, which build a shared vocabulary of returns and other time-series measures:</p><pre><code class="clojure">(def ret     #dt/e (- (win/ratio :price) 1))
+(def log-ret #dt/e (log (+ 1 ret)))
+
+(dt prices :by [:sym] :within-order [(asc :date)]
+    :set {:ret ret :log-ret log-ret})
 </code></pre><h2 id="selecting-columns">Selecting Columns</h2><p><code>:select</code> accepts several forms:</p><pre><code class="clojure">(dt prices :select [:sym :price])               ;; these columns
 (dt prices :select [:not :volume])              ;; all but these
 (dt prices :select #"p.*")                      ;; names matching a regex
@@ -133,9 +138,10 @@
 
 (reshape/cast prices {:id [:date] :from :sym :value :price})
 (reshape/melt prices {:id [:date :sym] :measure [:price :volume]})
-</code></pre><h2 id="other-namespaces">Other Namespaces</h2><table><thead><tr><th>Namespace</th><th>Contents</th></tr></thead><tbody><tr><td><code>datajure.io</code></td><td><code>read</code>, <code>write</code> and <code>read-seq</code> for CSV, TSV, JSON, JSON Lines, Nippy, Parquet, Arrow and Excel</td></tr><tr><td><code>datajure.util</code></td><td><code>describe</code>, <code>clean-column-names</code>, <code>distinct-rows</code>, <code>mark-duplicates</code>, <code>coerce-columns</code>, <code>blank-&gt;nil</code>, <code>parse-numeric</code></td></tr><tr><td><code>datajure.index</code></td><td><code>index-by</code> and <code>lookup</code> for repeated lookups by key</td></tr><tr><td><code>datajure.concise</code></td><td>Short aliases (<code>mn</code>, <code>sm</code>, <code>N</code>, …) for use outside <code>#dt/e</code></td></tr><tr><td><code>datajure.clay</code>, <code>datajure.clerk</code></td><td>Notebook viewers</td></tr><tr><td><code>datajure.nrepl</code></td><td>nREPL middleware that binds <code>*dt*</code> to the last result</td></tr></tbody></table><h2 id="errors">Errors</h2><p>Errors are <code>ex-info</code> exceptions whose data has a <code>:dt/error</code> key for handling them in code. Many include a suggestion, such as the closest column names for a misspelled column (under <code>:closest</code>) or the intended keyword for a misspelled <code>dt</code> keyword:</p><pre><code class="clojure">(dt prices :set {:value #dt/e (* :prcie :volume)})
+</code></pre><h2 id="other-namespaces">Other Namespaces</h2><table><thead><tr><th>Namespace</th><th>Contents</th></tr></thead><tbody><tr><td><code>datajure.io</code></td><td><code>read</code>, <code>write</code> and <code>read-seq</code> for CSV, TSV, JSON, JSON Lines, Nippy, Parquet, Arrow and Excel</td></tr><tr><td><code>datajure.util</code></td><td><code>describe</code>, <code>clean-column-names</code>, <code>distinct-rows</code>, <code>mark-duplicates</code>, <code>coerce-columns</code>, <code>blank-&gt;nil</code>, <code>parse-numeric</code></td></tr><tr><td><code>datajure.index</code></td><td><code>index-by</code> and <code>lookup</code> for repeated lookups by key</td></tr><tr><td><code>datajure.concise</code></td><td>Short aliases (<code>mn</code>, <code>sm</code>, <code>N</code>, …) for use outside <code>#dt/e</code></td></tr><tr><td><code>datajure.clay</code>, <code>datajure.clerk</code></td><td>Notebook viewers</td></tr><tr><td><code>datajure.nrepl</code></td><td>nREPL middleware that binds <code>*dt*</code> to the last result</td></tr></tbody></table><h2 id="errors">Errors</h2><p>Errors are <code>ex-info</code> exceptions whose data has a <code>:dt/error</code> key for handling them in code. Many suggest a fix, such as the closest column name for a misspelled column or the intended keyword for a misspelled <code>dt</code> keyword:</p><pre><code class="clojure">(dt prices :set {:value #dt/e (* :prcie :volume)})
 ;; Unknown column(s) #{:prcie} in :set :value expression
-;; ex-data includes :dt/error :unknown-column, :closest {:prcie [:price]}
+;; Did you mean: :price (edit distance 1)
+;; Available: :date :price :sym :volume
 </code></pre><p>See the <a href="/datajure-website/pages-output/examples/#errors">examples</a> for more.</p>
 
     

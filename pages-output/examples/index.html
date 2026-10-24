@@ -5,9 +5,9 @@
         <title>Datajure: Examples</title>
         
 
-<meta name="description" content="These examples walk through common operations on a small dataset of daily prices. Every output below comes from running the code with Datajure 2.7.8. The docs explain the concepts.Sample Data">
+<meta name="description" content="These examples walk through common operations on a small dataset of daily prices. Every output below comes from running the code with Datajure 2.7.9. The docs explain the concepts.Sample Data">
 
-<meta property="og:description" content="These examples walk through common operations on a small dataset of daily prices. Every output below comes from running the code with Datajure 2.7.8. The docs explain the concepts.Sample Data">
+<meta property="og:description" content="These examples walk through common operations on a small dataset of daily prices. Every output below comes from running the code with Datajure 2.7.9. The docs explain the concepts.Sample Data">
 
 <meta property="og:url" content="https://clojure-finance.github.io/datajure-website/pages-output/examples/" />
 <meta property="og:title" content="Examples" />
@@ -76,8 +76,8 @@
     <div id="page-header">
         <h1>Examples</h1>
     </div>
-    <ul class="toc"><li><a href="#sample-data">Sample Data</a></li><li><a href="#filtering-rows">Filtering Rows</a></li><li><a href="#adding-columns">Adding Columns</a></li><li><a href="#grouping-and-aggregating">Grouping and Aggregating</a></li><li><a href="#sorting-limiting-and-selecting">Sorting, Limiting and Selecting</a></li><li><a href="#window-functions">Window Functions</a></li><li><a href="#multi-step-pipelines">Multi-Step Pipelines</a></li><li><a href="#runtime-values">Runtime Values</a></li><li><a href="#joins">Joins</a></li><li><a href="#reshaping">Reshaping</a></li><li><a href="#errors">Errors</a></li></ul>
-    <p>These examples walk through common operations on a small dataset of daily prices. Every output below comes from running the code with Datajure 2.7.8. The <a href="/datajure-website/pages-output/docs/">docs</a> explain the concepts.</p><h2 id="sample-data">Sample Data</h2><pre><code class="clojure">(require '[datajure.core :refer [dt dt1 nrow asc desc]]
+    <ul class="toc"><li><a href="#sample-data">Sample Data</a></li><li><a href="#filtering-rows">Filtering Rows</a></li><li><a href="#adding-columns">Adding Columns</a></li><li><a href="#grouping-and-aggregating">Grouping and Aggregating</a></li><li><a href="#sorting-limiting-and-selecting">Sorting, Limiting and Selecting</a></li><li><a href="#window-functions">Window Functions</a></li><li><a href="#multi-step-pipelines">Multi-Step Pipelines</a></li><li><a href="#reusable-expressions">Reusable Expressions</a></li><li><a href="#runtime-values">Runtime Values</a></li><li><a href="#joins">Joins</a></li><li><a href="#reshaping">Reshaping</a></li><li><a href="#errors">Errors</a></li></ul>
+    <p>These examples walk through common operations on a small dataset of daily prices. Every output below comes from running the code with Datajure 2.7.9. The <a href="/datajure-website/pages-output/docs/">docs</a> explain the concepts.</p><h2 id="sample-data">Sample Data</h2><pre><code class="clojure">(require '[datajure.core :refer [dt dt1 nrow asc desc]]
          '[tech.v3.dataset :as ds])
 
 (def prices
@@ -276,6 +276,23 @@
 |------|-----------:|-----------:|
 | AAPL | 0.01369776 | 0.04032943 |
 | MSFT | 0.01165150 | 0.01888828 |
+</code></pre><h2 id="reusable-expressions">Reusable Expressions</h2><p>Store expressions in vars and build on them. Here <code>log-ret</code> uses <code>ret</code>, and both are computed within each symbol:</p><pre><code class="clojure">(def ret     #dt/e (- (win/ratio :price) 1))
+(def log-ret #dt/e (log (+ 1 ret)))
+
+(dt prices :by [:sym] :within-order [(asc :date)]
+    :set {:ret ret :log-ret log-ret})
+</code></pre><pre><code class="text">_unnamed [8 6]:
+
+|      :date | :sym | :price | :volume |        :ret |    :log-ret |
+|------------|------|-------:|--------:|------------:|------------:|
+| 2024-01-02 | AAPL |  100.0 |    1200 |             |             |
+| 2024-01-03 | AAPL |  102.0 |    1500 |  0.02000000 |  0.01980263 |
+| 2024-01-04 | AAPL |   99.0 |         | -0.02941176 | -0.02985296 |
+| 2024-01-05 | AAPL |  104.0 |    1800 |  0.05050505 |  0.04927105 |
+| 2024-01-02 | MSFT |  200.0 |     900 |             |             |
+| 2024-01-03 | MSFT |  198.0 |    1100 | -0.01000000 | -0.01005034 |
+| 2024-01-04 | MSFT |  202.0 |    1000 |  0.02020202 |  0.02000067 |
+| 2024-01-05 | MSFT |  207.0 |    1300 |  0.02475248 |  0.02445110 |
 </code></pre><h2 id="runtime-values">Runtime Values</h2><p><code>#dt/e</code> cannot see local variables. Data-forms can:</p><pre><code class="clojure">(let [ticker "MSFT" lo 199]
   (dt prices :where [:and [:= :sym ticker] [:&gt; :price lo]]))
 </code></pre><pre><code class="text">_unnamed [3 4]:
@@ -335,7 +352,8 @@
 | 2024-01-05 | 104.0 | 207.0 |
 </code></pre><h2 id="errors">Errors</h2><p>Mistakes are reported as <code>ex-info</code> exceptions with a <code>:dt/error</code> key and, where possible, a suggestion. A misspelled column:</p><pre><code class="clojure">(dt prices :set {:value #dt/e (* :prcie :volume)})
 </code></pre><pre><code class="text">Unknown column(s) #{:prcie} in :set :value expression
-#:dt{:error :unknown-column, :columns #{:prcie}, :context ":set :value", :available [:date :price :sym :volume], :closest {:prcie [:price]}}
+Did you mean: :price (edit distance 1)
+Available: :date :price :sym :volume
 </code></pre><p>A misspelled keyword:</p><pre><code class="clojure">(dt prices :wehre #dt/e (&gt; :price 100))
 </code></pre><pre><code class="text">Unknown dt query key(s) [:wehre]. Did you mean: :wehre -&gt; :where? Supported: [:agg :by :off-heap :order-by :select :set :take :where :within-order].
 </code></pre><p>A map-form <code>:set</code> whose columns refer to each other:</p><pre><code class="clojure">(dt prices :set {:value #dt/e (* :price :volume)
