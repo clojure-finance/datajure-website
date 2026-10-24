@@ -8,10 +8,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v7
       # Deploy hexo blog website.
       - name: Deploy
-        uses: clojure-finance/cryogen-action@v3.0.1
+        uses: clojure-finance/cryogen-action@v3
         with:
           folder: public/datajure-website
           java-version: '11' # optional
