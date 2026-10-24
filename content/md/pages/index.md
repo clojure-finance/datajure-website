@@ -49,7 +49,7 @@ Datajure borrows from whichever library got a given idea right:
 
 ## Datajure v1
 
-Datajure v2 (March 2026) is a rewrite. Datajure v1 (1.x) was a query syntax that routed to several backends: tech.ml.dataset, tablecloth, Clojask and Geni. Its code is on the [`v1` branch](https://github.com/clojure-finance/datajure/tree/v1), its documentation is in [this site's history](https://github.com/clojure-finance/datajure-website/tree/559361a/content/md/pages), and the [posts](/archives/) describe its design. Thanks to [YANG Ming-Tian](https://github.com/skylee03) for the original v1 implementation.
+Datajure v2 (March 2026) is a rewrite. Datajure v1 (1.x) was a query syntax that routed to several backends: tech.ml.dataset, tablecloth, Clojask and Geni. Its code is on the [`v1` branch](https://github.com/clojure-finance/datajure/tree/v1), its documentation is in [this site's history](https://github.com/clojure-finance/datajure-website/tree/559361a/content/md/pages), and [posts](https://github.com/clojure-finance/datajure-website/tree/559361a/content/md/posts) from that time describe its design. Thanks to [YANG Ming-Tian](https://github.com/skylee03) for the original v1 implementation.
 
 ## Report Bugs
 
