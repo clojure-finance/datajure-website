@@ -1,4 +1,5 @@
 {:title "Examples"
+ :subtitle "Common tasks on one small dataset of daily prices, each with its output."
  :layout :page
  :toc :ul
  :page-index 3

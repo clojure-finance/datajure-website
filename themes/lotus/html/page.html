@@ -3,7 +3,6 @@
 {% block meta %}
 {% if page.description %}
 <meta name="description" content="{{page.description}}">
-{% comment %} OpenGraph tags {% endcomment %}
 <meta property="og:description" content="{{page.description}}">
 {% endif %}
 <meta property="og:url" content="{{site-url}}{{uri}}" />
@@ -11,16 +10,27 @@
 <meta property="og:type" content="article" />
 {% endblock %}
 {% block content %}
-<div id="custom-page">
-    <div id="page-header">
+<div class="page-hero">
+    <div class="page-hero-inner">
         <h1>{{page.title}}</h1>
+        {% if page.subtitle %}<p class="page-lead">{{page.subtitle}}</p>{% endif %}
     </div>
-    {% if page.toc %}{{page.toc|safe}}{% endif %}
-    {{page.content|safe}}
+</div>
+<div class="doc-layout{% if page.toc %} has-toc{% endif %}">
+    {% if page.toc %}
+    <aside class="toc-side">
+        <details class="toc-box" open>
+            <summary>On this page</summary>
+            <nav aria-label="On this page">{{page.toc|safe}}</nav>
+        </details>
+    </aside>
+    {% endif %}
+    <article class="prose">
+        {{page.content|safe}}
 
-    {% with prev=page.prev next=page.next%}
-    {% include "/html/prev-next.html" %}
-    {% endwith %}
-
+        {% with prev=page.prev next=page.next %}
+        {% include "/html/prev-next.html" %}
+        {% endwith %}
+    </article>
 </div>
 {% endblock %}

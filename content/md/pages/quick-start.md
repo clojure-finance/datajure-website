@@ -1,4 +1,5 @@
 {:title "Quick Start"
+ :subtitle "Install Datajure, build a small dataset and run your first queries."
  :layout :page
  :toc :ul
  :page-index 1
@@ -46,6 +47,23 @@ Datajure works on [tech.ml.dataset](https://github.com/techascent/tech.ml.datase
     :volume [1200 1500 nil 1800 900 1100 1000 1300]}))
 ```
 
+```text
+_unnamed [8 4]:
+
+|      :date | :sym | :price | :volume |
+|------------|------|-------:|--------:|
+| 2024-01-02 | AAPL |  100.0 |    1200 |
+| 2024-01-03 | AAPL |  102.0 |    1500 |
+| 2024-01-04 | AAPL |   99.0 |         |
+| 2024-01-05 | AAPL |  104.0 |    1800 |
+| 2024-01-02 | MSFT |  200.0 |     900 |
+| 2024-01-03 | MSFT |  198.0 |    1100 |
+| 2024-01-04 | MSFT |  202.0 |    1000 |
+| 2024-01-05 | MSFT |  207.0 |    1300 |
+```
+
+That is two stocks over four trading days. The `nil` is a missing value: there is no AAPL volume for 2024-01-04. The rest of this site uses this dataset.
+
 Then query it with `dt`. Average price and total volume per symbol:
 
 ```clojure
@@ -65,7 +83,34 @@ _unnamed [2 4]:
 | MSFT |  4 |     201.75 |     4300.0 |
 ```
 
-`#dt/e` is a reader tag: inside it, bare keywords such as `:price` refer to columns, and `mn` and `sm` are the mean and sum. The missing volume is skipped. The result is an ordinary dataset, so it can be passed to the next `dt` call, to tech.ml.dataset, or to tablecloth.
+Reading the query part by part:
+
+- `prices` is the dataset to query.
+- `:by [:sym]` splits the rows into one group per symbol.
+- `:agg` collapses each group into one row. Its map names the new columns and says how to compute each one: `nrow` counts the rows, `mn` is the mean and `sm` the sum.
+- `#dt/e` marks an expression. Inside it, bare keywords such as `:price` refer to columns.
+
+The missing volume is skipped by the sum. The result is an ordinary dataset, so it can be passed to the next `dt` call, to tech.ml.dataset, or to tablecloth.
+
+Other keywords filter and sort. The two highest prices with a volume above 1000:
+
+```clojure
+(dt prices
+    :where    #dt/e (> :volume 1000)
+    :order-by [(desc :price)]
+    :take     2)
+```
+
+```text
+_unnamed [2 4]:
+
+|      :date | :sym | :price | :volume |
+|------------|------|-------:|--------:|
+| 2024-01-05 | MSFT |  207.0 |    1300 |
+| 2024-01-03 | MSFT |  198.0 |    1100 |
+```
+
+The row with the missing volume is dropped by `:where`, because a comparison with a missing value is false. The [docs](/pages-output/docs/) explain every keyword.
 
 The first time a query does something worth knowing about, such as aggregating over the whole dataset, Datajure prints a one-time `[datajure] NOTE:` line explaining it.
 

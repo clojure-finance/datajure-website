@@ -1,16 +1,88 @@
 {% extends "/html/base.html" %}
+{% block title %}{{title}}: data manipulation for Clojure{% endblock %}
 {% block content %}
-<div id="post">
-    {% include "/html/post-content.html" %}
-    {% if disqus? %}
-    <div id="comments">
-        <a href="{{post.uri}}#disqus_thread">View Comments</a>
+<section class="hero">
+    <div class="hero-inner">
+        <div class="hero-text">
+            <p class="eyebrow">Clojure &middot; tech.ml.dataset &middot; Apache 2.0</p>
+            <h1>Ask questions of your data with <span class="accent">one function</span>.</h1>
+            <p class="hero-lead">
+                Datajure gives Clojure a compact query language for tables.
+                Filter rows, add columns, group, aggregate and run window functions
+                with a single function, <code>dt</code>, and a few keywords.
+                Every result is an ordinary dataset.
+            </p>
+            <div class="cta">
+                <a class="btn btn-primary" href="{{index-uri}}pages-output/quick-start/">Get started</a>
+                <a class="btn btn-ghost" href="{{index-uri}}pages-output/docs/">Read the docs</a>
+            </div>
+            <div class="badges">
+                <a href="https://clojars.org/com.github.clojure-finance/datajure"><img src="https://img.shields.io/clojars/v/com.github.clojure-finance/datajure.svg" alt="Latest version on Clojars"></a>
+                <a href="https://github.com/clojure-finance/datajure/actions/workflows/tests.yml"><img src="https://github.com/clojure-finance/datajure/actions/workflows/tests.yml/badge.svg" alt="CI status"></a>
+                <a href="https://cljdoc.org/d/com.github.clojure-finance/datajure/CURRENT"><img src="https://cljdoc.org/badge/com.github.clojure-finance/datajure" alt="cljdoc"></a>
+            </div>
+        </div>
+        <div class="hero-demo" aria-label="Example query and its result">
+            <div class="window">
+                <div class="window-bar"><span></span><span></span><span></span><em>REPL</em></div>
+<pre class="hero-code"><code class="language-clojure">(dt prices
+    :where #dt/e (&gt; :volume 1000)  ; busy days only
+    :by    [:sym]                  ; one group per stock
+    :agg   {:days      nrow        ; count the rows
+            :avg-price #dt/e (mn :price)})</code></pre>
+                <div class="window-out">
+                    <span class="out-label">Result</span>
+                    <table class="mini-result">
+                        <thead><tr><th>:sym</th><th>:days</th><th>:avg-price</th></tr></thead>
+                        <tbody>
+                            <tr><td>AAPL</td><td>3</td><td>102.0</td></tr>
+                            <tr><td>MSFT</td><td>2</td><td>202.5</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
-    {% endif %}
+</section>
 
-    {% with prev=post.prev next=post.next%}
-    {% include "/html/prev-next.html" %}
-    {% endwith %}
+<section class="features" aria-label="Features">
+    <div class="features-inner">
+        <div class="feature">
+            <div class="feature-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16M7 12h10M10 19h4"/></svg></div>
+            <h3>One query function</h3>
+            <p><code>:where</code>, <code>:set</code>, <code>:agg</code>, <code>:by</code> and a few more keywords cover filtering, new columns, grouping and sorting.</p>
+        </div>
+        <div class="feature">
+            <div class="feature-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 17l5-6 4 3 6-8 3 3"/><path d="M3 21h18"/></svg></div>
+            <h3>Made for time series</h3>
+            <p>Returns, lags, moving averages, fills, bars, as-of and window joins, inspired by q/kdb+.</p>
+        </div>
+        <div class="feature">
+            <div class="feature-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 4H6a2 2 0 0 0-2 2v4l-2 2 2 2v4a2 2 0 0 0 2 2h2M16 4h2a2 2 0 0 1 2 2v4l2 2-2 2v4a2 2 0 0 1-2 2h-2"/></svg></div>
+            <h3>Expressions are values</h3>
+            <p>Write <code>#dt/e (* :price :volume)</code> once, store it in a var and reuse it across queries.</p>
+        </div>
+        <div class="feature">
+            <div class="feature-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 12h8"/></svg></div>
+            <h3>Safe with missing data</h3>
+            <p>Comparisons with a missing value are false and aggregations skip it, so blank cells don&rsquo;t derail a query.</p>
+        </div>
+        <div class="feature">
+            <div class="feature-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v4M12 17v4M4.9 4.9l2.8 2.8M16.3 16.3l2.8 2.8M3 12h4M17 12h4"/></svg></div>
+            <h3>Fast, not magic</h3>
+            <p>Expressions compile to vectorized column operations on tech.ml.dataset. Datajure adds syntax, not a new engine.</p>
+        </div>
+        <div class="feature">
+            <div class="feature-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8v5M12 16.5v.5"/><path d="M10.3 3.9 2.4 18a2 2 0 0 0 1.7 3h15.8a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg></div>
+            <h3>Errors that help</h3>
+            <p>A typo such as <code>:prcie</code> is caught before the query runs, with a suggestion: <em>did you mean <code>:price</code>?</em></p>
+        </div>
+    </div>
+</section>
 
+<div class="home-body">
+    <article class="prose">
+        {{page.content|safe}}
+    </article>
 </div>
 {% endblock %}

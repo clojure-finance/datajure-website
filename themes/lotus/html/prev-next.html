@@ -1,12 +1,10 @@
-<div id="prev-next">
+<nav class="pager" aria-label="Previous and next page">
     {% if prev %}
-    <a class="prev" href="{{prev.uri}}"><i class="fa-solid fa-circle-left"></i><div class="nav-text">{{prev.title}}</div></a>
+    <a class="pager-link prev" href="{{prev.uri}}"><span class="pager-label">&larr; Previous</span><span class="pager-title">{{prev.title}}</span></a>
     {% else %}
-    <div class="prev"></div>
+    <span></span>
     {% endif %}
     {% if next %}
-    <a class="next" href="{{next.uri}}"><div class="nav-text"">{{next.title}}</div><i class="fa-solid fa-circle-right"></i></a>
-    {% else %}
-    <div class="next"></div>
+    <a class="pager-link next" href="{{next.uri}}"><span class="pager-label">Next &rarr;</span><span class="pager-title">{{next.title}}</span></a>
     {% endif %}
-</div>
+</nav>

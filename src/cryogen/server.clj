@@ -1,5 +1,5 @@
 (ns cryogen.server
-  (:require 
+  (:require
    [clojure.string :as string]
    [compojure.core :refer [GET defroutes]]
    [compojure.route :as route]
@@ -10,15 +10,7 @@
    [cryogen-core.plugins :refer [load-plugins]]
    [cryogen-core.compiler :refer [compile-assets-timed]]
    [cryogen-core.config :refer [resolve-config]]
-   [cryogen-core.io :refer [path]]
-   [net.cgrand.enlive-html :as html]))
-
-(cryogen-core.compiler/compile-assets-timed
- {:update-article-fn
-  (fn update-article [{:keys [slug] :as article} config]
-    (if slug
-      (assoc article :uri (str "/" slug "/"))
-      article))})
+   [cryogen-core.io :refer [path]]))
 
 (defn init [fast?]
   (println "Init: fast compile enabled = " (boolean fast?))
@@ -26,10 +18,10 @@
   (compile-assets-timed)
   (let [ignored-files (-> (resolve-config) :ignored-files)]
     (run!
-      #(if fast?
-         (start-watcher-for-changes! % ignored-files compile-assets-timed {})
-         (start-watcher! % ignored-files compile-assets-timed))
-      ["content" "themes"])))
+     #(if fast?
+        (start-watcher-for-changes! % ignored-files compile-assets-timed {})
+        (start-watcher! % ignored-files compile-assets-timed))
+     ["content" "themes"])))
 
 (defn wrap-subdirectories
   [handler]
@@ -71,8 +63,8 @@
   "Entrypoint for running via tools-deps (clojure)"
   [{:keys [fast] :as opts}]
   (ring-server/serve
-    handler
-    (merge {:init (partial init fast)} opts)))
+   handler
+   (merge {:init (partial init fast)} opts)))
 
 (defn -main [& args]
   (serve {:port 3000, :fast ((set args) "fast")}))

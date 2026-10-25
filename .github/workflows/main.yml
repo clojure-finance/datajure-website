@@ -14,7 +14,7 @@ jobs:
         uses: clojure-finance/cryogen-action@v3
         with:
           folder: public/datajure-website
-          java-version: '11' # optional
+          java-version: '21' # optional
           java-distribution: 'liberica' # optional
           branch: gh-pages # optional
           single-commit: yes # optional
