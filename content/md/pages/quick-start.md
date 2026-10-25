@@ -11,13 +11,13 @@ Datajure requires Java 21+ and Clojure 1.12+.
 With the Clojure CLI, add Datajure to `deps.edn`:
 
 ```clojure
-{:deps {com.github.clojure-finance/datajure {:mvn/version "2.7.9"}}}
+{:deps {com.github.clojure-finance/datajure {:mvn/version "2.7.10"}}}
 ```
 
 With Leiningen, add it to `:dependencies` in `project.clj`:
 
 ```clojure
-[com.github.clojure-finance/datajure "2.7.9"]
+[com.github.clojure-finance/datajure "2.7.10"]
 ```
 
 The [Clojars page](https://clojars.org/com.github.clojure-finance/datajure) always shows the latest version, and the [changelog](https://github.com/clojure-finance/datajure/blob/main/CHANGELOG.md) lists what changed in each release.
@@ -25,7 +25,7 @@ The [Clojars page](https://clojars.org/com.github.clojure-finance/datajure) alwa
 To try Datajure without creating a project, start a REPL with it on the classpath:
 
 ```bash
-clj -Sdeps '{:deps {com.github.clojure-finance/datajure {:mvn/version "2.7.9"}}}'
+clj -Sdeps '{:deps {com.github.clojure-finance/datajure {:mvn/version "2.7.10"}}}'
 ```
 
 ## A First Query

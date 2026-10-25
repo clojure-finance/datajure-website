@@ -4,7 +4,7 @@
  :page-index 3
  :navbar? true}
 
-These examples walk through common operations on a small dataset of daily prices. Every output below comes from running the code with Datajure 2.7.9. The [docs](/pages-output/docs/) explain the concepts.
+These examples walk through common operations on a small dataset of daily prices. Every output below comes from running the code with Datajure 2.7.10. The [docs](/pages-output/docs/) explain the concepts.
 
 ## Sample Data
 
