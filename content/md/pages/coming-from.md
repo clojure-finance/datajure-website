@@ -170,20 +170,20 @@ The pandas lag and fill rows, and dplyr's `fill`, assume the rows are already so
 
 ### data.table and Polars
 
-| Task | data.table | Polars |
-|---|---|---|
-| Filter rows | `prices[price > 100]` | `prices.filter(pl.col("price") > 100)` |
-| Add a column | `prices[, value := price * volume]` | `prices.with_columns(value=pl.col("price") * pl.col("volume"))` |
-| Summarize by group | `prices[, .(avg = mean(price)), by = sym]` | `prices.group_by("sym").agg(avg=pl.col("price").mean())` |
-| Count rows per group | `prices[, .N, by = sym]` | `prices.group_by("sym").len()` |
-| Previous value within group | `prices[order(date), prev := shift(price), by = sym]` | `prices.with_columns(prev=pl.col("price").shift().over("sym", order_by="date"))` |
-| Top 3 rows | `prices[order(-price)][1:3]` | `prices.top_k(3, by="price")` |
-| As-of join | `quotes[trades, on = .(sym, time), roll = TRUE]` | `trades.join_asof(quotes, on="time", by="sym")` |
-| Long to wide | `dcast(prices, date ~ sym, value.var = "price")` | `prices.pivot(on="sym", index="date", values="price")` |
-| Replace missing values | `prices[is.na(volume), volume := 0L]` | `prices.with_columns(pl.col("volume").fill_null(0))` |
-| Fill forward within group | `prices[, volume := nafill(volume, "locf"), by = sym]` | `prices.with_columns(pl.col("volume").forward_fill().over("sym", order_by="date"))` |
+| Task | data.table | Polars | Datajure |
+|---|---|---|---|
+| Filter rows | `prices[price > 100]` | `prices.filter(pl.col("price") > 100)` | `(dt prices :where #dt/e (> :price 100))` |
+| Add a column | `prices[, value := price * volume]` | `prices.with_columns(value=pl.col("price") * pl.col("volume"))` | `(dt prices :set {:value #dt/e (* :price :volume)})` |
+| Summarize by group | `prices[, .(avg = mean(price)), by = sym]` | `prices.group_by("sym").agg(avg=pl.col("price").mean())` | `(dt prices :by [:sym] :agg {:avg #dt/e (mn :price)})` |
+| Count rows per group | `prices[, .N, by = sym]` | `prices.group_by("sym").len()` | `(dt prices :by [:sym] :agg {:n nrow})` |
+| Previous value within group | `prices[order(date), prev := shift(price), by = sym]` | `prices.with_columns(prev=pl.col("price").shift().over("sym", order_by="date"))` | `(dt prices :by [:sym] :within-order [(asc :date)] :set {:prev #dt/e (win/lag :price 1)})` |
+| Top 3 rows | `prices[order(-price)][1:3]` | `prices.top_k(3, by="price")` | `(dt prices :order-by [(desc :price)] :take 3)` |
+| As-of join | `quotes[trades, on = .(sym, time), roll = TRUE]` | `trades.join_asof(quotes, on="time", by="sym")` | `(join trades quotes :on [:sym :time] :how :asof)` |
+| Long to wide | `dcast(prices, date ~ sym, value.var = "price")` | `prices.pivot(on="sym", index="date", values="price")` | `(reshape/cast prices {:id [:date] :from :sym :value :price})` |
+| Replace missing values | `prices[is.na(volume), volume := 0L]` | `prices.with_columns(pl.col("volume").fill_null(0))` | `(dt prices :set {:volume #dt/e (coalesce :volume 0)})` |
+| Fill forward within group | `prices[, volume := nafill(volume, "locf"), by = sym]` | `prices.with_columns(pl.col("volume").forward_fill().over("sym", order_by="date"))` | `(dt prices :by [:sym] :within-order [(asc :date)] :set {:volume #dt/e (win/fills :volume)})` |
 
-The Datajure versions are the same as in the first table. Note that the data.table `:=` rows change `prices` itself; the Datajure versions return a new dataset instead.
+The data.table `:=` rows change `prices` itself; the Datajure versions return a new dataset instead.
 
 ## Differences Worth Knowing
 
