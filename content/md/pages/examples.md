@@ -5,7 +5,7 @@
  :page-index 3
  :navbar? true}
 
-These examples walk through common operations on a small dataset of daily prices. Every output below comes from running the code with Datajure 2.7.11. The [docs](/pages-output/docs/) explain the concepts.
+These examples walk through common operations on a small dataset of daily prices. Every output below comes from running the code with Datajure 2.7.12. The [docs](/pages-output/docs/) explain the concepts.
 
 ## Sample Data
 
@@ -195,8 +195,8 @@ _unnamed [2 4]:
 
 | :sym | :n | :avg-price | :total-vol |
 |------|---:|-----------:|-----------:|
-| AAPL |  4 |     101.25 |     4500.0 |
-| MSFT |  4 |     201.75 |     4300.0 |
+| AAPL |  4 |     101.25 |       4500 |
+| MSFT |  4 |     201.75 |       4300 |
 ```
 
 Without `:by`, `:agg` summarizes the whole dataset. `dt1` returns that single row as a map:

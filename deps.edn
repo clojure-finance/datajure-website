@@ -19,6 +19,6 @@
            ;; Run the snippets on the pages against this Datajure version and
            ;; compare their printed output: `clojure -M:check content/md/pages/*.md`
            :check {:replace-deps {org.clojure/clojure {:mvn/version "1.12.4"}
-                                  com.github.clojure-finance/datajure {:mvn/version "2.7.11"}}
+                                  com.github.clojure-finance/datajure {:mvn/version "2.7.12"}}
                    :replace-paths []
                    :main-opts ["script/check_pages.clj"]}}}

@@ -12,13 +12,13 @@ Datajure requires Java 21+ and Clojure 1.12+.
 With the Clojure CLI, add Datajure to `deps.edn`:
 
 ```clojure
-{:deps {com.github.clojure-finance/datajure {:mvn/version "2.7.11"}}}
+{:deps {com.github.clojure-finance/datajure {:mvn/version "2.7.12"}}}
 ```
 
 With Leiningen, add it to `:dependencies` in `project.clj`:
 
 ```clojure
-[com.github.clojure-finance/datajure "2.7.11"]
+[com.github.clojure-finance/datajure "2.7.12"]
 ```
 
 The [Clojars page](https://clojars.org/com.github.clojure-finance/datajure) always shows the latest version, and the [changelog](https://github.com/clojure-finance/datajure/blob/main/CHANGELOG.md) lists what changed in each release.
@@ -26,7 +26,7 @@ The [Clojars page](https://clojars.org/com.github.clojure-finance/datajure) alwa
 To try Datajure without creating a project, start a REPL with it on the classpath:
 
 ```bash
-clj -Sdeps '{:deps {com.github.clojure-finance/datajure {:mvn/version "2.7.11"}}}'
+clj -Sdeps '{:deps {com.github.clojure-finance/datajure {:mvn/version "2.7.12"}}}'
 ```
 
 ## A First Query
@@ -79,8 +79,8 @@ _unnamed [2 4]:
 
 | :sym | :n | :avg-price | :total-vol |
 |------|---:|-----------:|-----------:|
-| AAPL |  4 |     101.25 |     4500.0 |
-| MSFT |  4 |     201.75 |     4300.0 |
+| AAPL |  4 |     101.25 |       4500 |
+| MSFT |  4 |     201.75 |       4300 |
 ```
 
 Reading the query part by part:

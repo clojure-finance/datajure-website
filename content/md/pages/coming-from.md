@@ -128,8 +128,8 @@ _unnamed [2 4]:
 
 | :sym | :n | :avg-price | :total-vol |
 |------|---:|-----------:|-----------:|
-| AAPL |  3 |      102.0 |     4500.0 |
-| MSFT |  2 |      202.5 |     2400.0 |
+| AAPL |  3 |      102.0 |       4500 |
+| MSFT |  2 |      202.5 |       2400 |
 ```
 
 All five give the same numbers. The Datajure version reads most like data.table: one call with named parts, where `:where` is data.table's `i`, `:agg` is its `j`, and `:by` is its `by`. The parts can be written in any order, because `dt` always runs them in the same [fixed order](/pages-output/docs/#evaluation-order).
@@ -200,7 +200,7 @@ Each library has its own rules for missing values. Datajure's are:
 ```
 
 ```text
-{:total 8800.0, :n 7, :rows 8}
+{:total 8800, :n 7, :rows 8}
 ```
 
 - **A comparison with a missing value is `false`, not missing.** So `:where #dt/e (> :volume 1200)` drops the missing row, as in every library. But `not` turns that `false` into `true`, so the negated filter *keeps* the missing row. pandas behaves the same way; dplyr, data.table and Polars drop the row, because there the comparison is `NA` or `null`:

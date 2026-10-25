@@ -84,7 +84,7 @@ _unnamed [2 3]:
 | AAPL |  2 |     103.00 |
 ```
 
-`:set` and `:agg` cannot be used in the same call; thread several `dt` calls with `->` instead. `:by` only groups for `:set` or `:agg`: without either it is silently ignored, so `(dt prices :by [:sym])` returns `prices` unchanged. An unknown keyword is an error with a suggestion (`:wehre -> :where`), not silently ignored.
+`:set` and `:agg` cannot be used in the same call; thread several `dt` calls with `->` instead. `:by` only groups for `:set` or `:agg`: without either it is an error (`:by-requires-set-or-agg`), so `(dt prices :by [:sym])` throws instead of returning `prices` unchanged. An unknown keyword is an error with a suggestion (`:wehre -> :where`), not silently ignored.
 
 ### Rows In, Rows Out: `:by` with `:set` or `:agg`
 
@@ -273,7 +273,7 @@ The AAPL volume on 2024-01-04 is missing, so `ct` counts seven volumes and `sm` 
 ```
 
 ```text
-{:rows 8, :with-volume 7, :total-vol 8800.0}
+{:rows 8, :with-volume 7, :total-vol 8800}
 ```
 
 Filling the gap, either with a constant or with the previous value of the same symbol:
