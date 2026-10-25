@@ -2,127 +2,216 @@
 <html lang="en">
     <head>
         <meta charset="utf-8">
-        <title>Datajure: Welcome to Datajure!</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Datajure: data manipulation for Clojure</title>
         
-
-<meta name="description" content="One function. Seven keywords. Two expression modes.">
-
-<meta property="og:description" content="One function. Seven keywords. Two expression modes.">
-
-<meta property="og:url" content="https://clojure-finance.github.io/datajure-website/" />
-<meta property="og:title" content="Welcome to Datajure!" />
-<meta property="og:type" content="article" />
-
-        <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+        <meta name="description" content="Documentation for Datajure, a Clojure data manipulation library built on tech.ml.dataset.">
         
-        <link rel="shortcut icon" href="images/ico/favicon.png">
-        <link href="https://fonts.googleapis.com/css2?family=Fira+Code&family=Titillium+Web:wght@400;700&display=swap" rel="stylesheet">
-        <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@400;700&display=swap" rel="stylesheet">
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-        <link href="/datajure-website/css/normalize.css" rel="stylesheet" type="text/css" />
-        <link href="/datajure-website/css/blog.css" rel="stylesheet" type="text/css" />
-        <link href="/datajure-website/css/lotus-highlightjs.min.css" rel="stylesheet" type="text/css" />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/default.min.css">
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+        <meta name="color-scheme" content="light dark">
+        <script>
+            // Apply the saved light/dark choice before the page paints.
+            try {
+                var t = localStorage.getItem("theme");
+                if (t === "light" || t === "dark") document.documentElement.dataset.theme = t;
+            } catch (e) {}
+        </script>
+        <link rel="icon" type="image/svg+xml" href="/datajure-website/img/favicon.svg">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+        <link href="/datajure-website/css/site.css" rel="stylesheet" type="text/css" />
     </head>
-    <body>
-        <aside id="sidebar">
-            <div id="logo">
-                <a title="Datajure" href="/datajure-website/">
-                    <div class="title-text text desktop-and-tablet-only">
-                        <i class="desktop-and-tablet-only fa fa-table"></i>
-                        <br/><br/>
-                        Datajure
-                    </div>
-                    <div class="title-text text mobile-only">Datajure</div>
+    <body class="is-home">
+        <a class="skip-link" href="#content">Skip to content</a>
+        <header class="topbar">
+            <div class="topbar-inner">
+                <a class="brand" href="/datajure-website/" title="Datajure home">
+                    <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true">
+                        <rect x="2" y="2" width="28" height="28" rx="7" class="bm-bg"/>
+                        <rect x="7" y="8" width="18" height="4" rx="1.5" class="bm-head"/>
+                        <rect x="7" y="14" width="5" height="3" rx="1" class="bm-cell"/>
+                        <rect x="13.5" y="14" width="5" height="3" rx="1" class="bm-cell"/>
+                        <rect x="20" y="14" width="5" height="3" rx="1" class="bm-hot"/>
+                        <rect x="7" y="19" width="5" height="3" rx="1" class="bm-cell"/>
+                        <rect x="13.5" y="19" width="5" height="3" rx="1" class="bm-cell"/>
+                        <rect x="20" y="19" width="5" height="3" rx="1" class="bm-hot"/>
+                    </svg>
+                    <span class="brand-name">Datajure</span>
                 </a>
-            </div> 
-
-            <nav id="sidebar-links">
-                <nav id="menucont">
-                    <ul class="menu">
-                        <li  class="active" ><a title="Home" href="/datajure-website/"><div class="menu-item-text">Home</div></a></li>
-                        
-                        <li >
-                            <a href="/datajure-website/pages-output/quick-start/"><div class="menu-item-text">Quick Start</div></a>
-                        </li>
-                        
-                        <li >
-                            <a href="/datajure-website/pages-output/docs/"><div class="menu-item-text">Docs</div></a>
-                        </li>
-                        
-                        <li >
-                            <a href="/datajure-website/pages-output/examples/"><div class="menu-item-text">Examples</div></a>
-                        </li>
-                        
-                    </ul>
-                </nav>
-
-                <nav id="socialmedia">
+                <nav class="mainnav" aria-label="Main">
                     <ul>
-                        <li><a target="_blank" title="GitHub" href="https://github.com/clojure-finance/datajure" rel="external"><i class="icon fa-brands fa-github"></i></a></li>
+                        
+                        <li><a href="/datajure-website/pages-output/quick-start/">Quick Start</a></li>
+                        
+                        <li><a href="/datajure-website/pages-output/docs/">Docs</a></li>
+                        
+                        <li><a href="/datajure-website/pages-output/examples/">Examples</a></li>
+                        
+                        <li><a href="/datajure-website/pages-output/time-series/">Time Series</a></li>
+                        
+                        <li><a href="/datajure-website/pages-output/coming-from/">From R &amp; Python</a></li>
+                        
                     </ul>
                 </nav>
-            </nav>
-        </aside>
+                <div class="topbar-actions">
+                    <button class="icon-btn" id="theme-toggle" type="button" aria-label="Switch between light and dark mode" title="Light or dark mode">
+                        <svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.5"/><path d="M12 1.5v3M12 19.5v3M1.5 12h3M19.5 12h3M4.6 4.6l2.1 2.1M17.3 17.3l2.1 2.1M4.6 19.4l2.1-2.1M17.3 6.7l2.1-2.1"/></svg>
+                        <svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5a8.5 8.5 0 1 0 10.7 10.7z"/></svg>
+                    </button>
+                    <a class="icon-btn" href="https://github.com/clojure-finance/datajure" title="Datajure on GitHub" aria-label="Datajure on GitHub">
+                        <svg viewBox="0 0 16 16" aria-hidden="true" class="i-fill"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+                    </a>
+                </div>
+            </div>
+        </header>
 
-        <article id="main">
+        <main id="content">
             
-<div id="custom-page">
-    <div id="page-header">
-        <h1>Welcome to Datajure!</h1>
+<section class="hero">
+    <div class="hero-inner">
+        <div class="hero-text">
+            <p class="eyebrow">Clojure &middot; tech.ml.dataset &middot; Apache 2.0</p>
+            <h1>Ask questions of your data with <span class="accent">one function</span>.</h1>
+            <p class="hero-lead">
+                Datajure gives Clojure a compact query language for tables.
+                Filter rows, add columns, group, aggregate and run window functions
+                with a single function, <code>dt</code>, and a few keywords.
+                Every result is an ordinary dataset.
+            </p>
+            <div class="cta">
+                <a class="btn btn-primary" href="/datajure-website/pages-output/quick-start/">Get started</a>
+                <a class="btn btn-ghost" href="/datajure-website/pages-output/docs/">Read the docs</a>
+            </div>
+            <div class="badges">
+                <a href="https://clojars.org/com.github.clojure-finance/datajure"><img src="https://img.shields.io/clojars/v/com.github.clojure-finance/datajure.svg" alt="Latest version on Clojars"></a>
+                <a href="https://github.com/clojure-finance/datajure/actions/workflows/tests.yml"><img src="https://github.com/clojure-finance/datajure/actions/workflows/tests.yml/badge.svg" alt="CI status"></a>
+                <a href="https://cljdoc.org/d/com.github.clojure-finance/datajure/CURRENT"><img src="https://cljdoc.org/badge/com.github.clojure-finance/datajure" alt="cljdoc"></a>
+            </div>
+        </div>
+        <div class="hero-demo" aria-label="Example query and its result">
+            <div class="window">
+                <div class="window-bar"><span></span><span></span><span></span><em>REPL</em></div>
+<pre class="hero-code"><code class="language-clojure">(dt prices
+    :where #dt/e (&gt; :volume 1000)  ; busy days only
+    :by    [:sym]                  ; one group per stock
+    :agg   {:days      nrow        ; count the rows
+            :avg-price #dt/e (mn :price)})</code></pre>
+                <div class="window-out">
+                    <span class="out-label">Result</span>
+                    <table class="mini-result">
+                        <thead><tr><th>:sym</th><th>:days</th><th>:avg-price</th></tr></thead>
+                        <tbody>
+                            <tr><td>AAPL</td><td>3</td><td>102.0</td></tr>
+                            <tr><td>MSFT</td><td>2</td><td>202.5</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
-    
-    <p><a href="https://clojars.org/com.github.clojure-finance/datajure"><img src="https://img.shields.io/clojars/v/com.github.clojure-finance/datajure.svg" alt="Clojars Project" /></a><a href="https://github.com/clojure-finance/datajure/actions/workflows/tests.yml"><img src="https://github.com/clojure-finance/datajure/actions/workflows/tests.yml/badge.svg" alt="CI" /></a><a href="https://cljdoc.org/d/com.github.clojure-finance/datajure/CURRENT"><img src="https://cljdoc.org/badge/com.github.clojure-finance/datajure" alt="cljdoc" /></a></p><p><strong>One function. Seven keywords. Two expression modes.</strong></p><p>Datajure is a Clojure data manipulation library built on <a href="https://github.com/techascent/tech.ml.dataset">tech.ml.dataset</a>, developed at HKU Business School. It provides one composable query function, <code>dt</code>, for filtering, transforming, grouping, and aggregating tabular data.</p><pre><code class="clojure">(require '[datajure.core :refer [dt nrow asc desc]])
+</section>
 
-;; Filter, group, aggregate: one call
-(dt prices
-    :where #dt/e (&gt; :price 100)
-    :by [:sym]
-    :agg {:n nrow :avg-price #dt/e (mn :price)})
+<section class="features" aria-label="Features">
+    <div class="features-inner">
+        <div class="feature">
+            <div class="feature-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16M7 12h10M10 19h4"/></svg></div>
+            <h3>One query function</h3>
+            <p><code>:where</code>, <code>:set</code>, <code>:agg</code>, <code>:by</code> and a few more keywords cover filtering, new columns, grouping and sorting.</p>
+        </div>
+        <div class="feature">
+            <div class="feature-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 17l5-6 4 3 6-8 3 3"/><path d="M3 21h18"/></svg></div>
+            <h3>Made for time series</h3>
+            <p>Returns, lags, moving averages, fills, bars, as-of and window joins, inspired by q/kdb+.</p>
+        </div>
+        <div class="feature">
+            <div class="feature-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 4H6a2 2 0 0 0-2 2v4l-2 2 2 2v4a2 2 0 0 0 2 2h2M16 4h2a2 2 0 0 1 2 2v4l2 2-2 2v4a2 2 0 0 1-2 2h-2"/></svg></div>
+            <h3>Expressions are values</h3>
+            <p>Write <code>#dt/e (* :price :volume)</code> once, store it in a var and reuse it across queries.</p>
+        </div>
+        <div class="feature">
+            <div class="feature-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 12h8"/></svg></div>
+            <h3>Safe with missing data</h3>
+            <p>Comparisons with a missing value are false and aggregations skip it, so blank cells don&rsquo;t derail a query.</p>
+        </div>
+        <div class="feature">
+            <div class="feature-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v4M12 17v4M4.9 4.9l2.8 2.8M16.3 16.3l2.8 2.8M3 12h4M17 12h4"/></svg></div>
+            <h3>Fast, not magic</h3>
+            <p>Expressions compile to vectorized column operations on tech.ml.dataset. Datajure adds syntax, not a new engine.</p>
+        </div>
+        <div class="feature">
+            <div class="feature-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8v5M12 16.5v.5"/><path d="M10.3 3.9 2.4 18a2 2 0 0 0 1.7 3h15.8a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg></div>
+            <h3>Errors that help</h3>
+            <p>A typo such as <code>:prcie</code> is caught before the query runs, with a suggestion: <em>did you mean <code>:price</code>?</em></p>
+        </div>
+    </div>
+</section>
 
-;; Window functions: same keywords
-(dt prices
+<div class="home-body">
+    <article class="prose">
+        <h2 id="see-it-in-action">See It in Action</h2><p>The examples use <code>prices</code>, a small table of daily prices for two stocks, defined in the <a href="/datajure-website/pages-output/quick-start/">quick start</a>. Every output on this site comes from running the code.</p><h3 id="compute-within-groups">Compute within Groups</h3><p>Daily returns per stock, in date order. Every row is kept:</p><pre><code class="clojure">(dt prices
     :by [:sym]
     :within-order [(asc :date)]
     :set {:ret #dt/e (- (win/ratio :price) 1)})
+</code></pre><pre><code class="text">_unnamed [8 5]:
 
-;; Thread for multi-step pipelines
-(-&gt; prices
-    (dt :set {:value #dt/e (* :price :volume)})
-    (dt :by [:sym] :agg {:total #dt/e (sm :value)})
-    (dt :order-by [(desc :total)]))
-</code></pre><p>Datajure is a syntax layer, not an engine. It compiles <code>#dt/e</code> expressions to vectorized operations and leaves all computation to tech.ml.dataset, so every result is a standard dataset that works with tablecloth, Clerk, Clay, and the rest of the Scicloj ecosystem.</p><p>To get started, go through the <a href="/datajure-website/pages-output/quick-start/">quick start</a>, read the <a href="/datajure-website/pages-output/docs/">docs</a> and try the <a href="/datajure-website/pages-output/examples/">examples</a>. The complete reference is the <a href="https://github.com/clojure-finance/datajure#readme">README</a>, with API docs on <a href="https://cljdoc.org/d/com.github.clojure-finance/datajure/CURRENT">cljdoc</a>.</p><h2 id="why-datajure">Why Datajure</h2><p>Datajure borrows from whichever library got a given idea right:</p><ul><li><strong>R's data.table</strong>: <code>DT[i, j, by]</code> maps onto <code>(dt ds :where i :set-or-agg j :by by)</code>, without in-place mutation.</li><li><strong>Python's Polars</strong>: expressions are first-class values, and comparisons with missing values are safe.</li><li><strong>q/kdb+</strong>: time-series primitives such as <code>win/ratio</code>, <code>win/mavg</code>, <code>win/ema</code>, <code>win/fills</code> and <code>xbar</code>, plus as-of and window joins.</li><li><strong>Julia's DataFramesMeta.jl</strong>: <code>#dt/e</code> plays the role of <code>@transform</code> and <code>@subset</code>, using Clojure's reader tags.</li></ul><h2 id="datajure-v1">Datajure v1</h2><p>Datajure v2 (March 2026) is a rewrite. Datajure v1 (1.x) was a query syntax that routed to several backends: tech.ml.dataset, tablecloth, Clojask and Geni. Its code is on the <a href="https://github.com/clojure-finance/datajure/tree/v1"><code>v1</code> branch</a>, its documentation is in <a href="https://github.com/clojure-finance/datajure-website/tree/559361a/content/md/pages">this site's history</a>, and <a href="https://github.com/clojure-finance/datajure-website/tree/559361a/content/md/posts">posts</a> from that time describe its design. Thanks to <a href="https://github.com/skylee03">YANG Ming-Tian</a> for the original v1 implementation.</p><h2 id="report-bugs">Report Bugs</h2><p>If you find a bug, please <a href="https://github.com/clojure-finance/datajure/issues">open an issue</a>.</p><p>Datajure is distributed under the <a href="https://github.com/clojure-finance/datajure/blob/main/LICENSE">Apache License, Version 2.0</a>.</p>
+|      :date | :sym | :price | :volume |        :ret |
+|------------|------|-------:|--------:|------------:|
+| 2024-01-02 | AAPL |  100.0 |    1200 |             |
+| 2024-01-03 | AAPL |  102.0 |    1500 |  0.02000000 |
+| 2024-01-04 | AAPL |   99.0 |         | -0.02941176 |
+| 2024-01-05 | AAPL |  104.0 |    1800 |  0.05050505 |
+| 2024-01-02 | MSFT |  200.0 |     900 |             |
+| 2024-01-03 | MSFT |  198.0 |    1100 | -0.01000000 |
+| 2024-01-04 | MSFT |  202.0 |    1000 |  0.02020202 |
+| 2024-01-05 | MSFT |  207.0 |    1300 |  0.02475248 |
+</code></pre><h3 id="chain-steps">Chain Steps</h3><p>Each <code>dt</code> call returns a dataset, so steps chain with <code>-&gt;</code>. Returns, then their mean and volatility per stock, then a sort:</p><pre><code class="clojure">(-&gt; prices
+    (dt :by [:sym] :within-order [(asc :date)]
+        :set {:ret #dt/e (- (win/ratio :price) 1)})
+    (dt :by [:sym] :agg {:mean-ret #dt/e (mn :ret) :vol #dt/e (sd :ret)})
+    (dt :order-by [(desc :mean-ret)]))
+</code></pre><pre><code class="text">_unnamed [2 3]:
 
-    
-    <div id="prev-next">
-    
-    <div class="prev"></div>
-    
-    
-    <div class="next"></div>
-    
+| :sym |  :mean-ret |       :vol |
+|------|-----------:|-----------:|
+| AAPL | 0.01369776 | 0.04032943 |
+| MSFT | 0.01165150 | 0.01888828 |
+</code></pre><h3 id="match-by-time">Match by Time</h3><p>An as-of join gives each trade the latest quote for its symbol at or before the trade's time:</p><pre><code class="clojure">(join trades quotes :on [:sym :time] :how :asof)
+</code></pre><pre><code class="text">_unnamed [3 4]:
+
+| :sym | :time | :qty |  :bid |
+|------|------:|-----:|------:|
+| AAPL |    10 |  100 |  99.5 |
+| AAPL |    25 |   50 | 100.5 |
+| MSFT |    30 |   75 | 201.0 |
+</code></pre><h2 id="the-core-idea">The Core Idea</h2><p>Two keywords decide what a query does to the rows. <code>:set</code> adds columns and keeps every row; <code>:agg</code> collapses rows into summaries. <code>:by</code> splits the rows into groups first. Together they give four operations:</p><div class="grid4" role="img" aria-label="Without :by, :set adds a column to every row and :agg collapses all rows into one. With :by, :set computes the new column within each group and :agg returns one row per group."><div class="g-corner"></div><div class="g-head">without <code>:by</code></div><div class="g-head">with <code>:by</code></div><div class="g-row"><code>:set</code></div><div class="g-cell"><span class="g-tag">:set</span><strong>Add a column</strong><span class="g-shape"><span class="mt"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span><span class="g-arrow">→</span><span class="mt" style="--cols:3"><i></i><i></i><i class="n"></i><i></i><i></i><i class="n"></i><i></i><i></i><i class="n"></i><i></i><i></i><i class="n"></i></span></span><span class="g-desc">Same rows, plus new columns.</span></div><div class="g-cell"><span class="g-tag">:set + :by</span><strong>Compute per group</strong><span class="g-shape"><span class="mt"><i class="a"></i><i></i><i class="a"></i><i></i><i class="b"></i><i></i><i class="b"></i><i></i></span><span class="g-arrow">→</span><span class="mt" style="--cols:3"><i class="a"></i><i></i><i class="na"></i><i class="a"></i><i></i><i class="na"></i><i class="b"></i><i></i><i class="nb"></i><i class="b"></i><i></i><i class="nb"></i></span></span><span class="g-desc">Same rows; each group computed on its own, e.g. returns per stock.</span></div><div class="g-row"><code>:agg</code></div><div class="g-cell"><span class="g-tag">:agg</span><strong>Summarize everything</strong><span class="g-shape"><span class="mt"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span><span class="g-arrow">→</span><span class="mt"><i class="n"></i><i class="n"></i></span></span><span class="g-desc">One row in total.</span></div><div class="g-cell"><span class="g-tag">:agg + :by</span><strong>Summarize per group</strong><span class="g-shape"><span class="mt"><i class="a"></i><i></i><i class="a"></i><i></i><i class="b"></i><i></i><i class="b"></i><i></i></span><span class="g-arrow">→</span><span class="mt"><i class="a"></i><i class="n"></i><i class="b"></i><i class="n"></i></span></span><span class="g-desc">One row per group.</span></div></div><p>Around that core, <code>:where</code> filters rows first, and <code>:select</code>, <code>:order-by</code> and <code>:take</code> shape the result. The <a href="/datajure-website/pages-output/docs/">docs</a> explain each step.</p><h2 id="why-datajure">Why Datajure</h2><p>Datajure is a syntax layer, not an engine. It compiles <code>#dt/e</code> expressions to vectorized operations on <a href="https://github.com/techascent/tech.ml.dataset">tech.ml.dataset</a>, so results are standard datasets that work with tablecloth, Clerk, Clay and the rest of the Scicloj ecosystem.</p><p>Its design borrows from whichever library got a given idea right:</p><ul><li><strong>R's data.table</strong>: <code>DT[i, j, by]</code> becomes <code>(dt ds :where i :set-or-agg j :by by)</code>, without in-place changes.</li><li><strong>Python's Polars</strong>: expressions are values you can store and combine, and comparisons with missing values are safe.</li><li><strong>q/kdb+</strong>: time-series tools such as <code>win/ratio</code>, <code>win/mavg</code>, <code>win/ema</code>, <code>win/fills</code> and <code>xbar</code>, plus as-of and window joins.</li><li><strong>Julia's DataFramesMeta.jl</strong>: <code>#dt/e</code> plays the role of <code>@transform</code> and <code>@subset</code>, using a Clojure reader tag.</li></ul><h2 id="where-to-go-next">Where to Go Next</h2><div class="cards"><a class="card" href="/datajure-website/pages-output/quick-start/"><strong>Quick Start</strong><span>Install Datajure and run your first query in a few minutes.</span></a><a class="card" href="/datajure-website/pages-output/docs/"><strong>Docs</strong><span>How queries work: keywords, expressions, missing values, grouping and joins.</span></a><a class="card" href="/datajure-website/pages-output/examples/"><strong>Examples</strong><span>Common tasks on one small dataset, each with its output.</span></a><a class="card" href="/datajure-website/pages-output/time-series/"><strong>Time Series</strong><span>Returns, rolling windows, gaps, bars and as-of joins for panel data.</span></a><a class="card" href="/datajure-website/pages-output/coming-from/"><strong>From R &amp; Python</strong><span>The same tasks in dplyr, data.table, pandas, Polars and Datajure.</span></a><a class="card" href="https://github.com/clojure-finance/datajure#readme"><strong>Reference</strong><span>The README covers every option; API docs are on cljdoc.</span></a></div><h2 id="datajure-v1">Datajure v1</h2><p>Datajure v2 (March 2026) is a rewrite. Datajure v1 (1.x) was a query syntax that routed to several backends: tech.ml.dataset, tablecloth, Clojask and Geni. Its code is on the <a href="https://github.com/clojure-finance/datajure/tree/v1"><code>v1</code> branch</a>, its documentation is in <a href="https://github.com/clojure-finance/datajure-website/tree/559361a/content/md/pages">this site's history</a>, and <a href="https://github.com/clojure-finance/datajure-website/tree/559361a/content/md/posts">posts</a> from that time describe its design. Thanks to <a href="https://github.com/skylee03">YANG Ming-Tian</a> for the original v1 implementation.</p><p>Found a bug? Please <a href="https://github.com/clojure-finance/datajure/issues">open an issue</a>. Datajure is distributed under the <a href="https://github.com/clojure-finance/datajure/blob/main/LICENSE">Apache License, Version 2.0</a>.</p>
+    </article>
 </div>
 
-    
+        </main>
 
-</div>
-
-            <br/>
-            <div id="footercont">
-                Copyright &copy; 2026 Datajure
-                <br>Powered by <a href="http://cryogenweb.org">Cryogen</a>
+        <footer class="site-footer">
+            <div class="footer-inner">
+                <div class="footer-brand">
+                    <strong>Datajure</strong>
+                    <span>Data manipulation for Clojure, built on tech.ml.dataset. Developed at HKU Business School.</span>
+                </div>
+                <ul class="footer-links">
+                    <li><a href="https://github.com/clojure-finance/datajure">GitHub</a></li>
+                    <li><a href="https://clojars.org/com.github.clojure-finance/datajure">Clojars</a></li>
+                    <li><a href="https://cljdoc.org/d/com.github.clojure-finance/datajure/CURRENT">API docs</a></li>
+                    <li><a href="https://github.com/clojure-finance/datajure/blob/main/CHANGELOG.md">Changelog</a></li>
+                    <li><a href="https://github.com/clojure-finance/datajure/issues">Report a bug</a></li>
+                </ul>
+                <p class="footer-legal">
+                    &copy; 2026 Datajure &middot; Apache License 2.0 &middot;
+                    Site built with <a href="https://cryogenweb.org">Cryogen</a>
+                    &middot; <a href="https://github.com/clojure-finance/datajure-website">Edit this site</a>
+                </p>
             </div>
-        </article>
+        </footer>
 
-        <script src="/datajure-website/js/highlight.pack.js" type="application/javascript"></script>
-        <script>hljs.initHighlightingOnLoad();</script>
-        <script src="/datajure-website/js.dropdown.js" type="application/javascript"></script> 
-        
-
-        
-        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/clojure.min.js"></script>
+        <script src="/datajure-website/js/site.js" type="application/javascript"></script>
     </body>
 </html>

@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Datajure: Time Series and Panels</title>
+        
+
+<meta name="description" content="This page covers the work that fills most of a finance or economics project: returns, rolling statistics, gaps in the data, intraday bars, and matching records by time. It uses the prices dataset from the quick start and a few small datasets defined along the way. Every output comes from running the code.The Basic Pattern">
+<meta property="og:description" content="This page covers the work that fills most of a finance or economics project: returns, rolling statistics, gaps in the data, intraday bars, and matching records by time. It uses the prices dataset from the quick start and a few small datasets defined along the way. Every output comes from running the code.The Basic Pattern">
+
+<meta property="og:url" content="https://clojure-finance.github.io/datajure-website/pages-output/time-series/" />
+<meta property="og:title" content="Time Series and Panels" />
+<meta property="og:type" content="article" />
+
+        <meta name="color-scheme" content="light dark">
+        <script>
+            // Apply the saved light/dark choice before the page paints.
+            try {
+                var t = localStorage.getItem("theme");
+                if (t === "light" || t === "dark") document.documentElement.dataset.theme = t;
+            } catch (e) {}
+        </script>
+        <link rel="icon" type="image/svg+xml" href="/datajure-website/img/favicon.svg">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+        <link href="/datajure-website/css/site.css" rel="stylesheet" type="text/css" />
+    </head>
+    <body class="">
+        <a class="skip-link" href="#content">Skip to content</a>
+        <header class="topbar">
+            <div class="topbar-inner">
+                <a class="brand" href="/datajure-website/" title="Datajure home">
+                    <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true">
+                        <rect x="2" y="2" width="28" height="28" rx="7" class="bm-bg"/>
+                        <rect x="7" y="8" width="18" height="4" rx="1.5" class="bm-head"/>
+                        <rect x="7" y="14" width="5" height="3" rx="1" class="bm-cell"/>
+                        <rect x="13.5" y="14" width="5" height="3" rx="1" class="bm-cell"/>
+                        <rect x="20" y="14" width="5" height="3" rx="1" class="bm-hot"/>
+                        <rect x="7" y="19" width="5" height="3" rx="1" class="bm-cell"/>
+                        <rect x="13.5" y="19" width="5" height="3" rx="1" class="bm-cell"/>
+                        <rect x="20" y="19" width="5" height="3" rx="1" class="bm-hot"/>
+                    </svg>
+                    <span class="brand-name">Datajure</span>
+                </a>
+                <nav class="mainnav" aria-label="Main">
+                    <ul>
+                        
+                        <li><a href="/datajure-website/pages-output/quick-start/">Quick Start</a></li>
+                        
+                        <li><a href="/datajure-website/pages-output/docs/">Docs</a></li>
+                        
+                        <li><a href="/datajure-website/pages-output/examples/">Examples</a></li>
+                        
+                        <li><a href="/datajure-website/pages-output/time-series/" class="active" aria-current="page">Time Series</a></li>
+                        
+                        <li><a href="/datajure-website/pages-output/coming-from/">From R &amp; Python</a></li>
+                        
+                    </ul>
+                </nav>
+                <div class="topbar-actions">
+                    <button class="icon-btn" id="theme-toggle" type="button" aria-label="Switch between light and dark mode" title="Light or dark mode">
+                        <svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.5"/><path d="M12 1.5v3M12 19.5v3M1.5 12h3M19.5 12h3M4.6 4.6l2.1 2.1M17.3 17.3l2.1 2.1M4.6 19.4l2.1-2.1M17.3 6.7l2.1-2.1"/></svg>
+                        <svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5a8.5 8.5 0 1 0 10.7 10.7z"/></svg>
+                    </button>
+                    <a class="icon-btn" href="https://github.com/clojure-finance/datajure" title="Datajure on GitHub" aria-label="Datajure on GitHub">
+                        <svg viewBox="0 0 16 16" aria-hidden="true" class="i-fill"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+                    </a>
+                </div>
+            </div>
+        </header>
+
+        <main id="content">
+            
+<div class="page-hero">
+    <div class="page-hero-inner">
+        <h1>Time Series and Panels</h1>
+        <p class="page-lead">Returns, rolling windows, gaps, bars and as-of joins: the everyday work of panel data.</p>
+    </div>
+</div>
+<div class="doc-layout has-toc">
+    
+    <aside class="toc-side">
+        <details class="toc-box" open>
+            <summary>On this page</summary>
+            <nav aria-label="On this page"><ul class="toc"><li><a href="#the-basic-pattern">The Basic Pattern</a></li><li><a href="#returns-and-changes">Returns and Changes</a></li><li><a href="#rolling-windows">Rolling Windows</a><ul><li><a href="#exponential-moving-average">Exponential Moving Average</a></li></ul></li><li><a href="#running-totals">Running Totals</a></li><li><a href="#filling-missing-values">Filling Missing Values</a></li><li><a href="#panels-with-missing-periods">Panels with Missing Periods</a><ul><li><a href="#lag-by-date-not-by-row">Lag by Date, Not by Row</a></li><li><a href="#making-gaps-explicit">Making Gaps Explicit</a></li></ul></li><li><a href="#bars-from-ticks">Bars from Ticks</a></li><li><a href="#matching-records-by-time">Matching Records by Time</a><ul><li><a href="#as-of-joins">As-of Joins</a></li><li><a href="#window-joins">Window Joins</a></li></ul></li><li><a href="#cross-sections">Cross-Sections</a></li><li><a href="#putting-it-together">Putting It Together</a></li></ul></nav>
+        </details>
+    </aside>
+    
+    <article class="prose">
+        <p>This page covers the work that fills most of a finance or economics project: returns, rolling statistics, gaps in the data, intraday bars, and matching records by time. It uses the <code>prices</code> dataset from the <a href="/datajure-website/pages-output/quick-start/">quick start</a> and a few small datasets defined along the way. Every output comes from running the code.</p><h2 id="the-basic-pattern">The Basic Pattern</h2><p>A <em>time series</em> is a sequence of observations in time order, such as one stock's daily prices. A <em>panel</em> stacks many time series in one table, with one row per entity and period: each stock on each day, or each firm in each year. <code>prices</code> is a panel of two stocks over four days.</p><p>Most panel calculations follow the same recipe: split the rows by entity, put each entity's rows in time order, then compute something that looks at neighbouring rows. In Datajure that recipe is three keywords:</p><pre><code class="clojure">(dt prices
+    :by [:sym]                  ;; one group per stock
+    :within-order [(asc :date)] ;; oldest first within each group
+    :set {:prev #dt/e (win/lag :price 1)
+          :next #dt/e (win/lead :price 1)})
+</code></pre><pre><code class="text">_unnamed [8 6]:
+
+|      :date | :sym | :price | :volume | :prev | :next |
+|------------|------|-------:|--------:|------:|------:|
+| 2024-01-02 | AAPL |  100.0 |    1200 |       | 102.0 |
+| 2024-01-03 | AAPL |  102.0 |    1500 | 100.0 |  99.0 |
+| 2024-01-04 | AAPL |   99.0 |         | 102.0 | 104.0 |
+| 2024-01-05 | AAPL |  104.0 |    1800 |  99.0 |       |
+| 2024-01-02 | MSFT |  200.0 |     900 |       | 198.0 |
+| 2024-01-03 | MSFT |  198.0 |    1100 | 200.0 | 202.0 |
+| 2024-01-04 | MSFT |  202.0 |    1000 | 198.0 | 207.0 |
+| 2024-01-05 | MSFT |  207.0 |    1300 | 202.0 |       |
+</code></pre><p>The functions that start with <code>win/</code> are <em>window functions</em>: each row's result depends on other rows of its group. They only work inside <code>:set</code>. The first row of each stock has no previous price, so <code>win/lag</code> gives a missing value there instead of borrowing the other stock's price.</p><p><code>:within-order</code> decides the order in which the window functions walk each group. It does not reorder the result: rows come back in the order they went in. Here the same query runs on a copy of <code>prices</code> sorted by date, so the two stocks are interleaved, and each row still gets its own stock's previous price:</p><pre><code class="clojure">(def by-date (dt prices :order-by [(asc :date)]))
+
+(dt by-date :by [:sym] :within-order [(asc :date)]
+    :set {:prev #dt/e (win/lag :price 1)})
+</code></pre><pre><code class="text">_unnamed [8 5]:
+
+|      :date | :sym | :price | :volume | :prev |
+|------------|------|-------:|--------:|------:|
+| 2024-01-02 | AAPL |  100.0 |    1200 |       |
+| 2024-01-02 | MSFT |  200.0 |     900 |       |
+| 2024-01-03 | AAPL |  102.0 |    1500 | 100.0 |
+| 2024-01-03 | MSFT |  198.0 |    1100 | 200.0 |
+| 2024-01-04 | AAPL |   99.0 |         | 102.0 |
+| 2024-01-04 | MSFT |  202.0 |    1000 | 198.0 |
+| 2024-01-05 | AAPL |  104.0 |    1800 |  99.0 |
+| 2024-01-05 | MSFT |  207.0 |    1300 | 202.0 |
+</code></pre><p>Add <code>:order-by</code> when the output should be sorted. Without <code>:by</code>, the whole dataset is one group, which suits a single time series.</p><blockquote><p><strong>Tip:</strong> <code>win/lag</code> and <code>win/lead</code> take an options map to fill the rows that have no neighbour: <code>#dt/e (win/lag :price 1 {:fill 0})</code>. Only those boundary rows are filled; a value that is missing in the data stays missing.</p></blockquote><h2 id="returns-and-changes">Returns and Changes</h2><p><code>win/ratio</code> divides each value by the previous one, and <code>win/delta</code> subtracts the previous one. A simple return is the ratio minus one, and a log return is the log of the ratio:</p><pre><code class="clojure">(dt prices :by [:sym] :within-order [(asc :date)]
+    :set {:ret     #dt/e (- (win/ratio :price) 1)
+          :log-ret #dt/e (log (win/ratio :price))
+          :chg     #dt/e (win/delta :price)})
+</code></pre><pre><code class="text">_unnamed [8 7]:
+
+|      :date | :sym | :price | :volume |        :ret |    :log-ret | :chg |
+|------------|------|-------:|--------:|------------:|------------:|-----:|
+| 2024-01-02 | AAPL |  100.0 |    1200 |             |             |      |
+| 2024-01-03 | AAPL |  102.0 |    1500 |  0.02000000 |  0.01980263 |  2.0 |
+| 2024-01-04 | AAPL |   99.0 |         | -0.02941176 | -0.02985296 | -3.0 |
+| 2024-01-05 | AAPL |  104.0 |    1800 |  0.05050505 |  0.04927105 |  5.0 |
+| 2024-01-02 | MSFT |  200.0 |     900 |             |             |      |
+| 2024-01-03 | MSFT |  198.0 |    1100 | -0.01000000 | -0.01005034 | -2.0 |
+| 2024-01-04 | MSFT |  202.0 |    1000 |  0.02020202 |  0.02000067 |  4.0 |
+| 2024-01-05 | MSFT |  207.0 |    1300 |  0.02475248 |  0.02445110 |  5.0 |
+</code></pre><p>If the previous price is zero or missing, <code>win/ratio</code> gives a missing value rather than infinity, so one bad price does not spread through later calculations.</p><p>Returns are needed in many queries, so it helps to define them once. An <code>#dt/e</code> expression is a value that can be stored in a var and used anywhere a column expression fits (see <a href="/datajure-website/pages-output/docs/#reusable-expressions">reusable expressions</a>):</p><pre><code class="clojure">(def ret #dt/e (- (win/ratio :price) 1))
+</code></pre><h2 id="rolling-windows">Rolling Windows</h2><p>A <em>rolling</em> (or moving) window looks at the current row and a fixed number of rows before it. <code>win/mavg</code> is the moving average, <code>win/mmax</code> and <code>win/mmin</code> the moving maximum and minimum, <code>win/msum</code> the moving sum and <code>win/mdev</code> the moving standard deviation. Here is a three-day window:</p><pre><code class="clojure">(dt prices :by [:sym] :within-order [(asc :date)]
+    :set {:ma-3      #dt/e (win/mavg :price 3)
+          :ma-3-full #dt/e (win/mavg :price 3 {:min-periods 3})
+          :hi-3      #dt/e (win/mmax :price 3)})
+</code></pre><pre><code class="text">_unnamed [8 7]:
+
+|      :date | :sym | :price | :volume |        :ma-3 |   :ma-3-full | :hi-3 |
+|------------|------|-------:|--------:|-------------:|-------------:|------:|
+| 2024-01-02 | AAPL |  100.0 |    1200 | 100.00000000 |              | 100.0 |
+| 2024-01-03 | AAPL |  102.0 |    1500 | 101.00000000 |              | 102.0 |
+| 2024-01-04 | AAPL |   99.0 |         | 100.33333333 | 100.33333333 | 102.0 |
+| 2024-01-05 | AAPL |  104.0 |    1800 | 101.66666667 | 101.66666667 | 104.0 |
+| 2024-01-02 | MSFT |  200.0 |     900 | 200.00000000 |              | 200.0 |
+| 2024-01-03 | MSFT |  198.0 |    1100 | 199.00000000 |              | 200.0 |
+| 2024-01-04 | MSFT |  202.0 |    1000 | 200.00000000 | 200.00000000 | 202.0 |
+| 2024-01-05 | MSFT |  207.0 |    1300 | 202.33333333 | 202.33333333 | 207.0 |
+</code></pre><p>At the start of each group there are fewer than three rows to look at. By default the window is <em>expanding</em> there: the first row averages one price, the second averages two. With <code>{:min-periods 3}</code>, the result stays missing until three rows are available, as R's <code>zoo::rollapplyr</code> does.</p><p>Moving functions skip missing values. The AAPL volume on 2024-01-04 is missing, so the two-day moving sum on that day is just the previous day's volume:</p><pre><code class="clojure">(dt prices :by [:sym] :within-order [(asc :date)]
+    :set {:vol-2 #dt/e (win/msum :volume 2)
+          :sd-3  #dt/e (win/mdev :price 3)})
+</code></pre><pre><code class="text">_unnamed [8 6]:
+
+|      :date | :sym | :price | :volume | :vol-2 |      :sd-3 |
+|------------|------|-------:|--------:|-------:|-----------:|
+| 2024-01-02 | AAPL |  100.0 |    1200 | 1200.0 |            |
+| 2024-01-03 | AAPL |  102.0 |    1500 | 2700.0 | 1.41421356 |
+| 2024-01-04 | AAPL |   99.0 |         | 1500.0 | 1.52752523 |
+| 2024-01-05 | AAPL |  104.0 |    1800 | 1800.0 | 2.51661148 |
+| 2024-01-02 | MSFT |  200.0 |     900 |  900.0 |            |
+| 2024-01-03 | MSFT |  198.0 |    1100 | 2000.0 | 1.41421356 |
+| 2024-01-04 | MSFT |  202.0 |    1000 | 2100.0 | 2.00000000 |
+| 2024-01-05 | MSFT |  207.0 |    1300 | 2300.0 | 4.50924975 |
+</code></pre><p>A standard deviation needs at least two values, so <code>:sd-3</code> is missing on each stock's first day.</p><h3 id="exponential-moving-average">Exponential Moving Average</h3><p>An exponential moving average (EMA) weights recent rows more heavily than older ones, without a fixed window. <code>win/ema</code> takes either a period or a smoothing factor <em>alpha</em>; a period of n means alpha = 2 / (n + 1), so a period of 3 and an alpha of 0.5 give the same result:</p><pre><code class="clojure">(dt prices :by [:sym] :within-order [(asc :date)]
+    :set {:ema-3   #dt/e (win/ema :price 3)
+          :ema-0.5 #dt/e (win/ema :price {:alpha 0.5})})
+</code></pre><pre><code class="text">_unnamed [8 6]:
+
+|      :date | :sym | :price | :volume | :ema-3 | :ema-0.5 |
+|------------|------|-------:|--------:|-------:|---------:|
+| 2024-01-02 | AAPL |  100.0 |    1200 | 100.00 |   100.00 |
+| 2024-01-03 | AAPL |  102.0 |    1500 | 101.00 |   101.00 |
+| 2024-01-04 | AAPL |   99.0 |         | 100.00 |   100.00 |
+| 2024-01-05 | AAPL |  104.0 |    1800 | 102.00 |   102.00 |
+| 2024-01-02 | MSFT |  200.0 |     900 | 200.00 |   200.00 |
+| 2024-01-03 | MSFT |  198.0 |    1100 | 199.00 |   199.00 |
+| 2024-01-04 | MSFT |  202.0 |    1000 | 200.50 |   200.50 |
+| 2024-01-05 | MSFT |  207.0 |    1300 | 203.75 |   203.75 |
+</code></pre><h2 id="running-totals">Running Totals</h2><p><code>win/cumsum</code> adds up a column from the first row of each group, and <code>win/scan</code> does the same with another operation: <code>*</code> for compounding, <code>max</code> or <code>min</code> for a running high or low.</p><p>The <em>wealth index</em> is what one dollar invested on the first day is worth on each later day. It is the running product of one plus the return. The first return is missing, so <code>coalesce</code> treats it as zero:</p><pre><code class="clojure">(dt prices :by [:sym] :within-order [(asc :date)]
+    :set [[:ret    #dt/e (- (win/ratio :price) 1)]
+          [:wealth #dt/e (win/scan * (+ 1 (coalesce :ret 0)))]])
+</code></pre><pre><code class="text">_unnamed [8 6]:
+
+|      :date | :sym | :price | :volume |        :ret | :wealth |
+|------------|------|-------:|--------:|------------:|--------:|
+| 2024-01-02 | AAPL |  100.0 |    1200 |             |   1.000 |
+| 2024-01-03 | AAPL |  102.0 |    1500 |  0.02000000 |   1.020 |
+| 2024-01-04 | AAPL |   99.0 |         | -0.02941176 |   0.990 |
+| 2024-01-05 | AAPL |  104.0 |    1800 |  0.05050505 |   1.040 |
+| 2024-01-02 | MSFT |  200.0 |     900 |             |   1.000 |
+| 2024-01-03 | MSFT |  198.0 |    1100 | -0.01000000 |   0.990 |
+| 2024-01-04 | MSFT |  202.0 |    1000 |  0.02020202 |   1.010 |
+| 2024-01-05 | MSFT |  207.0 |    1300 |  0.02475248 |   1.035 |
+</code></pre><p><code>:set</code> is given a sequence of pairs here rather than a map, so <code>:wealth</code> can use the <code>:ret</code> column defined just before it.</p><p>The <em>drawdown</em> is how far the price is below its highest level so far. The running maximum comes from <code>win/scan max</code>:</p><pre><code class="clojure">(dt prices :by [:sym] :within-order [(asc :date)]
+    :set [[:peak     #dt/e (win/scan max :price)]
+          [:drawdown #dt/e (- (/ :price :peak) 1)]])
+</code></pre><pre><code class="text">_unnamed [8 6]:
+
+|      :date | :sym | :price | :volume | :peak |   :drawdown |
+|------------|------|-------:|--------:|------:|------------:|
+| 2024-01-02 | AAPL |  100.0 |    1200 | 100.0 |  0.00000000 |
+| 2024-01-03 | AAPL |  102.0 |    1500 | 102.0 |  0.00000000 |
+| 2024-01-04 | AAPL |   99.0 |         | 102.0 | -0.02941176 |
+| 2024-01-05 | AAPL |  104.0 |    1800 | 104.0 |  0.00000000 |
+| 2024-01-02 | MSFT |  200.0 |     900 | 200.0 |  0.00000000 |
+| 2024-01-03 | MSFT |  198.0 |    1100 | 200.0 | -0.01000000 |
+| 2024-01-04 | MSFT |  202.0 |    1000 | 202.0 |  0.00000000 |
+| 2024-01-05 | MSFT |  207.0 |    1300 | 207.0 |  0.00000000 |
+</code></pre><h2 id="filling-missing-values">Filling Missing Values</h2><p>Datajure never fills missing values on its own: a gap stays visible until you decide what it should mean. Three window functions fill it on request:</p><ul><li><code>win/fills</code> carries the last known value forward (pandas <code>ffill</code>, "last observation carried forward").</li><li><code>win/fills</code> with <code>{:limit n}</code> carries it at most n rows into a gap, after which the value is treated as stale.</li><li><code>win/bfill</code> carries the next known value backward.</li></ul><p>A single series of readings with a three-day gap shows the difference. There is no <code>:by</code>, so the whole dataset is one series:</p><pre><code class="clojure">(def readings
+  (ds/-&gt;dataset {:day   [1 2 3 4 5 6]
+                 :value [1.0 nil nil nil 5.0 nil]}))
+
+(dt readings :within-order [(asc :day)]
+    :set {:carried   #dt/e (win/fills :value)
+          :at-most-2 #dt/e (win/fills :value {:limit 2})
+          :next      #dt/e (win/bfill :value)})
+</code></pre><pre><code class="text">_unnamed [6 5]:
+
+| :day | :value | :carried | :at-most-2 | :next |
+|-----:|-------:|---------:|-----------:|------:|
+|    1 |    1.0 |      1.0 |        1.0 |   1.0 |
+|    2 |        |      1.0 |        1.0 |   5.0 |
+|    3 |        |      1.0 |        1.0 |   5.0 |
+|    4 |        |      1.0 |            |   5.0 |
+|    5 |    5.0 |      5.0 |        5.0 |   5.0 |
+|    6 |        |      5.0 |        5.0 |       |
+</code></pre><p>To fill both ways, nest them: <code>#dt/e (win/fills (win/bfill :value))</code>. To replace missing values with a constant instead, use <code>coalesce</code>.</p><h2 id="panels-with-missing-periods">Panels with Missing Periods</h2><h3 id="lag-by-date-not-by-row">Lag by Date, Not by Row</h3><p><code>win/lag</code> counts rows. When a period is missing from the data, the previous row is not the previous period. In this yearly panel, firm B has no row for 2016:</p><pre><code class="clojure">(def sales
+  (ds/-&gt;dataset {:firm  ["A" "A" "A" "A" "B" "B" "B"]
+                 :year  [2015 2016 2017 2018 2015 2017 2018]
+                 :sales [10.0 12.0 15.0 16.0 50.0 60.0 66.0]}))
+
+(dt sales :by [:firm] :within-order [(asc :year)]
+    :set {:lag-row  #dt/e (win/lag :sales 1)
+          :lag-year #dt/e (win/tlag :sales :year)})
+</code></pre><pre><code class="text">_unnamed [7 5]:
+
+| :firm | :year | :sales | :lag-row | :lag-year |
+|-------|------:|-------:|---------:|----------:|
+|     A |  2015 |   10.0 |          |           |
+|     A |  2016 |   12.0 |     10.0 |      10.0 |
+|     A |  2017 |   15.0 |     12.0 |      12.0 |
+|     A |  2018 |   16.0 |     15.0 |      15.0 |
+|     B |  2015 |   50.0 |          |           |
+|     B |  2017 |   60.0 |     50.0 |           |
+|     B |  2018 |   66.0 |     60.0 |      60.0 |
+</code></pre><p>For firm B in 2017, <code>win/lag</code> returns the 2015 value, so a "one-year growth" computed from it would really be a two-year growth. <code>win/tlag</code> looks up the row whose <code>:year</code> is one less, finds none, and returns a missing value. The date column can be a number, as here, or a <code>java.time</code> date with a unit such as <code>{:unit :month}</code>; see <a href="https://github.com/clojure-finance/datajure#date-aware-lag-wintlag">date-aware lag</a> in the README.</p><h3 id="making-gaps-explicit">Making Gaps Explicit</h3><p><code>tsfill</code> (named after Stata's command) inserts the missing periods as rows, with missing values in every column except the keys. After that, every row-based function sees one row per period:</p><pre><code class="clojure">(reshape/tsfill sales {:by [:firm] :date :year})
+</code></pre><pre><code class="text">_unnamed [8 3]:
+
+| :firm | :year | :sales |
+|-------|------:|-------:|
+|     A |  2015 |   10.0 |
+|     A |  2016 |   12.0 |
+|     A |  2017 |   15.0 |
+|     A |  2018 |   16.0 |
+|     B |  2015 |   50.0 |
+|     B |  2016 |        |
+|     B |  2017 |   60.0 |
+|     B |  2018 |   66.0 |
+</code></pre><p>Each firm's rows run from its own first year to its own last year, and rows that were already there are never dropped. For dates rather than year numbers, <code>:every :month</code> (or <code>:day</code>, <code>:week</code>, <code>:quarter</code>, <code>:year</code>) sets the step, and <code>:grid</code> takes an explicit list such as trading days.</p><h2 id="bars-from-ticks">Bars from Ticks</h2><p>Trade data arrives one row per trade (a <em>tick</em>). A <em>bar</em> summarizes the ticks in a fixed interval: the first price (open), the highest and lowest, the last price (close) and the total size traded. <code>xbar</code> assigns each timestamp to its interval, and <code>:within-order</code> makes <code>first-val</code> and <code>last-val</code> see each interval's ticks in time order:</p><pre><code class="clojure">(require '[datajure.core :refer [xbar]])
+
+(def ticks
+  (ds/-&gt;dataset
+   {:time  (map #(java.time.LocalDateTime/parse %)
+                ["2024-01-02T09:30:05" "2024-01-02T09:31:40" "2024-01-02T09:33:10"
+                 "2024-01-02T09:34:55" "2024-01-02T09:35:20" "2024-01-02T09:36:45"
+                 "2024-01-02T09:38:30" "2024-01-02T09:41:00"])
+    :price [100.0 100.4 99.8 100.2 100.6 101.0 100.7 100.9]
+    :size  [200 100 300 150 250 100 200 400]}))
+
+(dt ticks
+    :by [(xbar :time 5 :minutes)]
+    :within-order [(asc :time)]
+    :agg {:open   #dt/e (first-val :price)
+          :high   #dt/e (mx :price)
+          :low    #dt/e (mi :price)
+          :close  #dt/e (last-val :price)
+          :volume #dt/e (sm :size)})
+</code></pre><pre><code class="text">_unnamed [3 6]:
+
+|    :time | :open | :high |  :low | :close | :volume |
+|---------:|------:|------:|------:|-------:|--------:|
+| 28403130 | 100.0 | 100.4 |  99.8 |  100.2 |   750.0 |
+| 28403135 | 100.6 | 101.0 | 100.6 |  100.7 |   550.0 |
+| 28403140 | 100.9 | 100.9 | 100.9 |  100.9 |   400.0 |
+</code></pre><p>For a date-time column, the bar key is the start of the interval counted in units since 1970-01-01, here minutes. A plain function turns it back into a time:</p><pre><code class="clojure">(defn minutes-&gt;time [m]
+  (java.time.LocalDateTime/ofEpochSecond (* 60 m) 0 java.time.ZoneOffset/UTC))
+
+(-&gt; ticks
+    (dt :by [(xbar :time 5 :minutes)]
+        :within-order [(asc :time)]
+        :agg {:open   #dt/e (first-val :price)
+              :high   #dt/e (mx :price)
+              :low    #dt/e (mi :price)
+              :close  #dt/e (last-val :price)
+              :volume #dt/e (sm :size)})
+    (dt :set {:time #(minutes-&gt;time (:time %))}))
+</code></pre><pre><code class="text">_unnamed [3 6]:
+
+|            :time | :open | :high |  :low | :close | :volume |
+|------------------|------:|------:|------:|-------:|--------:|
+| 2024-01-02T09:30 | 100.0 | 100.4 |  99.8 |  100.2 |   750.0 |
+| 2024-01-02T09:35 | 100.6 | 101.0 | 100.6 |  100.7 |   550.0 |
+| 2024-01-02T09:40 | 100.9 | 100.9 | 100.9 |  100.9 |   400.0 |
+</code></pre><p>With several instruments, add the symbol to <code>:by</code>: <code>:by [(xbar :time 5 :minutes) :sym]</code>. On a number column, <code>xbar</code> makes equal-width buckets: <code>(xbar :price 10)</code> groups prices into 100–110, 110–120 and so on.</p><h2 id="matching-records-by-time">Matching Records by Time</h2><h3 id="as-of-joins">As-of Joins</h3><p>Two time series rarely share timestamps. Trades happen at one set of times and quotes at another. An <em>as-of join</em> gives each left row the most recent right row at or before its time, which is the information that was available at that moment. These datasets give times as plain numbers:</p><pre><code class="clojure">(def trades (ds/-&gt;dataset {:sym  ["AAPL" "AAPL" "MSFT"]
+                           :time [10 25 30]
+                           :qty  [100 50 75]}))
+
+(def quotes (ds/-&gt;dataset {:sym  ["AAPL" "AAPL" "AAPL" "MSFT"]
+                           :time [5 20 30 28]
+                           :bid  [99.5 100.5 101.0 201.0]}))
+
+(join trades quotes :on [:sym :time] :how :asof)
+</code></pre><pre><code class="text">_unnamed [3 4]:
+
+| :sym | :time | :qty |  :bid |
+|------|------:|-----:|------:|
+| AAPL |    10 |  100 |  99.5 |
+| AAPL |    25 |   50 | 100.5 |
+| MSFT |    30 |   75 | 201.0 |
+</code></pre><p>The last key in <code>:on</code> (<code>:time</code>) is matched as-of; the keys before it (<code>:sym</code>) must match exactly. Every left row is kept.</p><p><code>:tolerance</code> limits how old a match may be. A quote more than 3 time units older than the trade counts as no match:</p><pre><code class="clojure">(join trades quotes :on [:sym :time] :how :asof :tolerance 3)
+</code></pre><pre><code class="text">_unnamed [3 4]:
+
+| :sym | :time | :qty |  :bid |
+|------|------:|-----:|------:|
+| AAPL |    10 |  100 |       |
+| AAPL |    25 |   50 |       |
+| MSFT |    30 |   75 | 201.0 |
+</code></pre><p><code>:direction :forward</code> matches the first right row at or after the left row's time instead, and <code>:direction :nearest</code> the closest one either way:</p><pre><code class="clojure">(join trades quotes :on [:sym :time] :how :asof :direction :forward)
+</code></pre><pre><code class="text">_unnamed [3 4]:
+
+| :sym | :time | :qty |  :bid |
+|------|------:|-----:|------:|
+| AAPL |    10 |  100 | 100.5 |
+| AAPL |    25 |   50 | 101.0 |
+| MSFT |    30 |   75 |       |
+</code></pre><blockquote><p><strong>Note:</strong> For research data, the default backward direction is usually the right one: it never attaches information from the future. With dates as keys, <code>:tolerance</code> takes a duration such as <code>[90 :days]</code>.</p></blockquote><h3 id="window-joins">Window Joins</h3><p>A <em>window join</em> gives each left row a summary of all right rows in a time window around it, rather than a single match. Here each trade gets the average bid and the number of quotes in the 20 time units up to and including the trade:</p><pre><code class="clojure">(join trades quotes :on [:sym :time] :how :window
+      :window [-20 0]
+      :agg {:avg-bid  #dt/e (mn :bid)
+            :n-quotes nrow})
+</code></pre><pre><code class="text">_unnamed [3 5]:
+
+| :sym | :time | :qty | :avg-bid | :n-quotes |
+|------|------:|-----:|---------:|----------:|
+| AAPL |    10 |  100 |     99.5 |         1 |
+| AAPL |    25 |   50 |    100.0 |         2 |
+| MSFT |    30 |   75 |    201.0 |         1 |
+</code></pre><p>The window can be given in time units, such as <code>[-5 0 :minutes]</code>, when the key column holds epoch milliseconds. See <a href="https://github.com/clojure-finance/datajure#window-joins">window joins</a> in the README for the details.</p><h2 id="cross-sections">Cross-Sections</h2><p>A <em>cross-section</em> is all entities at one point in time. Many finance methods compare stocks with each other within each month: standardizing a signal, or sorting stocks into size groups. In Datajure this is the same pattern with the date in <code>:by</code> instead of the entity. This small dataset has four stocks over two months:</p><pre><code class="clojure">(require '[datajure.core :refer [cut]])
+
+(def stocks
+  (ds/-&gt;dataset
+   {:month  ["2024-01" "2024-01" "2024-01" "2024-01" "2024-02" "2024-02" "2024-02" "2024-02"]
+    :sym    ["A" "B" "C" "D" "A" "B" "C" "D"]
+    :mktcap [5.0 40.0 12.0 90.0 6.0 38.0 15.0 95.0]
+    :ret    [0.04 0.01 0.03 -0.01 -0.02 0.02 0.05 0.00]}))
+
+(dt stocks :by [:month]
+    :set {:size #dt/e (cut :mktcap 2)
+          :z    #dt/e (stat/standardize :ret)})
+</code></pre><pre><code class="text">_unnamed [8 6]:
+
+|  :month | :sym | :mktcap |  :ret | :size |          :z |
+|---------|------|--------:|------:|------:|------------:|
+| 2024-01 |    A |     5.0 |  0.04 |     1 |  1.01472214 |
+| 2024-01 |    B |    40.0 |  0.01 |     2 | -0.33824071 |
+| 2024-01 |    C |    12.0 |  0.03 |     1 |  0.56373452 |
+| 2024-01 |    D |    90.0 | -0.01 |     2 | -1.24021595 |
+| 2024-02 |    A |     6.0 | -0.02 |     1 | -1.08838387 |
+| 2024-02 |    B |    38.0 |  0.02 |     2 |  0.25116551 |
+| 2024-02 |    C |    15.0 |  0.05 |     1 |  1.25582754 |
+| 2024-02 |    D |    95.0 |  0.00 |     2 | -0.41860918 |
+</code></pre><p><code>cut</code> splits each month's stocks into equal-count groups by market cap (1 = small, 2 = big), and <code>stat/standardize</code> turns each month's returns into z-scores. Other transforms such as <code>stat/winsorize</code> and <code>stat/demean</code> work the same way.</p><p>Put <code>cut</code> in <code>:by</code> to group by those bins directly. Here is the average return of small and big stocks in each month, the first step of a size-sorted portfolio:</p><pre><code class="clojure">(dt stocks :by [:month (cut :mktcap 2)]
+    :agg {:n nrow :avg-ret #dt/e (mn :ret)})
+</code></pre><pre><code class="text">_unnamed [4 4]:
+
+|  :month | :mktcap-q2 | :n | :avg-ret |
+|---------|-----------:|---:|---------:|
+| 2024-01 |          1 |  2 |    0.035 |
+| 2024-01 |          2 |  2 |    0.000 |
+| 2024-02 |          1 |  2 |    0.015 |
+| 2024-02 |          2 |  2 |    0.010 |
+</code></pre><p>Because <code>:month</code> is also in <code>:by</code>, each month gets its own breakpoints. With <code>:from</code>, the breakpoints come from a subset of stocks and apply to all of them, as with NYSE breakpoints: <code>(cut :mktcap 5 :from #dt/e (= :exchcd 1))</code>. See <a href="https://github.com/clojure-finance/datajure#quantile-binning-with-cut">quantile binning</a> in the README.</p><h2 id="putting-it-together">Putting It Together</h2><p>A per-stock summary in three steps: derive daily returns and drawdowns, collapse each stock to one row, and sort. <code>:within-order</code> also works with <code>:agg</code>, so <code>first-val</code> and <code>last-val</code> see each stock's first and last day:</p><pre><code class="clojure">(-&gt; prices
+    (dt :by [:sym] :within-order [(asc :date)]
+        :set [[:ret  #dt/e (- (win/ratio :price) 1)]
+              [:peak #dt/e (win/scan max :price)]
+              [:dd   #dt/e (- (/ :price :peak) 1)]])
+    (dt :by [:sym] :within-order [(asc :date)]
+        :agg {:total-ret #dt/e (- (/ (last-val :price) (first-val :price)) 1)
+              :vol       #dt/e (sd :ret)
+              :max-dd    #dt/e (mi :dd)})
+    (dt :order-by [(desc :total-ret)]))
+</code></pre><pre><code class="text">_unnamed [2 4]:
+
+| :sym | :total-ret |       :vol |     :max-dd |
+|------|-----------:|-----------:|------------:|
+| AAPL |      0.040 | 0.04032943 | -0.02941176 |
+| MSFT |      0.035 | 0.01888828 | -0.01000000 |
+</code></pre><p>The full list of window functions, including ranks, <code>win/cummax</code>, <code>win/each-prior</code> and <code>win/grr</code>, is in the <a href="https://github.com/clojure-finance/datajure#window-functions">README</a>.</p>
+
+        
+        <nav class="pager" aria-label="Previous and next page">
+    
+    <a class="pager-link prev" href="/datajure-website/pages-output/examples/"><span class="pager-label">&larr; Previous</span><span class="pager-title">Examples</span></a>
+    
+    
+    <a class="pager-link next" href="/datajure-website/pages-output/coming-from/"><span class="pager-label">Next &rarr;</span><span class="pager-title">Coming from R or Python</span></a>
+    
+</nav>
+
+        
+    </article>
+</div>
+
+        </main>
+
+        <footer class="site-footer">
+            <div class="footer-inner">
+                <div class="footer-brand">
+                    <strong>Datajure</strong>
+                    <span>Data manipulation for Clojure, built on tech.ml.dataset. Developed at HKU Business School.</span>
+                </div>
+                <ul class="footer-links">
+                    <li><a href="https://github.com/clojure-finance/datajure">GitHub</a></li>
+                    <li><a href="https://clojars.org/com.github.clojure-finance/datajure">Clojars</a></li>
+                    <li><a href="https://cljdoc.org/d/com.github.clojure-finance/datajure/CURRENT">API docs</a></li>
+                    <li><a href="https://github.com/clojure-finance/datajure/blob/main/CHANGELOG.md">Changelog</a></li>
+                    <li><a href="https://github.com/clojure-finance/datajure/issues">Report a bug</a></li>
+                </ul>
+                <p class="footer-legal">
+                    &copy; 2026 Datajure &middot; Apache License 2.0 &middot;
+                    Site built with <a href="https://cryogenweb.org">Cryogen</a>
+                    &middot; <a href="https://github.com/clojure-finance/datajure-website">Edit this site</a>
+                </p>
+            </div>
+        </footer>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/clojure.min.js"></script>
+        <script src="/datajure-website/js/site.js" type="application/javascript"></script>
+    </body>
+</html>

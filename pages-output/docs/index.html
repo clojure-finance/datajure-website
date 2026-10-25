@@ -2,99 +2,163 @@
 <html lang="en">
     <head>
         <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Datajure: Docs</title>
         
 
-<meta name="description" content="This page explains how Datajure queries work. The snippets use the prices dataset from the quick start; the examples show their output. Every option is covered in the README, and the API docs are on cljdoc.The dt Function">
-
-<meta property="og:description" content="This page explains how Datajure queries work. The snippets use the prices dataset from the quick start; the examples show their output. Every option is covered in the README, and the API docs are on cljdoc.The dt Function">
+<meta name="description" content="This page explains how Datajure works, from the core idea to the helper namespaces. It builds on the prices dataset from the quick start: two stocks, four trading days, one missing volume. The examples show more queries with their output. Every option is covered in the README, and the API docs are on cljdoc.The Mental Model">
+<meta property="og:description" content="This page explains how Datajure works, from the core idea to the helper namespaces. It builds on the prices dataset from the quick start: two stocks, four trading days, one missing volume. The examples show more queries with their output. Every option is covered in the README, and the API docs are on cljdoc.The Mental Model">
 
 <meta property="og:url" content="https://clojure-finance.github.io/datajure-website/pages-output/docs/" />
 <meta property="og:title" content="Docs" />
 <meta property="og:type" content="article" />
 
-        <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-        
-        <link rel="shortcut icon" href="images/ico/favicon.png">
-        <link href="https://fonts.googleapis.com/css2?family=Fira+Code&family=Titillium+Web:wght@400;700&display=swap" rel="stylesheet">
-        <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@400;700&display=swap" rel="stylesheet">
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-        <link href="/datajure-website/css/normalize.css" rel="stylesheet" type="text/css" />
-        <link href="/datajure-website/css/blog.css" rel="stylesheet" type="text/css" />
-        <link href="/datajure-website/css/lotus-highlightjs.min.css" rel="stylesheet" type="text/css" />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/default.min.css">
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+        <meta name="color-scheme" content="light dark">
+        <script>
+            // Apply the saved light/dark choice before the page paints.
+            try {
+                var t = localStorage.getItem("theme");
+                if (t === "light" || t === "dark") document.documentElement.dataset.theme = t;
+            } catch (e) {}
+        </script>
+        <link rel="icon" type="image/svg+xml" href="/datajure-website/img/favicon.svg">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+        <link href="/datajure-website/css/site.css" rel="stylesheet" type="text/css" />
     </head>
-    <body>
-        <aside id="sidebar">
-            <div id="logo">
-                <a title="Datajure" href="/datajure-website/">
-                    <div class="title-text text desktop-and-tablet-only">
-                        <i class="desktop-and-tablet-only fa fa-table"></i>
-                        <br/><br/>
-                        Datajure
-                    </div>
-                    <div class="title-text text mobile-only">Datajure</div>
+    <body class="">
+        <a class="skip-link" href="#content">Skip to content</a>
+        <header class="topbar">
+            <div class="topbar-inner">
+                <a class="brand" href="/datajure-website/" title="Datajure home">
+                    <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true">
+                        <rect x="2" y="2" width="28" height="28" rx="7" class="bm-bg"/>
+                        <rect x="7" y="8" width="18" height="4" rx="1.5" class="bm-head"/>
+                        <rect x="7" y="14" width="5" height="3" rx="1" class="bm-cell"/>
+                        <rect x="13.5" y="14" width="5" height="3" rx="1" class="bm-cell"/>
+                        <rect x="20" y="14" width="5" height="3" rx="1" class="bm-hot"/>
+                        <rect x="7" y="19" width="5" height="3" rx="1" class="bm-cell"/>
+                        <rect x="13.5" y="19" width="5" height="3" rx="1" class="bm-cell"/>
+                        <rect x="20" y="19" width="5" height="3" rx="1" class="bm-hot"/>
+                    </svg>
+                    <span class="brand-name">Datajure</span>
                 </a>
-            </div> 
-
-            <nav id="sidebar-links">
-                <nav id="menucont">
-                    <ul class="menu">
-                        <li ><a title="Home" href="/datajure-website/"><div class="menu-item-text">Home</div></a></li>
-                        
-                        <li >
-                            <a href="/datajure-website/pages-output/quick-start/"><div class="menu-item-text">Quick Start</div></a>
-                        </li>
-                        
-                        <li  class="active" >
-                            <a href="/datajure-website/pages-output/docs/"><div class="menu-item-text">Docs</div></a>
-                        </li>
-                        
-                        <li >
-                            <a href="/datajure-website/pages-output/examples/"><div class="menu-item-text">Examples</div></a>
-                        </li>
-                        
-                    </ul>
-                </nav>
-
-                <nav id="socialmedia">
+                <nav class="mainnav" aria-label="Main">
                     <ul>
-                        <li><a target="_blank" title="GitHub" href="https://github.com/clojure-finance/datajure" rel="external"><i class="icon fa-brands fa-github"></i></a></li>
+                        
+                        <li><a href="/datajure-website/pages-output/quick-start/">Quick Start</a></li>
+                        
+                        <li><a href="/datajure-website/pages-output/docs/" class="active" aria-current="page">Docs</a></li>
+                        
+                        <li><a href="/datajure-website/pages-output/examples/">Examples</a></li>
+                        
+                        <li><a href="/datajure-website/pages-output/time-series/">Time Series</a></li>
+                        
+                        <li><a href="/datajure-website/pages-output/coming-from/">From R &amp; Python</a></li>
+                        
                     </ul>
                 </nav>
-            </nav>
-        </aside>
+                <div class="topbar-actions">
+                    <button class="icon-btn" id="theme-toggle" type="button" aria-label="Switch between light and dark mode" title="Light or dark mode">
+                        <svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.5"/><path d="M12 1.5v3M12 19.5v3M1.5 12h3M19.5 12h3M4.6 4.6l2.1 2.1M17.3 17.3l2.1 2.1M4.6 19.4l2.1-2.1M17.3 6.7l2.1-2.1"/></svg>
+                        <svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5a8.5 8.5 0 1 0 10.7 10.7z"/></svg>
+                    </button>
+                    <a class="icon-btn" href="https://github.com/clojure-finance/datajure" title="Datajure on GitHub" aria-label="Datajure on GitHub">
+                        <svg viewBox="0 0 16 16" aria-hidden="true" class="i-fill"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+                    </a>
+                </div>
+            </div>
+        </header>
 
-        <article id="main">
+        <main id="content">
             
-<div id="custom-page">
-    <div id="page-header">
+<div class="page-hero">
+    <div class="page-hero-inner">
         <h1>Docs</h1>
+        <p class="page-lead">How Datajure queries work, from the core idea to the helper namespaces.</p>
     </div>
-    <ul class="toc"><li><a href="#the-dt-function">The <code>dt</code> Function</a></li><ul><li><a href="#evaluation-order">Evaluation Order</a></li><li><a href="#by-with-set-or-agg"><code>:by</code> with <code>:set</code> or <code>:agg</code></a></li><li><a href="#columns-built-in-order">Columns Built in Order</a></li></ul><li><a href="#expressions">Expressions</a></li><ul><li><a href="#dte-and-plain-functions"><code>#dt/e</code> and Plain Functions</a></li><li><a href="#operations">Operations</a></li><li><a href="#missing-values">Missing Values</a></li><li><a href="#runtime-values-and-data-forms">Runtime Values and Data-Forms</a></li><li><a href="#reusable-expressions">Reusable Expressions</a></li></ul><li><a href="#selecting-columns">Selecting Columns</a></li><li><a href="#grouping">Grouping</a></li><li><a href="#joins">Joins</a></li><li><a href="#reshaping">Reshaping</a></li><li><a href="#other-namespaces">Other Namespaces</a></li><li><a href="#errors">Errors</a></li></ul>
-    <p>This page explains how Datajure queries work. The snippets use the <code>prices</code> dataset from the <a href="/datajure-website/pages-output/quick-start/">quick start</a>; the <a href="/datajure-website/pages-output/examples/">examples</a> show their output. Every option is covered in the <a href="https://github.com/clojure-finance/datajure#readme">README</a>, and the API docs are on <a href="https://cljdoc.org/d/com.github.clojure-finance/datajure/CURRENT">cljdoc</a>.</p><h2 id="the-dt-function">The <code>dt</code> Function</h2><p>Every query is a call to <code>dt</code> with a dataset and keyword arguments:</p><pre><code class="clojure">(require '[datajure.core :refer [dt dt1 nrow asc desc]])
+</div>
+<div class="doc-layout has-toc">
+    
+    <aside class="toc-side">
+        <details class="toc-box" open>
+            <summary>On this page</summary>
+            <nav aria-label="On this page"><ul class="toc"><li><a href="#the-mental-model">The Mental Model</a></li><li><a href="#how-a-query-works">How a Query Works</a><ul><li><a href="#the-dt-function">The <code>dt</code> Function</a></li><li><a href="#evaluation-order">Evaluation Order</a></li><li><a href="#rows-in-rows-out-by-with-set-or-agg">Rows In, Rows Out: <code>:by</code> with <code>:set</code> or <code>:agg</code></a></li><li><a href="#columns-built-in-order">Columns Built in Order</a></li><li><a href="#dt1-and-queries-as-maps"><code>dt1</code> and Queries as Maps</a></li></ul></li><li><a href="#expressions">Expressions</a><ul><li><a href="#dte-and-plain-functions"><code>#dt/e</code> and Plain Functions</a></li><li><a href="#operations">Operations</a></li><li><a href="#missing-values">Missing Values</a></li><li><a href="#plain-functions-and-missing-values">Plain Functions and Missing Values</a></li><li><a href="#keywords-as-values-lit">Keywords as Values: <code>lit</code></a></li><li><a href="#runtime-values-and-data-forms">Runtime Values and Data-Forms</a></li><li><a href="#reusable-expressions">Reusable Expressions</a></li></ul></li><li><a href="#selecting-columns">Selecting Columns</a></li><li><a href="#grouping">Grouping</a></li><li><a href="#dates">Dates</a></li><li><a href="#binning-xbar-and-cut">Binning: <code>xbar</code> and <code>cut</code></a></li><li><a href="#window-functions">Window Functions</a></li><li><a href="#row-wise-functions">Row-Wise Functions</a></li><li><a href="#statistical-transforms">Statistical Transforms</a></li><li><a href="#joins">Joins</a></li><li><a href="#reshaping">Reshaping</a></li><li><a href="#cleaning-and-inspecting-data">Cleaning and Inspecting Data</a></li><li><a href="#fast-lookups-by-key">Fast Lookups by Key</a></li><li><a href="#reusing-a-grouping">Reusing a Grouping</a></li><li><a href="#other-namespaces">Other Namespaces</a></li><li><a href="#errors">Errors</a></li></ul></nav>
+        </details>
+    </aside>
+    
+    <article class="prose">
+        <p>This page explains how Datajure works, from the core idea to the helper namespaces. It builds on the <code>prices</code> dataset from the <a href="/datajure-website/pages-output/quick-start/">quick start</a>: two stocks, four trading days, one missing volume. The <a href="/datajure-website/pages-output/examples/">examples</a> show more queries with their output. Every option is covered in the <a href="https://github.com/clojure-finance/datajure#readme">README</a>, and the API docs are on <a href="https://cljdoc.org/d/com.github.clojure-finance/datajure/CURRENT">cljdoc</a>.</p><h2 id="the-mental-model">The Mental Model</h2><p>A Datajure query takes a dataset (a table of named columns) and returns a new dataset. The input is never changed. Every query is one call to <code>dt</code>, which runs up to five steps in a fixed order: keep some rows, compute new columns or summaries, pick columns, sort, and take the first few rows. The computations are written as expressions that describe whole columns, such as "price times volume", rather than loops over rows.</p><p>Because the result is always a dataset, queries chain: the output of one <code>dt</code> call is the input of the next.</p><h2 id="how-a-query-works">How a Query Works</h2><h3 id="the-dt-function">The <code>dt</code> Function</h3><p><code>dt</code> takes a dataset and keyword arguments. Each keyword is optional:</p><pre><code class="clojure">(require '[datajure.core :refer [dt dt1 nrow asc desc]])
 
 (dt prices
     :where #dt/e (&gt; :price 100)
     :by [:sym]
     :agg {:n nrow :avg-price #dt/e (mn :price)})
-</code></pre><table><thead><tr><th>Keyword</th><th>Purpose</th></tr></thead><tbody><tr><td><code>:where</code></td><td>Keep the rows where an expression is true</td></tr><tr><td><code>:set</code></td><td>Add or replace columns, keeping every row</td></tr><tr><td><code>:agg</code></td><td>Collapse rows into one row per group (or one row in total)</td></tr><tr><td><code>:by</code></td><td>Group for <code>:set</code> or <code>:agg</code></td></tr><tr><td><code>:within-order</code></td><td>Sort rows within each group before <code>:set</code> or <code>:agg</code> runs</td></tr><tr><td><code>:select</code></td><td>Keep, drop or rename columns</td></tr><tr><td><code>:order-by</code></td><td>Sort the result</td></tr><tr><td><code>:take</code></td><td>Keep the first n rows, or the last n if negative</td></tr></tbody></table><p><code>dt</code> is a function, not a macro, and always returns a dataset. <code>dt1</code> takes the same arguments and returns the single result row as a map, or throws if the result is not exactly one row:</p><pre><code class="clojure">(dt1 prices :agg {:n nrow :avg-price #dt/e (mn :price)})
-;; =&gt; {:n 8, :avg-price 151.5}
-</code></pre><p>A query can also be one map, which makes it plain data that can be stored, merged or built by a program:</p><pre><code class="clojure">(dt prices {:where [:&gt; :price 100] :by [:sym] :agg {:n [:nrow]}})
-</code></pre><h3 id="evaluation-order">Evaluation Order</h3><p>Whatever order the keywords are written in, <code>dt</code> evaluates them in this order:</p><ol><li><code>:where</code> filters rows.</li><li><code>:set</code> or <code>:agg</code> derives or aggregates (<code>:by</code> and <code>:within-order</code> apply here).</li><li><code>:select</code> keeps the listed columns.</li><li><code>:order-by</code> sorts the result.</li><li><code>:take</code> limits the number of rows.</li></ol><p><code>:set</code> and <code>:agg</code> cannot be used in the same call; thread several <code>dt</code> calls with <code>-&gt;</code> instead. An unknown keyword is an error with a suggestion (<code>:wehre -&gt; :where</code>), not silently ignored.</p><h3 id="by-with-set-or-agg"><code>:by</code> with <code>:set</code> or <code>:agg</code></h3><p><code>:by</code> combines with <code>:set</code> and <code>:agg</code> to give four kinds of operation:</p><table><thead><tr><th> </th><th>Without <code>:by</code></th><th>With <code>:by</code></th></tr></thead><tbody><tr><td><code>:set</code></td><td>Derive columns over the whole dataset</td><td>Derive columns within each group (window functions run per group)</td></tr><tr><td><code>:agg</code></td><td>One summary row</td><td>One row per group</td></tr></tbody></table><pre><code class="clojure">;; one row per symbol
-(dt prices :by [:sym] :agg {:n nrow :avg-price #dt/e (mn :price)})
+</code></pre><pre><code class="text">_unnamed [2 3]:
 
-;; every row kept, return computed within each symbol in date order
-(dt prices
+| :sym | :n | :avg-price |
+|------|---:|-----------:|
+| AAPL |  2 |     103.00 |
+| MSFT |  4 |     201.75 |
+</code></pre><p>Read it as: keep the rows with a price above 100, group them by symbol, and for each group count the rows and average the price.</p><table><thead><tr><th>Keyword</th><th>Purpose</th></tr></thead><tbody><tr><td><code>:where</code></td><td>Keep the rows where an expression is true</td></tr><tr><td><code>:set</code></td><td>Add or replace columns, keeping every row</td></tr><tr><td><code>:agg</code></td><td>Collapse rows into one row per group (or one row in total)</td></tr><tr><td><code>:by</code></td><td>Group for <code>:set</code> or <code>:agg</code></td></tr><tr><td><code>:within-order</code></td><td>Sort rows within each group before <code>:set</code> or <code>:agg</code> runs</td></tr><tr><td><code>:select</code></td><td>Keep, drop or rename columns</td></tr><tr><td><code>:order-by</code></td><td>Sort the result</td></tr><tr><td><code>:take</code></td><td>Keep the first n rows, or the last n if negative</td></tr></tbody></table><p><code>dt</code> is an ordinary function, not a macro, and always returns a dataset.</p><h3 id="evaluation-order">Evaluation Order</h3><p>Whatever order the keywords are written in, <code>dt</code> evaluates them in this order:</p><ol class="flow" aria-label="Evaluation order"><li><code>:where</code><span>keeps the matching rows</span></li><li><code>:set</code> / <code>:agg</code><span>computes, per <code>:by</code> group, in <code>:within-order</code></span></li><li><code>:select</code><span>keeps the listed columns</span></li><li><code>:order-by</code><span>sorts the result</span></li><li><code>:take</code><span>keeps the first (or last) n rows</span></li></ol><p>So this query, written back to front, still filters first and sorts last:</p><pre><code class="clojure">(dt prices
+    :order-by [(desc :avg-price)]
+    :agg {:n nrow :avg-price #dt/e (mn :price)}
+    :by [:sym]
+    :where #dt/e (&gt; :price 100))
+</code></pre><pre><code class="text">_unnamed [2 3]:
+
+| :sym | :n | :avg-price |
+|------|---:|-----------:|
+| MSFT |  4 |     201.75 |
+| AAPL |  2 |     103.00 |
+</code></pre><p><code>:set</code> and <code>:agg</code> cannot be used in the same call; thread several <code>dt</code> calls with <code>-&gt;</code> instead. An unknown keyword is an error with a suggestion (<code>:wehre -&gt; :where</code>), not silently ignored.</p><h3 id="rows-in-rows-out-by-with-set-or-agg">Rows In, Rows Out: <code>:by</code> with <code>:set</code> or <code>:agg</code></h3><p>The two ways of computing differ in what happens to the rows:</p><ul><li><code>:set</code> keeps every row and adds columns, like a formula filled down a spreadsheet column.</li><li><code>:agg</code> performs an aggregation: it collapses many rows into one, such as a sum or a mean.</li></ul><p><code>:by</code> splits the rows into groups first (also called partitions). Combined, they give four kinds of operation:</p><div class="grid4" role="img" aria-label="Without :by, :set adds a column to every row and :agg collapses all rows into one. With :by, :set computes the new column within each group and :agg returns one row per group."><div class="g-corner"></div><div class="g-head">without <code>:by</code></div><div class="g-head">with <code>:by</code></div><div class="g-row"><code>:set</code></div><div class="g-cell"><span class="g-tag">:set</span><strong>Add a column</strong><span class="g-shape"><span class="mt"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span><span class="g-arrow">→</span><span class="mt" style="--cols:3"><i></i><i></i><i class="n"></i><i></i><i></i><i class="n"></i><i></i><i></i><i class="n"></i><i></i><i></i><i class="n"></i></span></span><span class="g-desc">Same rows, plus new columns.</span></div><div class="g-cell"><span class="g-tag">:set + :by</span><strong>Compute per group</strong><span class="g-shape"><span class="mt"><i class="a"></i><i></i><i class="a"></i><i></i><i class="b"></i><i></i><i class="b"></i><i></i></span><span class="g-arrow">→</span><span class="mt" style="--cols:3"><i class="a"></i><i></i><i class="na"></i><i class="a"></i><i></i><i class="na"></i><i class="b"></i><i></i><i class="nb"></i><i class="b"></i><i></i><i class="nb"></i></span></span><span class="g-desc">Same rows; each group computed on its own.</span></div><div class="g-row"><code>:agg</code></div><div class="g-cell"><span class="g-tag">:agg</span><strong>Summarize everything</strong><span class="g-shape"><span class="mt"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span><span class="g-arrow">→</span><span class="mt"><i class="n"></i><i class="n"></i></span></span><span class="g-desc">One row in total.</span></div><div class="g-cell"><span class="g-tag">:agg + :by</span><strong>Summarize per group</strong><span class="g-shape"><span class="mt"><i class="a"></i><i></i><i class="a"></i><i></i><i class="b"></i><i></i><i class="b"></i><i></i></span><span class="g-arrow">→</span><span class="mt"><i class="a"></i><i class="n"></i><i class="b"></i><i class="n"></i></span></span><span class="g-desc">One row per group.</span></div></div><table><thead><tr><th> </th><th>Without <code>:by</code></th><th>With <code>:by</code></th></tr></thead><tbody><tr><td><code>:set</code></td><td>Derive columns over the whole dataset</td><td>Derive columns within each group</td></tr><tr><td><code>:agg</code></td><td>One summary row</td><td>One row per group</td></tr></tbody></table><p>With <code>:by</code> and <code>:agg</code>, each symbol becomes one row. <code>:within-order</code> sorts each group by date first, so <code>first-val</code> and <code>last-val</code> give the opening and closing price:</p><pre><code class="clojure">(dt prices
     :by [:sym]
     :within-order [(asc :date)]
-    :set {:ret #dt/e (- (win/ratio :price) 1)})
-</code></pre><p>A <code>:set</code> query keeps the input row order. <code>:within-order</code> only sets the order in which window functions walk each group; use <code>:order-by</code> to sort the output.</p><h3 id="columns-built-in-order">Columns Built in Order</h3><p><code>:set</code> takes a map or a sequence of pairs. In a map, every expression sees only the input columns, and referring to a sibling is an error. In a sequence of pairs, each expression sees the columns derived before it:</p><pre><code class="clojure">(dt prices :set [[:value #dt/e (* :price :volume)]
+    :agg {:open  #dt/e (first-val :price)
+          :close #dt/e (last-val :price)
+          :hi    #dt/e (mx :price)
+          :lo    #dt/e (mi :price)})
+</code></pre><pre><code class="text">_unnamed [2 5]:
+
+| :sym | :open | :close |   :hi |   :lo |
+|------|------:|-------:|------:|------:|
+| AAPL | 100.0 |  104.0 | 104.0 |  99.0 |
+| MSFT | 200.0 |  207.0 | 207.0 | 198.0 |
+</code></pre><p>With <code>:by</code> and <code>:set</code>, every row is kept and each value is computed within its own group. This is where window functions come in: functions such as <code>win/lag</code> (the previous value) or <code>win/delta</code> (the change from the previous value) that look at neighboring rows. Here they never reach across from AAPL into MSFT:</p><pre><code class="clojure">(dt prices
+    :by [:sym]
+    :within-order [(asc :date)]
+    :set {:prev #dt/e (win/lag :price 1)
+          :chg  #dt/e (win/delta :price)})
+</code></pre><pre><code class="text">_unnamed [8 6]:
+
+|      :date | :sym | :price | :volume | :prev | :chg |
+|------------|------|-------:|--------:|------:|-----:|
+| 2024-01-02 | AAPL |  100.0 |    1200 |       |      |
+| 2024-01-03 | AAPL |  102.0 |    1500 | 100.0 |  2.0 |
+| 2024-01-04 | AAPL |   99.0 |         | 102.0 | -3.0 |
+| 2024-01-05 | AAPL |  104.0 |    1800 |  99.0 |  5.0 |
+| 2024-01-02 | MSFT |  200.0 |     900 |       |      |
+| 2024-01-03 | MSFT |  198.0 |    1100 | 200.0 | -2.0 |
+| 2024-01-04 | MSFT |  202.0 |    1000 | 198.0 |  4.0 |
+| 2024-01-05 | MSFT |  207.0 |    1300 | 202.0 |  5.0 |
+</code></pre><p>An aggregation inside <code>:set</code> gives the same value for every row of the group, which makes shares and deviations easy. Each price as a share of its symbol's total:</p><pre><code class="clojure">(dt prices :by [:sym]
+    :set {:share #dt/e (/ :price (sm :price))}
+    :select [:sym :price :share]
+    :take 3)
+</code></pre><pre><code class="text">_unnamed [3 3]:
+
+| :sym | :price |     :share |
+|------|-------:|-----------:|
+| AAPL |  100.0 | 0.24691358 |
+| AAPL |  102.0 | 0.25185185 |
+| AAPL |   99.0 | 0.24444444 |
+</code></pre><p>A <code>:set</code> query keeps the input row order. <code>:within-order</code> only sets the order in which window functions walk each group; use <code>:order-by</code> to sort the output. The <a href="/datajure-website/pages-output/time-series/">time series</a> page covers window functions in depth.</p><h3 id="columns-built-in-order">Columns Built in Order</h3><p><code>:set</code> takes a map or a sequence of pairs. In a map, every expression sees only the input columns, and referring to a sibling is an error. In a sequence of pairs, each expression sees the columns derived before it:</p><pre><code class="clojure">(dt prices :set [[:value #dt/e (* :price :volume)]
                  [:big?  #dt/e (&gt; :value 200000)]])
-</code></pre><h2 id="expressions">Expressions</h2><h3 id="dte-and-plain-functions"><code>#dt/e</code> and Plain Functions</h3><p><code>#dt/e</code> is a reader tag that turns a form into an expression: bare keywords refer to columns, and the expression runs on whole columns at once. Plain Clojure functions also work and are called once per row with a row map:</p><pre><code class="clojure">(dt prices :where #dt/e (&gt; :price 150))     ;; expression, vectorized
+</code></pre><h3 id="dt1-and-queries-as-maps"><code>dt1</code> and Queries as Maps</h3><p><code>dt1</code> takes the same arguments as <code>dt</code> and returns the single result row as a map. It throws if the result is not exactly one row, so it suits whole-dataset summaries:</p><pre><code class="clojure">(dt1 prices :agg {:n nrow :avg-price #dt/e (mn :price)})
+</code></pre><pre><code class="text">{:n 8, :avg-price 151.5}
+</code></pre><p>A query can also be one map, which makes it plain data that can be stored, merged or built by a program:</p><pre><code class="clojure">(dt prices {:where [:&gt; :price 100] :by [:sym] :agg {:n [:nrow]}})
+</code></pre><h2 id="expressions">Expressions</h2><h3 id="dte-and-plain-functions"><code>#dt/e</code> and Plain Functions</h3><p><code>#dt/e</code> is a reader tag: a marker placed before a form that changes how Clojure reads it. Inside it, bare keywords such as <code>:price</code> refer to columns, and the expression is vectorized: it runs on whole columns at once, which is much faster than calling a function for each row. Plain Clojure functions also work and are called once per row with a row map:</p><pre><code class="clojure">(dt prices :where #dt/e (&gt; :price 150))     ;; expression, vectorized
 (dt prices :where #(&gt; (:price %) 150))      ;; plain function, per row
 </code></pre><table><thead><tr><th> </th><th><code>#dt/e</code></th><th>Plain function</th></tr></thead><tbody><tr><td>Column access</td><td><code>:price</code></td><td><code>(:price %)</code></td></tr><tr><td>Speed</td><td>Vectorized</td><td>One call per row in <code>:where</code> and <code>:set</code></td></tr><tr><td>Missing values</td><td>Handled by the rules below</td><td>Up to the function (see <code>pass-nil</code>)</td></tr><tr><td>Checking</td><td>Unknown columns and operations are reported before running, with suggestions</td><td>Errors at run time</td></tr></tbody></table><p>Prefer <code>#dt/e</code>, and use plain functions for logic that has no vectorized form, such as Java interop. In <code>:agg</code>, a plain function receives the whole group dataset rather than a row.</p><h3 id="operations">Operations</h3><p>Inside <code>#dt/e</code>:</p><table><thead><tr><th>Kind</th><th>Operations</th></tr></thead><tbody><tr><td>Arithmetic and math</td><td><code>+ - * /</code>, <code>sq</code>, <code>sqrt</code>, <code>pow</code>, <code>log</code>, <code>exp</code>, <code>log1p</code>, <code>expm1</code>, <code>abs</code>, <code>signum</code>, <code>floor</code>, <code>ceil</code>, <code>round</code></td></tr><tr><td>Comparison and logic</td><td><code>= &lt; &lt;= &gt; &gt;=</code>, <code>and</code>, <code>or</code>, <code>not</code>, <code>in</code> (set membership), <code>between?</code></td></tr><tr><td>Conditionals and bindings</td><td><code>if</code>, <code>cond</code>, <code>let</code>, <code>when-finite</code></td></tr><tr><td>Missing values</td><td><code>coalesce</code>, <code>coalesce-finite</code>, <code>div0</code></td></tr><tr><td>Aggregations</td><td><code>mn</code> (mean), <code>sm</code> (sum), <code>md</code> (median), <code>qnt</code> (quantile), <code>sd</code>, <code>mx</code>, <code>mi</code>, <code>ct</code> (non-missing count), <code>nuniq</code>, <code>first-val</code>, <code>last-val</code>, <code>wavg</code>, <code>wsum</code>, <code>cov</code>, <code>corr</code>, <code>tstat</code>, <code>nrow</code></td></tr><tr><td>Calendar parts</td><td><code>year</code>, <code>month</code>, <code>day</code>, <code>dow</code> (1 = Monday), <code>quarter</code></td></tr><tr><td>Window functions</td><td><code>win/rank</code>, <code>win/lag</code>, <code>win/lead</code>, <code>win/cumsum</code>, <code>win/ratio</code>, <code>win/delta</code>, <code>win/mavg</code>, <code>win/mdev</code>, <code>win/ema</code>, <code>win/fills</code>, <code>win/scan</code>, and <a href="https://github.com/clojure-finance/datajure#window-functions">more</a></td></tr><tr><td>Across columns in a row</td><td><code>row/sum</code>, <code>row/mean</code>, <code>row/min</code>, <code>row/max</code>, <code>row/count-nil</code>, <code>row/any-nil?</code></td></tr><tr><td>Column transforms</td><td><code>stat/standardize</code>, <code>stat/demean</code>, <code>stat/winsorize</code>, <code>stat/trim</code>, <code>stat/rescale</code></td></tr><tr><td>Binning</td><td><code>xbar</code> (fixed width), <code>cut</code> (equal-count quantile bins)</td></tr></tbody></table><pre><code class="clojure">(dt prices :set {:size #dt/e (cond (&gt; :price 200) "large"
                                    (&gt; :price 100) "medium"
@@ -102,73 +166,283 @@
 
 (dt prices :where #dt/e (and (in :sym #{"AAPL" "MSFT"})
                              (between? :price 100 205)))
-</code></pre><p>Aggregations also have full names (<code>mean</code>, <code>sum</code>, <code>median</code>, …), and <code>datajure.concise</code> exports short aliases such as <code>N</code> for <code>nrow</code>.</p><h3 id="missing-values">Missing Values</h3><p>Datajure handles missing values (<code>nil</code>) with a few rules rather than one blanket guarantee:</p><ul><li>A comparison with a missing value is false, so <code>:where</code> drops that row.</li><li>Arithmetic on a missing value gives a missing value. Arithmetic with a literal <code>nil</code> is an error when the expression is read.</li><li>Aggregations skip missing values, and return <code>nil</code> if all are missing.</li><li><code>coalesce</code> replaces missing values, <code>div0</code> gives <code>nil</code> instead of dividing by zero or <code>nil</code>, and <code>win/fills</code> carries the last value forward.</li><li>Plain functions get no special handling; <code>pass-nil</code> wraps one so it returns <code>nil</code> when a given column is missing.</li></ul><pre><code class="clojure">(dt prices :set {:volume #dt/e (coalesce :volume 0)})
+</code></pre><p>Aggregations also have full names (<code>mean</code>, <code>sum</code>, <code>median</code>, …), and <code>datajure.concise</code> exports short aliases such as <code>N</code> for <code>nrow</code>.</p><h3 id="missing-values">Missing Values</h3><p>Real data has gaps. Datajure represents a missing value as <code>nil</code> and handles it with a few rules rather than one blanket guarantee:</p><ul><li>A comparison with a missing value is false, so <code>:where</code> drops that row.</li><li>Arithmetic on a missing value gives a missing value. Arithmetic with a literal <code>nil</code> is an error when the expression is read.</li><li>Aggregations skip missing values, and return <code>nil</code> if all are missing.</li><li><code>coalesce</code> replaces missing values, <code>div0</code> gives <code>nil</code> instead of dividing by zero or <code>nil</code>, and <code>win/fills</code> carries the last value forward.</li><li>Plain functions get no special handling (see <a href="#plain-functions-and-missing-values">Plain Functions and Missing Values</a>).</li></ul><p>The AAPL volume on 2024-01-04 is missing, so <code>ct</code> counts seven volumes and <code>sm</code> adds up those seven:</p><pre><code class="clojure">(dt1 prices :agg {:rows        nrow
+                  :with-volume #dt/e (ct :volume)
+                  :total-vol   #dt/e (sm :volume)})
+</code></pre><pre><code class="text">{:rows 8, :with-volume 7, :total-vol 8800.0}
+</code></pre><p>Filling the gap, either with a constant or with the previous value of the same symbol:</p><pre><code class="clojure">(dt prices :set {:volume #dt/e (coalesce :volume 0)})
 (dt prices :by [:sym] :within-order [(asc :date)]
     :set {:volume #dt/e (win/fills :volume)})
-</code></pre><h3 id="runtime-values-and-data-forms">Runtime Values and Data-Forms</h3><p><code>#dt/e</code> is applied when the code is read, so it cannot see a local variable. For values known only at run time, write the expression as a data-form: a vector headed by an operation keyword, with keywords as columns and anything else as a literal:</p><pre><code class="clojure">(let [ticker "MSFT" lo 199]
+</code></pre><h3 id="plain-functions-and-missing-values">Plain Functions and Missing Values</h3><p>A plain function sees <code>nil</code> as is, and often fails on it. <code>pass-nil</code> wraps the function so that it returns <code>nil</code> whenever one of the named columns is missing:</p><pre><code class="clojure">(require '[datajure.core :refer [pass-nil]])
+
+;; without pass-nil this throws: Cannot invoke "java.lang.Number.doubleValue()"
+(dt prices
+    :set {:label (pass-nil #(str (:sym %) "/" (long (:volume %))) :volume)}
+    :select [:sym :volume :label]
+    :take 4)
+</code></pre><pre><code class="text">_unnamed [4 3]:
+
+| :sym | :volume |    :label |
+|------|--------:|-----------|
+| AAPL |    1200 | AAPL/1200 |
+| AAPL |    1500 | AAPL/1500 |
+| AAPL |         |           |
+| AAPL |    1800 | AAPL/1800 |
+</code></pre><h3 id="keywords-as-values-lit">Keywords as Values: <code>lit</code></h3><p>Inside <code>#dt/e</code> every keyword is a column. To compare against a keyword value instead, wrap it in <code>lit</code>:</p><pre><code class="clojure">(def orders (ds/-&gt;dataset {:id     [1 2 3]
+                           :status [:active :closed :active]}))
+
+(dt orders :where #dt/e (= :status (lit :active)))
+</code></pre><pre><code class="text">_unnamed [2 2]:
+
+| :id | :status |
+|----:|---------|
+|   1 | :active |
+|   3 | :active |
+</code></pre><p>In a data-form (next section) the same is <code>[:lit :active]</code>.</p><h3 id="runtime-values-and-data-forms">Runtime Values and Data-Forms</h3><p><code>#dt/e</code> is applied when the code is read, before the program runs, so it cannot see a local variable. For values known only at run time, write the expression as a data-form: a vector headed by an operation keyword, with keywords as columns and anything else as a literal value:</p><pre><code class="clojure">(let [ticker "MSFT" lo 199]
   (dt prices :where [:and [:= :sym ticker] [:&gt; :price lo]]))
-</code></pre><p>Data-forms cover everything <code>#dt/e</code> does, including windows (<code>[:win/lag :price 1]</code>) and conditionals (<code>[:cond … :else …]</code>), and run on the same vectorized path. They make it easy to generate queries:</p><pre><code class="clojure">(dt prices :by [:sym]
+</code></pre><pre><code class="text">_unnamed [3 4]:
+
+|      :date | :sym | :price | :volume |
+|------------|------|-------:|--------:|
+| 2024-01-02 | MSFT |  200.0 |     900 |
+| 2024-01-04 | MSFT |  202.0 |    1000 |
+| 2024-01-05 | MSFT |  207.0 |    1300 |
+</code></pre><p>Data-forms cover everything <code>#dt/e</code> does, including windows (<code>[:win/lag :price 1]</code>) and conditionals (<code>[:cond … :else …]</code>), and run on the same vectorized path. Because they are plain vectors, a program can generate them. The maximum of each listed column:</p><pre><code class="clojure">(dt prices :by [:sym]
     :agg (into {} (for [c [:price :volume]]
                     [(keyword (str "max-" (name c))) [:mx c]])))
-</code></pre><p>To use a keyword as a value rather than a column, wrap it in <code>lit</code>: <code>#dt/e (= :status (lit :active))</code>, or <code>[:lit status]</code> in a data-form.</p><h3 id="reusable-expressions">Reusable Expressions</h3><p>An <code>#dt/e</code> expression is a value. Store it in a var and use it in several queries or inside other expressions:</p><pre><code class="clojure">(def value #dt/e (* :price :volume))
+</code></pre><h3 id="reusable-expressions">Reusable Expressions</h3><p>An <code>#dt/e</code> expression is a value. Store it in a var and use it in several queries or inside other expressions:</p><pre><code class="clojure">(def value #dt/e (* :price :volume))
 
 (dt prices :set {:value value})
 (dt prices :by [:sym] :agg {:avg-value #dt/e (mn value)})
-</code></pre><p>This works for window functions too, which build a shared vocabulary of returns and other time-series measures:</p><pre><code class="clojure">(def ret     #dt/e (- (win/ratio :price) 1))
+</code></pre><p>This works for window functions too, which builds a shared vocabulary of returns and other measures:</p><pre><code class="clojure">(def ret     #dt/e (- (win/ratio :price) 1))
 (def log-ret #dt/e (log (+ 1 ret)))
 
 (dt prices :by [:sym] :within-order [(asc :date)]
     :set {:ret ret :log-ret log-ret})
-</code></pre><h2 id="selecting-columns">Selecting Columns</h2><p><code>:select</code> accepts several forms:</p><pre><code class="clojure">(dt prices :select [:sym :price])               ;; these columns
-(dt prices :select [:not :volume])              ;; all but these
-(dt prices :select #"p.*")                      ;; names matching a regex
-(dt prices :select :type/numerical)             ;; numeric columns (dates count as numeric)
+</code></pre><h2 id="selecting-columns">Selecting Columns</h2><p><code>:select</code> accepts several forms:</p><pre><code class="clojure">(dt prices :select [:sym :price])                ;; these columns
+(dt prices :select [:not :volume])               ;; all but these
+(dt prices :select #"p.*")                       ;; names matching a regex
+(dt prices :select :type/numerical)              ;; numeric columns (dates count as numeric)
 (dt prices :select {:sym :ticker :price :close}) ;; select and rename
-</code></pre><p><code>rename</code> renames columns without dropping any: <code>(rename prices {:sym :ticker})</code>.</p><h2 id="grouping">Grouping</h2><p><code>:by</code> takes column keywords, and also:</p><ul><li>named computed keys, as single-entry maps: <code>:by [{:month #dt/e (month :date)}]</code></li><li><code>xbar</code> buckets, such as <code>(xbar :time 5 :minutes)</code>, for time bars</li><li><code>cut</code> quantile bins, such as <code>(cut :mktcap 5)</code>, optionally with breakpoints computed from a subset (<code>:from</code>)</li><li>a plain function of the row</li></ul><pre><code class="clojure">(require '[datajure.core :refer [xbar]])
+</code></pre><p><code>rename</code> renames columns without dropping any: <code>(rename prices {:sym :ticker})</code>.</p><h2 id="grouping">Grouping</h2><p><code>:by</code> takes column keywords, and also:</p><ul><li>named computed keys, as single-entry maps, such as <code>{:month #dt/e (month :date)}</code></li><li><code>xbar</code> buckets and <code>cut</code> quantile bins (see <a href="#binning-xbar-and-cut">Binning</a>)</li><li>a plain function of the row</li></ul><p>A computed key is derived on the fly and appears in the result under the name you give it. Average price by day of the week, where 2 is Tuesday:</p><pre><code class="clojure">(dt prices
+    :by [{:dow #dt/e (dow :date)}]
+    :agg {:avg-price #dt/e (mn :price)})
+</code></pre><pre><code class="text">_unnamed [4 2]:
 
-(dt prices :by [{:dow #dt/e (dow :date)}] :agg {:avg-price #dt/e (mn :price)})
-(dt prices :by [(xbar :price 50)] :agg {:n nrow})
-</code></pre><p>For several passes over the same groups, <code>prepare-grouping</code> computes the grouping once and can be passed as <code>:by</code> in each pass.</p><h2 id="joins">Joins</h2><p><code>datajure.join/join</code> covers regular joins (<code>:inner</code>, <code>:left</code>, <code>:right</code>, <code>:outer</code>), filtering joins (<code>:semi</code>, <code>:anti</code>), <code>:cross</code>, as-of joins (<code>:asof</code>) and window joins (<code>:window</code>). <code>:validate</code> checks key cardinality, and <code>:report true</code> prints how many rows matched:</p><pre><code class="clojure">(require '[datajure.join :refer [join]])
+| :dow | :avg-price |
+|-----:|-----------:|
+|    2 |      150.0 |
+|    3 |      150.0 |
+|    4 |      150.5 |
+|    5 |      155.5 |
+</code></pre><p>Use one map per key (<code>:by [{:y …} {:m …}]</code>), since the order of keys in a map is not reliable. See <a href="https://github.com/clojure-finance/datajure#computed-by--named-expression-keys--custom-grouping-functions">computed <code>:by</code></a> in the README for the rules.</p><h2 id="dates">Dates</h2><p><code>year</code>, <code>month</code>, <code>day</code>, <code>dow</code> (day of week, 1 = Monday to 7 = Sunday) and <code>quarter</code> extract calendar fields from date and date-time columns. A missing date gives a missing value:</p><pre><code class="clojure">(dt prices
+    :set {:yr  #dt/e (year :date)
+          :m   #dt/e (month :date)
+          :q   #dt/e (quarter :date)
+          :dow #dt/e (dow :date)}
+    :select [:date :yr :m :q :dow]
+    :take 4)
+</code></pre><pre><code class="text">_unnamed [4 5]:
+
+|      :date |  :yr | :m | :q | :dow |
+|------------|-----:|---:|---:|-----:|
+| 2024-01-02 | 2024 |  1 |  1 |    2 |
+| 2024-01-03 | 2024 |  1 |  1 |    3 |
+| 2024-01-04 | 2024 |  1 |  1 |    4 |
+| 2024-01-05 | 2024 |  1 |  1 |    5 |
+</code></pre><p>They also work directly in <code>:where</code>, as in <code>#dt/e (= (quarter :date) 2)</code>, and in <code>:by</code> as named keys (above). For lags by date rather than by row, and for filling gaps in a panel, see the <a href="/datajure-website/pages-output/time-series/">time series</a> page.</p><h2 id="binning-xbar-and-cut">Binning: <code>xbar</code> and <code>cut</code></h2><p>Binning turns a continuous value into a small number of groups. Datajure has two kinds:</p><ul><li><code>xbar</code> cuts into fixed-width buckets, rounding down: <code>(xbar :price 50)</code> maps 99 to 50 and 104 to 100. With a unit, such as <code>(xbar :time 5 :minutes)</code>, it builds time bars.</li><li><code>cut</code> makes equal-count (quantile) bins numbered from 1: <code>(cut :price 2)</code> splits at the median.</li></ul><p>Both work in <code>:by</code>, to group, and inside <code>#dt/e</code>, to add a column. Counting prices in buckets of 50:</p><pre><code class="clojure">(require '[datajure.core :refer [xbar cut]])
+
+(dt prices
+    :by [(xbar :price 50)]
+    :agg {:n nrow}
+    :order-by [(asc :price)])
+</code></pre><pre><code class="text">_unnamed [4 2]:
+
+| :price | :n |
+|-------:|---:|
+|     50 |  1 |
+|    100 |  3 |
+|    150 |  1 |
+|    200 |  3 |
+</code></pre><p><code>cut</code> in <code>:by</code> names its result column after the column and the number of bins, here <code>:price-q2</code>:</p><pre><code class="clojure">(dt prices
+    :by [(cut :price 2)]
+    :agg {:n nrow :lo #dt/e (mi :price) :hi #dt/e (mx :price)})
+</code></pre><pre><code class="text">_unnamed [2 4]:
+
+| :price-q2 | :n |   :lo |   :hi |
+|----------:|---:|------:|------:|
+|         1 |  4 |  99.0 | 104.0 |
+|         2 |  4 | 198.0 | 207.0 |
+</code></pre><p>With <code>:from</code>, the breakpoints are computed from a subset of rows and then applied to all rows. In finance this is how size portfolios use NYSE breakpoints for every stock. Here the median comes from AAPL prices only, so every MSFT price lands in the upper bin:</p><pre><code class="clojure">(dt prices
+    :set {:half #dt/e (cut :price 2 :from (= :sym "AAPL"))}
+    :select [:sym :price :half])
+</code></pre><pre><code class="text">_unnamed [8 3]:
+
+| :sym | :price | :half |
+|------|-------:|------:|
+| AAPL |  100.0 |     1 |
+| AAPL |  102.0 |     2 |
+| AAPL |   99.0 |     1 |
+| AAPL |  104.0 |     2 |
+| MSFT |  200.0 |     2 |
+| MSFT |  198.0 |     2 |
+| MSFT |  202.0 |     2 |
+| MSFT |  207.0 |     2 |
+</code></pre><p>When <code>:by</code> also has ordinary keys, such as <code>:by [:date (cut :mktcap 5)]</code>, the breakpoints are computed separately within each date. See <a href="https://github.com/clojure-finance/datajure#bucketing-with-xbar"><code>xbar</code></a> and <a href="https://github.com/clojure-finance/datajure#quantile-binning-with-cut"><code>cut</code></a> in the README.</p><h2 id="window-functions">Window Functions</h2><p>A window function computes each row's value from a window of nearby rows in the same group: the previous row, the last 20 rows, or all rows so far. They run in <code>:set</code>, usually with <code>:by</code> to keep groups apart and <code>:within-order</code> to walk each group in date order, as in <a href="#rows-in-rows-out-by-with-set-or-agg">Rows In, Rows Out</a>. Without <code>:by</code>, the whole dataset is one group.</p><p>The main families are lags and leads (<code>win/lag</code>, <code>win/lead</code>, <code>win/tlag</code>), changes (<code>win/delta</code>, <code>win/ratio</code>), running totals (<code>win/cumsum</code>, <code>win/scan</code>), moving windows (<code>win/mavg</code>, <code>win/mdev</code>, <code>win/mmax</code>, …), <code>win/ema</code>, fills (<code>win/fills</code>, <code>win/bfill</code>) and ranks (<code>win/rank</code>, <code>win/row-number</code>). The <a href="/datajure-website/pages-output/time-series/">time series</a> page covers them with examples, and the README lists <a href="https://github.com/clojure-finance/datajure#window-functions">all of them</a>.</p><h2 id="row-wise-functions">Row-Wise Functions</h2><p>Window functions work down a column; <code>row/*</code> functions work across columns within one row. <code>row/sum</code> counts a missing value as 0, <code>row/mean</code>, <code>row/min</code> and <code>row/max</code> skip it, and all four give a missing value when every input is missing:</p><pre><code class="clojure">(def quarterly
+  (ds/-&gt;dataset {:firm ["A" "B" "C"]
+                 :q1   [10 5 nil]
+                 :q2   [12 nil nil]
+                 :q3   [11 7 3]}))
+
+(dt quarterly
+    :set {:total  #dt/e (row/sum :q1 :q2 :q3)
+          :avg    #dt/e (row/mean :q1 :q2 :q3)
+          :n-miss #dt/e (row/count-nil :q1 :q2 :q3)})
+</code></pre><pre><code class="text">_unnamed [3 7]:
+
+| :firm | :q1 | :q2 | :q3 | :total | :avg | :n-miss |
+|-------|----:|----:|----:|-------:|-----:|--------:|
+|     A |  10 |  12 |  11 |   33.0 | 11.0 |       0 |
+|     B |   5 |     |   7 |   12.0 |  6.0 |       1 |
+|     C |     |     |   3 |    3.0 |  3.0 |       2 |
+</code></pre><p><code>row/any-nil?</code> gives <code>true</code> for rows with any missing input, which is handy in <code>:where</code>.</p><h2 id="statistical-transforms">Statistical Transforms</h2><p><code>stat/*</code> functions transform a whole column using statistics of that column:</p><table><thead><tr><th>Function</th><th>Result</th></tr></thead><tbody><tr><td><code>stat/standardize</code></td><td>z-score: (x − mean) / standard deviation</td></tr><tr><td><code>stat/demean</code></td><td>x − mean</td></tr><tr><td><code>stat/rescale</code></td><td>Scaled to [0, 1], or to <code>[lo hi]</code> given as extra arguments</td></tr><tr><td><code>stat/winsorize</code></td><td>Values beyond the p and 1 − p quantiles clipped to them</td></tr><tr><td><code>stat/trim</code></td><td>Values beyond those quantiles made missing</td></tr></tbody></table><p>With <code>:by</code>, the statistics come from each group, so each symbol is standardized against its own prices:</p><pre><code class="clojure">(dt prices :by [:sym]
+    :set {:z   #dt/e (stat/standardize :price)
+          :dm  #dt/e (stat/demean :price)
+          :r01 #dt/e (stat/rescale :price)}
+    :select [:sym :price :z :dm :r01])
+</code></pre><pre><code class="text">_unnamed [8 5]:
+
+| :sym | :price |          :z |   :dm |       :r01 |
+|------|-------:|------------:|------:|-----------:|
+| AAPL |  100.0 | -0.56373452 | -1.25 | 0.20000000 |
+| AAPL |  102.0 |  0.33824071 |  0.75 | 0.60000000 |
+| AAPL |   99.0 | -1.01472214 | -2.25 | 0.00000000 |
+| AAPL |  104.0 |  1.24021595 |  2.75 | 1.00000000 |
+| MSFT |  200.0 | -0.45310844 | -1.75 | 0.22222222 |
+| MSFT |  198.0 | -0.97094667 | -3.75 | 0.00000000 |
+| MSFT |  202.0 |  0.06472978 |  0.25 | 0.44444444 |
+| MSFT |  207.0 |  1.35932533 |  5.25 | 1.00000000 |
+</code></pre><p>Winsorizing and trimming tame outliers. With p = 0.1, values below the 10th percentile (1.9) and above the 90th (18.1) are clipped, or removed:</p><pre><code class="clojure">(def scores (ds/-&gt;dataset {:x [1.0 2.0 3.0 4.0 5.0 6.0 7.0 8.0 9.0 100.0]}))
+
+(dt scores :set {:wins #dt/e (stat/winsorize :x 0.1)
+                 :trim #dt/e (stat/trim :x 0.1)})
+</code></pre><pre><code class="text">_unnamed [10 3]:
+
+|    :x | :wins | :trim |
+|------:|------:|------:|
+|   1.0 |   1.9 |       |
+|   2.0 |   2.0 |   2.0 |
+|   3.0 |   3.0 |   3.0 |
+|   4.0 |   4.0 |   4.0 |
+|   5.0 |   5.0 |   5.0 |
+|   6.0 |   6.0 |   6.0 |
+|   7.0 |   7.0 |   7.0 |
+|   8.0 |   8.0 |   8.0 |
+|   9.0 |   9.0 |   9.0 |
+| 100.0 |  18.1 |       |
+</code></pre><p>Missing values are left out of the statistics and stay missing. <code>stat/winsorize</code> also clips one tail only with <code>{:tail :upper}</code> or <code>{:tail :lower}</code>; see <a href="https://github.com/clojure-finance/datajure#statistical-transforms">statistical transforms</a> in the README.</p><h2 id="joins">Joins</h2><p><code>datajure.join/join</code> combines two datasets on key columns. It covers regular joins (<code>:inner</code>, <code>:left</code>, <code>:right</code>, <code>:outer</code>), filtering joins (<code>:semi</code> keeps left rows with a match, <code>:anti</code> those without), <code>:cross</code>, as-of joins (<code>:asof</code>) and window joins (<code>:window</code>). <code>:validate</code> checks key cardinality, for example that each key appears only once on the right (<code>:m:1</code>), and <code>:report true</code> prints how many rows matched:</p><pre><code class="clojure">(require '[datajure.join :refer [join]])
 
 (join prices sectors :on :sym :how :left :validate :m:1)
-</code></pre><p>In an as-of join, the last key in <code>:on</code> is matched to the latest right row at or before the left row's value, and the other keys must match exactly. <code>:direction</code> (<code>:backward</code>, <code>:forward</code>, <code>:nearest</code>) and <code>:tolerance</code> control the match:</p><pre><code class="clojure">(join trades quotes :on [:sym :time] :how :asof)
-</code></pre><p>See <a href="https://github.com/clojure-finance/datajure#joins">joins</a>, <a href="https://github.com/clojure-finance/datajure#as-of-joins">as-of joins</a> and <a href="https://github.com/clojure-finance/datajure#window-joins">window joins</a> in the README for all options.</p><h2 id="reshaping">Reshaping</h2><p><code>datajure.reshape</code> has <code>melt</code> (wide to long), <code>cast</code> (long to wide) and <code>tsfill</code>, which fills gaps in panel data so that each group has a row for every period:</p><pre><code class="clojure">(require '[datajure.reshape :as reshape])
+</code></pre><p>An as-of join matches each left row to the latest right row at or before it, such as each trade to the quote in force at that time. The last key in <code>:on</code> is the time key, and the other keys must match exactly:</p><pre><code class="clojure">(join trades quotes :on [:sym :time] :how :asof)
+</code></pre><p>The <a href="/datajure-website/pages-output/time-series/">time series</a> page covers as-of and window joins with their options, and the README covers <a href="https://github.com/clojure-finance/datajure#joins">joins</a> in full.</p><h2 id="reshaping">Reshaping</h2><p><code>datajure.reshape</code> has <code>melt</code> (wide to long), <code>cast</code> (long to wide) and <code>tsfill</code>, which fills gaps in panel data so that each group has a row for every period:</p><pre><code class="clojure">(require '[datajure.reshape :as reshape])
 
 (reshape/cast prices {:id [:date] :from :sym :value :price})
 (reshape/melt prices {:id [:date :sym] :measure [:price :volume]})
-</code></pre><h2 id="other-namespaces">Other Namespaces</h2><table><thead><tr><th>Namespace</th><th>Contents</th></tr></thead><tbody><tr><td><code>datajure.io</code></td><td><code>read</code>, <code>write</code> and <code>read-seq</code> for CSV, TSV, JSON, JSON Lines, Nippy, Parquet, Arrow and Excel</td></tr><tr><td><code>datajure.util</code></td><td><code>describe</code>, <code>clean-column-names</code>, <code>distinct-rows</code>, <code>mark-duplicates</code>, <code>coerce-columns</code>, <code>blank-&gt;nil</code>, <code>parse-numeric</code></td></tr><tr><td><code>datajure.index</code></td><td><code>index-by</code> and <code>lookup</code> for repeated lookups by key</td></tr><tr><td><code>datajure.concise</code></td><td>Short aliases (<code>mn</code>, <code>sm</code>, <code>N</code>, …) for use outside <code>#dt/e</code></td></tr><tr><td><code>datajure.clay</code>, <code>datajure.clerk</code></td><td>Notebook viewers</td></tr><tr><td><code>datajure.nrepl</code></td><td>nREPL middleware that binds <code>*dt*</code> to the last result</td></tr></tbody></table><h2 id="errors">Errors</h2><p>Errors are <code>ex-info</code> exceptions whose data has a <code>:dt/error</code> key for handling them in code. Many suggest a fix, such as the closest column name for a misspelled column or the intended keyword for a misspelled <code>dt</code> keyword:</p><pre><code class="clojure">(dt prices :set {:value #dt/e (* :prcie :volume)})
+</code></pre><p>See <a href="https://github.com/clojure-finance/datajure#reshaping">reshaping</a> in the README for the options.</p><h2 id="cleaning-and-inspecting-data">Cleaning and Inspecting Data</h2><p><code>datajure.util</code> has helpers for the first look at a dataset and for messy input. <code>describe</code> gives summary statistics, one row per column:</p><pre><code class="clojure">(require '[datajure.util :as du])
+
+(-&gt; (du/describe prices [:price :volume])
+    (dt :select [:column :n :n-missing :mean :min :max]))
+</code></pre><pre><code class="text">_unnamed [2 6]:
+
+| :column | :n | :n-missing |         :mean |  :min |   :max |
+|---------|---:|-----------:|--------------:|------:|-------:|
+|  :price |  8 |          0 |  151.50000000 |  99.0 |  207.0 |
+| :volume |  8 |          1 | 1257.14285714 | 900.0 | 1800.0 |
+</code></pre><p><code>describe</code> also reports the data type, standard deviation and quartiles. For a raw file, <code>clean-column-names</code> turns headers into keywords, <code>blank-&gt;nil</code> turns empty strings into missing values, <code>parse-numeric</code> reads numbers out of text such as <code>"$1,204.50"</code> (leaving values such as <code>"n/a"</code> missing), and <code>distinct-rows</code> drops duplicate rows:</p><pre><code class="clojure">(def raw
+  (ds/-&gt;dataset {"Ticker Symbol"   ["AAPL" "MSFT" "MSFT" " "]
+                 "Close Price ($)" ["$1,204.50" "n/a" "n/a" "310"]}))
+
+(-&gt; raw
+    du/clean-column-names
+    du/blank-&gt;nil
+    (du/parse-numeric [:close-price])
+    du/distinct-rows)
+</code></pre><pre><code class="text">_unnamed [3 2]:
+
+| :ticker-symbol | :close-price |
+|----------------|-------------:|
+|           AAPL |       1204.5 |
+|           MSFT |              |
+|                |        310.0 |
+</code></pre><p>Other helpers include <code>mark-duplicates</code>, <code>drop-constant-columns</code> and <code>coerce-columns</code>; see <a href="https://github.com/clojure-finance/datajure#utilities">utilities</a> in the README.</p><h2 id="fast-lookups-by-key">Fast Lookups by Key</h2><p>Looking up one key in a large dataset with <code>:where</code> scans every row each time. When the same dataset is queried by key again and again, build an index once with <code>datajure.index</code>; each lookup then returns the matching rows directly, in their original order:</p><pre><code class="clojure">(require '[datajure.index :as idx])
+
+(def by-sym (idx/index-by prices :sym))
+
+(-&gt; (idx/lookup by-sym "AAPL")
+    (dt :order-by [(desc :date)] :take 2))
+</code></pre><pre><code class="text">_unnamed [2 4]:
+
+|      :date | :sym | :price | :volume |
+|------------|------|-------:|--------:|
+| 2024-01-05 | AAPL |  104.0 |    1800 |
+| 2024-01-04 | AAPL |   99.0 |         |
+</code></pre><p>A key that is not present gives an empty dataset. An index can also use several columns, looked up with a vector such as <code>["AAPL" date]</code>. See <a href="https://github.com/clojure-finance/datajure#keyed-lookups">keyed lookups</a>.</p><h2 id="reusing-a-grouping">Reusing a Grouping</h2><p>Each <code>dt</code> call with <code>:by</code> groups the rows, and with <code>:within-order</code> it also sorts them. When several passes use the same groups, <code>prepare-grouping</code> does that work once, and the result is passed as <code>:by</code>:</p><pre><code class="clojure">(require '[datajure.core :refer [prepare-grouping]])
+
+(let [g (prepare-grouping prices [:sym] [(asc :date)])]
+  (-&gt; prices
+      (dt :by g :set {:ret #dt/e (- (win/ratio :price) 1)})
+      (dt :by g :agg {:mean-ret #dt/e (mn :ret)})))
+</code></pre><pre><code class="text">_unnamed [2 2]:
+
+| :sym |  :mean-ret |
+|------|-----------:|
+| AAPL | 0.01369776 |
+| MSFT | 0.01165150 |
+</code></pre><p>It stays valid as long as the rows and their order are unchanged; adding columns is fine.</p><h2 id="other-namespaces">Other Namespaces</h2><table><thead><tr><th>Namespace</th><th>Contents</th></tr></thead><tbody><tr><td><code>datajure.io</code></td><td><code>read</code>, <code>write</code> and <code>read-seq</code> for CSV, TSV, JSON, JSON Lines, Nippy, Parquet, Arrow and Excel</td></tr><tr><td><code>datajure.util</code></td><td><code>describe</code>, <code>clean-column-names</code>, <code>distinct-rows</code>, <code>mark-duplicates</code>, <code>coerce-columns</code>, <code>blank-&gt;nil</code>, <code>parse-numeric</code></td></tr><tr><td><code>datajure.index</code></td><td><code>index-by</code> and <code>lookup</code> for repeated lookups by key</td></tr><tr><td><code>datajure.join</code></td><td><code>join</code>, including as-of and window joins</td></tr><tr><td><code>datajure.reshape</code></td><td><code>melt</code>, <code>cast</code>, <code>tsfill</code></td></tr><tr><td><code>datajure.concise</code></td><td>Short aliases (<code>mn</code>, <code>sm</code>, <code>N</code>, …) for use outside <code>#dt/e</code></td></tr><tr><td><code>datajure.clay</code>, <code>datajure.clerk</code></td><td>Notebook viewers</td></tr><tr><td><code>datajure.nrepl</code></td><td>nREPL middleware that binds <code>*dt*</code> to the last result</td></tr></tbody></table><h2 id="errors">Errors</h2><p>Errors are <code>ex-info</code> exceptions whose data has a <code>:dt/error</code> key for handling them in code. Many suggest a fix, such as the closest column name for a misspelled column or the intended keyword for a misspelled <code>dt</code> keyword:</p><pre><code class="clojure">(dt prices :set {:value #dt/e (* :prcie :volume)})
 ;; Unknown column(s) #{:prcie} in :set :value expression
 ;; Did you mean: :price (edit distance 1)
 ;; Available: :date :price :sym :volume
 </code></pre><p>See the <a href="/datajure-website/pages-output/examples/#errors">examples</a> for more.</p>
 
+        
+        <nav class="pager" aria-label="Previous and next page">
     
-    <div id="prev-next">
-    
-    <a class="prev" href="/datajure-website/pages-output/quick-start/"><i class="fa-solid fa-circle-left"></i><div class="nav-text">Quick Start</div></a>
+    <a class="pager-link prev" href="/datajure-website/pages-output/quick-start/"><span class="pager-label">&larr; Previous</span><span class="pager-title">Quick Start</span></a>
     
     
-    <a class="next" href="/datajure-website/pages-output/examples/"><div class="nav-text"">Examples</div><i class="fa-solid fa-circle-right"></i></a>
+    <a class="pager-link next" href="/datajure-website/pages-output/examples/"><span class="pager-label">Next &rarr;</span><span class="pager-title">Examples</span></a>
     
+</nav>
+
+        
+    </article>
 </div>
 
-    
+        </main>
 
-</div>
-
-            <br/>
-            <div id="footercont">
-                Copyright &copy; 2026 Datajure
-                <br>Powered by <a href="http://cryogenweb.org">Cryogen</a>
+        <footer class="site-footer">
+            <div class="footer-inner">
+                <div class="footer-brand">
+                    <strong>Datajure</strong>
+                    <span>Data manipulation for Clojure, built on tech.ml.dataset. Developed at HKU Business School.</span>
+                </div>
+                <ul class="footer-links">
+                    <li><a href="https://github.com/clojure-finance/datajure">GitHub</a></li>
+                    <li><a href="https://clojars.org/com.github.clojure-finance/datajure">Clojars</a></li>
+                    <li><a href="https://cljdoc.org/d/com.github.clojure-finance/datajure/CURRENT">API docs</a></li>
+                    <li><a href="https://github.com/clojure-finance/datajure/blob/main/CHANGELOG.md">Changelog</a></li>
+                    <li><a href="https://github.com/clojure-finance/datajure/issues">Report a bug</a></li>
+                </ul>
+                <p class="footer-legal">
+                    &copy; 2026 Datajure &middot; Apache License 2.0 &middot;
+                    Site built with <a href="https://cryogenweb.org">Cryogen</a>
+                    &middot; <a href="https://github.com/clojure-finance/datajure-website">Edit this site</a>
+                </p>
             </div>
-        </article>
+        </footer>
 
-        <script src="/datajure-website/js/highlight.pack.js" type="application/javascript"></script>
-        <script>hljs.initHighlightingOnLoad();</script>
-        <script src="/datajure-website/js.dropdown.js" type="application/javascript"></script> 
-        
-
-        
-        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/clojure.min.js"></script>
+        <script src="/datajure-website/js/site.js" type="application/javascript"></script>
     </body>
 </html>

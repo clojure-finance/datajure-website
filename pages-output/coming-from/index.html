@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Datajure: Coming from R or Python</title>
+        
+
+<meta name="description" content="If you already know dplyr, data.table, pandas or Polars, you know most of Datajure. This page shows the few Clojure ideas you need, the same query in each library, and a translation table for everyday tasks. The examples use the prices dataset from the quick start: two symbols, four days, and one missing volume.Clojure in Five Minutes">
+<meta property="og:description" content="If you already know dplyr, data.table, pandas or Polars, you know most of Datajure. This page shows the few Clojure ideas you need, the same query in each library, and a translation table for everyday tasks. The examples use the prices dataset from the quick start: two symbols, four days, and one missing volume.Clojure in Five Minutes">
+
+<meta property="og:url" content="https://clojure-finance.github.io/datajure-website/pages-output/coming-from/" />
+<meta property="og:title" content="Coming from R or Python" />
+<meta property="og:type" content="article" />
+
+        <meta name="color-scheme" content="light dark">
+        <script>
+            // Apply the saved light/dark choice before the page paints.
+            try {
+                var t = localStorage.getItem("theme");
+                if (t === "light" || t === "dark") document.documentElement.dataset.theme = t;
+            } catch (e) {}
+        </script>
+        <link rel="icon" type="image/svg+xml" href="/datajure-website/img/favicon.svg">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+        <link href="/datajure-website/css/site.css" rel="stylesheet" type="text/css" />
+    </head>
+    <body class="">
+        <a class="skip-link" href="#content">Skip to content</a>
+        <header class="topbar">
+            <div class="topbar-inner">
+                <a class="brand" href="/datajure-website/" title="Datajure home">
+                    <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true">
+                        <rect x="2" y="2" width="28" height="28" rx="7" class="bm-bg"/>
+                        <rect x="7" y="8" width="18" height="4" rx="1.5" class="bm-head"/>
+                        <rect x="7" y="14" width="5" height="3" rx="1" class="bm-cell"/>
+                        <rect x="13.5" y="14" width="5" height="3" rx="1" class="bm-cell"/>
+                        <rect x="20" y="14" width="5" height="3" rx="1" class="bm-hot"/>
+                        <rect x="7" y="19" width="5" height="3" rx="1" class="bm-cell"/>
+                        <rect x="13.5" y="19" width="5" height="3" rx="1" class="bm-cell"/>
+                        <rect x="20" y="19" width="5" height="3" rx="1" class="bm-hot"/>
+                    </svg>
+                    <span class="brand-name">Datajure</span>
+                </a>
+                <nav class="mainnav" aria-label="Main">
+                    <ul>
+                        
+                        <li><a href="/datajure-website/pages-output/quick-start/">Quick Start</a></li>
+                        
+                        <li><a href="/datajure-website/pages-output/docs/">Docs</a></li>
+                        
+                        <li><a href="/datajure-website/pages-output/examples/">Examples</a></li>
+                        
+                        <li><a href="/datajure-website/pages-output/time-series/">Time Series</a></li>
+                        
+                        <li><a href="/datajure-website/pages-output/coming-from/" class="active" aria-current="page">From R &amp; Python</a></li>
+                        
+                    </ul>
+                </nav>
+                <div class="topbar-actions">
+                    <button class="icon-btn" id="theme-toggle" type="button" aria-label="Switch between light and dark mode" title="Light or dark mode">
+                        <svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.5"/><path d="M12 1.5v3M12 19.5v3M1.5 12h3M19.5 12h3M4.6 4.6l2.1 2.1M17.3 17.3l2.1 2.1M4.6 19.4l2.1-2.1M17.3 6.7l2.1-2.1"/></svg>
+                        <svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5a8.5 8.5 0 1 0 10.7 10.7z"/></svg>
+                    </button>
+                    <a class="icon-btn" href="https://github.com/clojure-finance/datajure" title="Datajure on GitHub" aria-label="Datajure on GitHub">
+                        <svg viewBox="0 0 16 16" aria-hidden="true" class="i-fill"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+                    </a>
+                </div>
+            </div>
+        </header>
+
+        <main id="content">
+            
+<div class="page-hero">
+    <div class="page-hero-inner">
+        <h1>Coming from R or Python</h1>
+        <p class="page-lead">Map what you know from dplyr, data.table, pandas and Polars onto Datajure.</p>
+    </div>
+</div>
+<div class="doc-layout has-toc">
+    
+    <aside class="toc-side">
+        <details class="toc-box" open>
+            <summary>On this page</summary>
+            <nav aria-label="On this page"><ul class="toc"><li><a href="#clojure-in-five-minutes">Clojure in Five Minutes</a></li><li><a href="#the-same-query-in-five-libraries">The Same Query in Five Libraries</a></li><li><a href="#translation-table">Translation Table</a><ul><li><a href="#dplyr-and-pandas">dplyr and pandas</a></li><li><a href="#datatable-and-polars">data.table and Polars</a></li></ul></li><li><a href="#differences-worth-knowing">Differences Worth Knowing</a><ul><li><a href="#missing-values">Missing Values</a></li><li><a href="#filtering-after-aggregating">Filtering After Aggregating</a></li><li><a href="#columns-that-use-each-other">Columns That Use Each Other</a></li><li><a href="#grouped-columns-keep-every-row">Grouped Columns Keep Every Row</a></li><li><a href="#expressions-are-values">Expressions Are Values</a></li><li><a href="#values-known-only-at-run-time">Values Known Only at Run Time</a></li></ul></li><li><a href="#next-steps">Next Steps</a></li></ul></nav>
+        </details>
+    </aside>
+    
+    <article class="prose">
+        <p>If you already know dplyr, data.table, pandas or Polars, you know most of Datajure. This page shows the few Clojure ideas you need, the same query in each library, and a translation table for everyday tasks. The examples use the <code>prices</code> dataset from the <a href="/datajure-website/pages-output/quick-start/">quick start</a>: two symbols, four days, and one missing volume.</p><h2 id="clojure-in-five-minutes">Clojure in Five Minutes</h2><p>You need only a handful of ideas to read and write Datajure queries.</p><p><strong>Calls put the function first.</strong> <code>f(x, y)</code> in R or Python is <code>(f x y)</code> in Clojure. Operators are functions too, so <code>1 + 2</code> is <code>(+ 1 2)</code>:</p><pre><code class="clojure">(+ 1 2)
+</code></pre><pre><code class="text">3
+</code></pre><p><strong>Keywords name columns.</strong> A keyword starts with a colon: <code>:price</code>, <code>:sym</code>. Column names in Clojure usually use hyphens (<code>:avg-price</code>) rather than underscores.</p><p><strong>Maps and vectors hold data.</strong> A map <code>{:sym "AAPL" :price 100.0}</code> is like a named list or a dict, and a vector <code>[:sym :date]</code> is like a list. Commas are optional whitespace. A keyword also works as a function that looks itself up in a map:</p><pre><code class="clojure">(def row {:sym "AAPL" :price 100.0})
+
+(:price row)
+</code></pre><pre><code class="text">100.0
+</code></pre><p><strong><code>-&gt;</code> is the pipe.</strong> It passes each result as the first argument of the next call, like <code>|&gt;</code> in R or method chaining in pandas and Polars:</p><pre><code class="clojure">(require '[datajure.core :refer [dt dt1 nrow asc desc rename]])
+
+(-&gt; prices
+    (dt :where #dt/e (&gt; :price 100))
+    (dt :by [:sym] :agg {:n nrow}))
+</code></pre><pre><code class="text">_unnamed [2 2]:
+
+| :sym | :n |
+|------|---:|
+| AAPL |  2 |
+| MSFT |  4 |
+</code></pre><p><strong>Nothing changes in place.</strong> Every <code>dt</code> call returns a new dataset and leaves its input alone, so there is no <code>inplace=True</code> and no <code>:=</code>. Adding a column to <code>prices</code> gives a new dataset, and <code>prices</code> still has its original four columns:</p><pre><code class="clojure">(def with-value (dt prices :set {:value #dt/e (* :price :volume)}))
+
+[(ds/column-names prices) (ds/column-names with-value)]
+</code></pre><pre><code class="text">[(:date :sym :price :volume) (:date :sym :price :volume :value)]
+</code></pre><p><strong><code>nil</code> is the missing value.</strong> It plays the role of <code>NA</code> in R, and <code>None</code>, <code>NaN</code> or <code>null</code> in pandas and Polars.</p><p><strong><code>#dt/e</code> marks an expression.</strong> Inside <code>#dt/e (...)</code>, a bare keyword such as <code>:price</code> means "the price column", much like a bare column name inside <code>dplyr::filter()</code> or <code>pl.col("price")</code> in Polars. The <a href="/datajure-website/pages-output/docs/#expressions">docs</a> cover expressions in full.</p><h2 id="the-same-query-in-five-libraries">The Same Query in Five Libraries</h2><p>For each symbol, on days with a volume above 1000: count the days, average the price, and total the volume, then sort by total volume, largest first.</p><p><strong>dplyr</strong></p><pre><code class="r">prices |&gt;
+  filter(volume &gt; 1000) |&gt;
+  summarise(n = n(), avg_price = mean(price), total_vol = sum(volume), .by = sym) |&gt;
+  arrange(desc(total_vol))
+</code></pre><p><strong>data.table</strong></p><pre><code class="r">prices[volume &gt; 1000,
+       .(n = .N, avg_price = mean(price), total_vol = sum(volume)),
+       by = sym][order(-total_vol)]
+</code></pre><p><strong>pandas</strong></p><pre><code class="python">(prices[prices["volume"] &gt; 1000]
+ .groupby("sym", as_index=False)
+ .agg(n=("price", "size"), avg_price=("price", "mean"), total_vol=("volume", "sum"))
+ .sort_values("total_vol", ascending=False))
+</code></pre><p><strong>Polars</strong></p><pre><code class="python">(prices
+ .filter(pl.col("volume") &gt; 1000)
+ .group_by("sym")
+ .agg(n=pl.len(), avg_price=pl.col("price").mean(), total_vol=pl.col("volume").sum())
+ .sort("total_vol", descending=True))
+</code></pre><p><strong>Datajure</strong></p><pre><code class="clojure">(dt prices
+    :where    #dt/e (&gt; :volume 1000)
+    :by       [:sym]
+    :agg      {:n         nrow
+               :avg-price #dt/e (mn :price)
+               :total-vol #dt/e (sm :volume)}
+    :order-by [(desc :total-vol)])
+</code></pre><pre><code class="text">_unnamed [2 4]:
+
+| :sym | :n | :avg-price | :total-vol |
+|------|---:|-----------:|-----------:|
+| AAPL |  3 |      102.0 |     4500.0 |
+| MSFT |  2 |      202.5 |     2400.0 |
+</code></pre><p>All five give the same numbers. The Datajure version reads most like data.table: one call with named parts, where <code>:where</code> is data.table's <code>i</code>, <code>:agg</code> is its <code>j</code>, and <code>:by</code> is its <code>by</code>. The parts can be written in any order, because <code>dt</code> always runs them in the same <a href="/datajure-website/pages-output/docs/#evaluation-order">fixed order</a>.</p><h2 id="translation-table">Translation Table</h2><p>Each row does the same thing on <code>prices</code> (and on <code>sectors</code>, <code>trades</code> and <code>quotes</code> for the joins, as in the <a href="/datajure-website/pages-output/examples/#joins">examples</a>). The Datajure column assumes the <code>require</code> above; joins and reshaping need their own namespaces:</p><pre><code class="clojure">(require '[datajure.join :refer [join]]
+         '[datajure.reshape :as reshape])
+</code></pre><h3 id="dplyr-and-pandas">dplyr and pandas</h3><table><thead><tr><th>Task</th><th>dplyr</th><th>pandas</th><th>Datajure</th></tr></thead><tbody><tr><td>Filter rows</td><td><code>filter(prices, price &gt; 100)</code></td><td><code>prices[prices["price"] &gt; 100]</code></td><td><code>(dt prices :where #dt/e (&gt; :price 100))</code></td></tr><tr><td>Add a column</td><td><code>mutate(prices, value = price * volume)</code></td><td><code>prices.assign(value=prices["price"] * prices["volume"])</code></td><td><code>(dt prices :set {:value #dt/e (* :price :volume)})</code></td></tr><tr><td>Summarize by group</td><td><code>summarise(prices, avg = mean(price), .by = sym)</code></td><td><code>prices.groupby("sym", as_index=False).agg(avg=("price", "mean"))</code></td><td><code>(dt prices :by [:sym] :agg {:avg #dt/e (mn :price)})</code></td></tr><tr><td>Count rows per group</td><td><code>count(prices, sym)</code></td><td><code>prices.groupby("sym", as_index=False).size()</code></td><td><code>(dt prices :by [:sym] :agg {:n nrow})</code></td></tr><tr><td>Previous value within group</td><td><code>mutate(prices, prev = lag(price, order_by = date), .by = sym)</code></td><td><code>prices.assign(prev=prices.groupby("sym")["price"].shift())</code></td><td><code>(dt prices :by [:sym] :within-order [(asc :date)] :set {:prev #dt/e (win/lag :price 1)})</code></td></tr><tr><td>Sort, descending</td><td><code>arrange(prices, desc(price))</code></td><td><code>prices.sort_values("price", ascending=False)</code></td><td><code>(dt prices :order-by [(desc :price)])</code></td></tr><tr><td>Top 3 rows</td><td><code>slice_max(prices, price, n = 3)</code></td><td><code>prices.nlargest(3, "price")</code></td><td><code>(dt prices :order-by [(desc :price)] :take 3)</code></td></tr><tr><td>Keep columns</td><td><code>select(prices, sym, price)</code></td><td><code>prices[["sym", "price"]]</code></td><td><code>(dt prices :select [:sym :price])</code></td></tr><tr><td>Drop a column</td><td><code>select(prices, -volume)</code></td><td><code>prices.drop(columns="volume")</code></td><td><code>(dt prices :select [:not :volume])</code></td></tr><tr><td>Rename a column</td><td><code>rename(prices, ticker = sym)</code></td><td><code>prices.rename(columns={"sym": "ticker"})</code></td><td><code>(rename prices {:sym :ticker})</code></td></tr><tr><td>Left join</td><td><code>left_join(prices, sectors, by = "sym")</code></td><td><code>prices.merge(sectors, on="sym", how="left")</code></td><td><code>(join prices sectors :on :sym :how :left)</code></td></tr><tr><td>Anti join</td><td><code>anti_join(prices, sectors, by = "sym")</code></td><td><code>prices[~prices["sym"].isin(sectors["sym"])]</code></td><td><code>(join prices sectors :on :sym :how :anti)</code></td></tr><tr><td>As-of join</td><td><code>left_join(trades, quotes, join_by(sym, closest(time &gt;= time)))</code></td><td><code>pd.merge_asof(trades, quotes, on="time", by="sym")</code></td><td><code>(join trades quotes :on [:sym :time] :how :asof)</code></td></tr><tr><td>Long to wide</td><td><code>pivot_wider(prices, id_cols = date, names_from = sym, values_from = price)</code></td><td><code>prices.pivot(index="date", columns="sym", values="price")</code></td><td><code>(reshape/cast prices {:id [:date] :from :sym :value :price})</code></td></tr><tr><td>Wide to long</td><td><code>pivot_longer(prices, c(price, volume))</code></td><td><code>prices.melt(id_vars=["date", "sym"], value_vars=["price", "volume"])</code></td><td><code>(reshape/melt prices {:id [:date :sym] :measure [:price :volume]})</code></td></tr><tr><td>Replace missing values</td><td><code>mutate(prices, volume = coalesce(volume, 0L))</code></td><td><code>prices.fillna({"volume": 0})</code></td><td><code>(dt prices :set {:volume #dt/e (coalesce :volume 0)})</code></td></tr><tr><td>Drop rows with a missing value</td><td><code>filter(prices, !is.na(volume))</code></td><td><code>prices.dropna(subset=["volume"])</code></td><td><code>(dt prices :where #(some? (:volume %)))</code></td></tr><tr><td>Fill forward within group</td><td><code>tidyr::fill(prices, volume, .by = sym)</code></td><td><code>prices.assign(volume=prices.groupby("sym")["volume"].ffill())</code></td><td><code>(dt prices :by [:sym] :within-order [(asc :date)] :set {:volume #dt/e (win/fills :volume)})</code></td></tr></tbody></table><p>The pandas lag and fill rows, and dplyr's <code>fill</code>, assume the rows are already sorted by date; <code>pd.merge_asof</code> needs both inputs sorted by <code>time</code>. In Datajure, <code>:within-order</code> sets the order a window function walks in, so the input order does not matter, and the as-of join sorts for you.</p><h3 id="datatable-and-polars">data.table and Polars</h3><table><thead><tr><th>Task</th><th>data.table</th><th>Polars</th></tr></thead><tbody><tr><td>Filter rows</td><td><code>prices[price &gt; 100]</code></td><td><code>prices.filter(pl.col("price") &gt; 100)</code></td></tr><tr><td>Add a column</td><td><code>prices[, value := price * volume]</code></td><td><code>prices.with_columns(value=pl.col("price") * pl.col("volume"))</code></td></tr><tr><td>Summarize by group</td><td><code>prices[, .(avg = mean(price)), by = sym]</code></td><td><code>prices.group_by("sym").agg(avg=pl.col("price").mean())</code></td></tr><tr><td>Count rows per group</td><td><code>prices[, .N, by = sym]</code></td><td><code>prices.group_by("sym").len()</code></td></tr><tr><td>Previous value within group</td><td><code>prices[order(date), prev := shift(price), by = sym]</code></td><td><code>prices.with_columns(prev=pl.col("price").shift().over("sym", order_by="date"))</code></td></tr><tr><td>Top 3 rows</td><td><code>prices[order(-price)][1:3]</code></td><td><code>prices.top_k(3, by="price")</code></td></tr><tr><td>As-of join</td><td><code>quotes[trades, on = .(sym, time), roll = TRUE]</code></td><td><code>trades.join_asof(quotes, on="time", by="sym")</code></td></tr><tr><td>Long to wide</td><td><code>dcast(prices, date ~ sym, value.var = "price")</code></td><td><code>prices.pivot(on="sym", index="date", values="price")</code></td></tr><tr><td>Replace missing values</td><td><code>prices[is.na(volume), volume := 0L]</code></td><td><code>prices.with_columns(pl.col("volume").fill_null(0))</code></td></tr><tr><td>Fill forward within group</td><td><code>prices[, volume := nafill(volume, "locf"), by = sym]</code></td><td><code>prices.with_columns(pl.col("volume").forward_fill().over("sym", order_by="date"))</code></td></tr></tbody></table><p>The Datajure versions are the same as in the first table. Note that the data.table <code>:=</code> rows change <code>prices</code> itself; the Datajure versions return a new dataset instead.</p><h2 id="differences-worth-knowing">Differences Worth Knowing</h2><h3 id="missing-values">Missing Values</h3><p>Each library has its own rules for missing values. Datajure's are:</p><ul><li><strong>Aggregations skip missing values.</strong> R's <code>sum(volume)</code> is <code>NA</code> unless you pass <code>na.rm = TRUE</code>; Datajure's <code>sm</code>, like pandas and Polars, skips the missing value. <code>ct</code> counts the values that are present, and <code>nrow</code> counts rows:</li></ul><pre><code class="clojure">(dt1 prices :agg {:total #dt/e (sm :volume)
+                  :n     #dt/e (ct :volume)
+                  :rows  nrow})
+</code></pre><pre><code class="text">{:total 8800.0, :n 7, :rows 8}
+</code></pre><ul><li><strong>A comparison with a missing value is <code>false</code>, not missing.</strong> So <code>:where #dt/e (&gt; :volume 1200)</code> drops the missing row, as in every library. But <code>not</code> turns that <code>false</code> into <code>true</code>, so the negated filter <em>keeps</em> the missing row. pandas behaves the same way; dplyr, data.table and Polars drop the row, because there the comparison is <code>NA</code> or <code>null</code>:</li></ul><pre><code class="clojure">(dt prices :where #dt/e (not (&gt; :volume 1200)))
+</code></pre><pre><code class="text">_unnamed [5 4]:
+
+|      :date | :sym | :price | :volume |
+|------------|------|-------:|--------:|
+| 2024-01-02 | AAPL |  100.0 |    1200 |
+| 2024-01-04 | AAPL |   99.0 |         |
+| 2024-01-02 | MSFT |  200.0 |     900 |
+| 2024-01-03 | MSFT |  198.0 |    1100 |
+| 2024-01-04 | MSFT |  202.0 |    1000 |
+</code></pre><ul><li><strong>Arithmetic on a missing value gives a missing value</strong>, as in R and Polars.</li><li><strong>Plain Clojure functions get no special handling.</strong> <code>#(some? (:volume %))</code> above is a plain function, called once per row with the row as a map. <code>pass-nil</code> wraps one so it returns <code>nil</code> when a column is missing.</li></ul><p>See <a href="/datajure-website/pages-output/docs/#missing-values">Missing Values</a> in the docs and <a href="https://github.com/clojure-finance/datajure#nil-handling">Nil handling</a> in the README for the full rules.</p><h3 id="filtering-after-aggregating">Filtering After Aggregating</h3><p>Because <code>dt</code> runs <code>:where</code> before <code>:agg</code>, a single call cannot filter on an aggregated value (SQL's <code>HAVING</code>, or a <code>filter()</code> after <code>summarise()</code>). Thread a second call instead:</p><pre><code class="clojure">(-&gt; prices
+    (dt :by [:sym] :agg {:avg-price #dt/e (mn :price)})
+    (dt :where #dt/e (&gt; :avg-price 150)))
+</code></pre><pre><code class="text">_unnamed [1 2]:
+
+| :sym | :avg-price |
+|------|-----------:|
+| MSFT |     201.75 |
+</code></pre><p>The same holds for <code>:set</code> and <code>:agg</code>, which cannot appear in the same call.</p><h3 id="columns-that-use-each-other">Columns That Use Each Other</h3><p>In dplyr's <code>mutate()</code> and Polars' <code>with_columns()</code> the rules differ: dplyr lets a later column use an earlier one in the same call, Polars does not. Datajure lets you choose with the shape of <code>:set</code>. In a map, every column sees only the input; in a vector of pairs, each column sees the ones before it:</p><pre><code class="clojure">(dt prices :set [[:value #dt/e (* :price :volume)]
+                 [:big?  #dt/e (&gt; :value 200000)]])
+</code></pre><p>A map whose columns refer to each other is an error that says to use pairs, rather than a silent surprise.</p><h3 id="grouped-columns-keep-every-row">Grouped Columns Keep Every Row</h3><p><code>:by</code> with <code>:set</code> is dplyr's grouped <code>mutate()</code>, data.table's <code>:=</code> with <code>by</code>, and Polars' <code>.over()</code>: each row gets a value computed within its group. An aggregation inside it, such as <code>mn</code>, uses the group's rows:</p><pre><code class="clojure">(dt prices :by [:sym] :set {:dev #dt/e (- :price (mn :price))})
+</code></pre><pre><code class="text">_unnamed [8 5]:
+
+|      :date | :sym | :price | :volume |  :dev |
+|------------|------|-------:|--------:|------:|
+| 2024-01-02 | AAPL |  100.0 |    1200 | -1.25 |
+| 2024-01-03 | AAPL |  102.0 |    1500 |  0.75 |
+| 2024-01-04 | AAPL |   99.0 |         | -2.25 |
+| 2024-01-05 | AAPL |  104.0 |    1800 |  2.75 |
+| 2024-01-02 | MSFT |  200.0 |     900 | -1.75 |
+| 2024-01-03 | MSFT |  198.0 |    1100 | -3.75 |
+| 2024-01-04 | MSFT |  202.0 |    1000 |  0.25 |
+| 2024-01-05 | MSFT |  207.0 |    1300 |  5.25 |
+</code></pre><p>The output keeps the input row order. Unlike pandas, there is no index to reset afterwards.</p><h3 id="expressions-are-values">Expressions Are Values</h3><p>Like a Polars expression, a <code>#dt/e</code> expression is a value you can store and reuse. Unlike R's quoted expressions, it needs no <code>!!</code> or <code>{{ }}</code> to splice in:</p><pre><code class="clojure">(def value #dt/e (* :price :volume))
+
+(dt prices :by [:sym] :agg {:avg-value #dt/e (mn value)})
+</code></pre><pre><code class="text">_unnamed [2 2]:
+
+| :sym | :avg-value |
+|------|-----------:|
+| AAPL |   153400.0 |
+| MSFT |   217225.0 |
+</code></pre><h3 id="values-known-only-at-run-time">Values Known Only at Run Time</h3><p><code>#dt/e</code> is expanded when the code is read, so it cannot see a local variable such as a function argument. For those, write the expression as plain data, a vector headed by an operation keyword. This plays the role of <code>.data[[col]]</code> and <code>{{ }}</code> in dplyr, or building <code>pl.col(name)</code> in Polars:</p><pre><code class="clojure">(defn above [ds col threshold]
+  (dt ds :where [:&gt; col threshold]))
+
+(above prices :price 200)
+</code></pre><pre><code class="text">_unnamed [2 4]:
+
+|      :date | :sym | :price | :volume |
+|------------|------|-------:|--------:|
+| 2024-01-04 | MSFT |  202.0 |    1000 |
+| 2024-01-05 | MSFT |  207.0 |    1300 |
+</code></pre><p>See <a href="/datajure-website/pages-output/docs/#runtime-values-and-data-forms">Runtime Values and Data-Forms</a> in the docs.</p><h2 id="next-steps">Next Steps</h2><ul><li>The <a href="/datajure-website/pages-output/quick-start/">quick start</a> installs Datajure and runs a first query.</li><li>The <a href="/datajure-website/pages-output/docs/">docs</a> explain each <code>dt</code> keyword and the expression language.</li><li>The <a href="/datajure-website/pages-output/examples/">examples</a> and <a href="/datajure-website/pages-output/time-series/">time series</a> pages show more queries with their output.</li><li>The <a href="https://github.com/clojure-finance/datajure#readme">README</a> is the complete reference.</li></ul>
+
+        
+        <nav class="pager" aria-label="Previous and next page">
+    
+    <a class="pager-link prev" href="/datajure-website/pages-output/time-series/"><span class="pager-label">&larr; Previous</span><span class="pager-title">Time Series and Panels</span></a>
+    
+    
+</nav>
+
+        
+    </article>
+</div>
+
+        </main>
+
+        <footer class="site-footer">
+            <div class="footer-inner">
+                <div class="footer-brand">
+                    <strong>Datajure</strong>
+                    <span>Data manipulation for Clojure, built on tech.ml.dataset. Developed at HKU Business School.</span>
+                </div>
+                <ul class="footer-links">
+                    <li><a href="https://github.com/clojure-finance/datajure">GitHub</a></li>
+                    <li><a href="https://clojars.org/com.github.clojure-finance/datajure">Clojars</a></li>
+                    <li><a href="https://cljdoc.org/d/com.github.clojure-finance/datajure/CURRENT">API docs</a></li>
+                    <li><a href="https://github.com/clojure-finance/datajure/blob/main/CHANGELOG.md">Changelog</a></li>
+                    <li><a href="https://github.com/clojure-finance/datajure/issues">Report a bug</a></li>
+                </ul>
+                <p class="footer-legal">
+                    &copy; 2026 Datajure &middot; Apache License 2.0 &middot;
+                    Site built with <a href="https://cryogenweb.org">Cryogen</a>
+                    &middot; <a href="https://github.com/clojure-finance/datajure-website">Edit this site</a>
+                </p>
+            </div>
+        </footer>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/clojure.min.js"></script>
+        <script src="/datajure-website/js/site.js" type="application/javascript"></script>
+    </body>
+</html>
