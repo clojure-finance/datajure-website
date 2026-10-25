@@ -89,9 +89,9 @@
     </aside>
     
     <article class="prose">
-        <h2 id="installation">Installation</h2><p>Datajure requires Java 21+ and Clojure 1.12+.</p><p>With the Clojure CLI, add Datajure to <code>deps.edn</code>:</p><pre><code class="clojure">{:deps {com.github.clojure-finance/datajure {:mvn/version "2.7.11"}}}
-</code></pre><p>With Leiningen, add it to <code>:dependencies</code> in <code>project.clj</code>:</p><pre><code class="clojure">[com.github.clojure-finance/datajure "2.7.11"]
-</code></pre><p>The <a href="https://clojars.org/com.github.clojure-finance/datajure">Clojars page</a> always shows the latest version, and the <a href="https://github.com/clojure-finance/datajure/blob/main/CHANGELOG.md">changelog</a> lists what changed in each release.</p><p>To try Datajure without creating a project, start a REPL with it on the classpath:</p><pre><code class="bash">clj -Sdeps '{:deps {com.github.clojure-finance/datajure {:mvn/version "2.7.11"}}}'
+        <h2 id="installation">Installation</h2><p>Datajure requires Java 21+ and Clojure 1.12+.</p><p>With the Clojure CLI, add Datajure to <code>deps.edn</code>:</p><pre><code class="clojure">{:deps {com.github.clojure-finance/datajure {:mvn/version "2.7.12"}}}
+</code></pre><p>With Leiningen, add it to <code>:dependencies</code> in <code>project.clj</code>:</p><pre><code class="clojure">[com.github.clojure-finance/datajure "2.7.12"]
+</code></pre><p>The <a href="https://clojars.org/com.github.clojure-finance/datajure">Clojars page</a> always shows the latest version, and the <a href="https://github.com/clojure-finance/datajure/blob/main/CHANGELOG.md">changelog</a> lists what changed in each release.</p><p>To try Datajure without creating a project, start a REPL with it on the classpath:</p><pre><code class="bash">clj -Sdeps '{:deps {com.github.clojure-finance/datajure {:mvn/version "2.7.12"}}}'
 </code></pre><h2 id="a-first-query">A First Query</h2><p>Datajure works on <a href="https://github.com/techascent/tech.ml.dataset">tech.ml.dataset</a> datasets, which it brings in as a dependency. Create one from a map of columns:</p><pre><code class="clojure">(require '[datajure.core :refer [dt dt1 nrow asc desc]]
          '[tech.v3.dataset :as ds])
 
@@ -124,8 +124,8 @@
 
 | :sym | :n | :avg-price | :total-vol |
 |------|---:|-----------:|-----------:|
-| AAPL |  4 |     101.25 |     4500.0 |
-| MSFT |  4 |     201.75 |     4300.0 |
+| AAPL |  4 |     101.25 |       4500 |
+| MSFT |  4 |     201.75 |       4300 |
 </code></pre><p>Reading the query part by part:</p><ul><li><code>prices</code> is the dataset to query.</li><li><code>:by [:sym]</code> splits the rows into one group per symbol.</li><li><code>:agg</code> collapses each group into one row. Its map names the new columns and says how to compute each one: <code>nrow</code> counts the rows, <code>mn</code> is the mean and <code>sm</code> the sum.</li><li><code>#dt/e</code> marks an expression. Inside it, bare keywords such as <code>:price</code> refer to columns.</li></ul><p>The missing volume is skipped by the sum. The result is an ordinary dataset, so it can be passed to the next <code>dt</code> call, to tech.ml.dataset, or to tablecloth.</p><p>Other keywords filter and sort. The two highest prices with a volume above 1000:</p><pre><code class="clojure">(dt prices
     :where    #dt/e (&gt; :volume 1000)
     :order-by [(desc :price)]

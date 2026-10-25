@@ -288,9 +288,9 @@
 
 |    :time | :open | :high |  :low | :close | :volume |
 |---------:|------:|------:|------:|-------:|--------:|
-| 28403130 | 100.0 | 100.4 |  99.8 |  100.2 |   750.0 |
-| 28403135 | 100.6 | 101.0 | 100.6 |  100.7 |   550.0 |
-| 28403140 | 100.9 | 100.9 | 100.9 |  100.9 |   400.0 |
+| 28403130 | 100.0 | 100.4 |  99.8 |  100.2 |     750 |
+| 28403135 | 100.6 | 101.0 | 100.6 |  100.7 |     550 |
+| 28403140 | 100.9 | 100.9 | 100.9 |  100.9 |     400 |
 </code></pre><p>For a date-time column, the bar key is the start of the interval counted in units since 1970-01-01, here minutes. A plain function turns it back into a time:</p><pre><code class="clojure">(defn minutes-&gt;time [m]
   (java.time.LocalDateTime/ofEpochSecond (* 60 m) 0 java.time.ZoneOffset/UTC))
 
@@ -307,9 +307,9 @@
 
 |            :time | :open | :high |  :low | :close | :volume |
 |------------------|------:|------:|------:|-------:|--------:|
-| 2024-01-02T09:30 | 100.0 | 100.4 |  99.8 |  100.2 |   750.0 |
-| 2024-01-02T09:35 | 100.6 | 101.0 | 100.6 |  100.7 |   550.0 |
-| 2024-01-02T09:40 | 100.9 | 100.9 | 100.9 |  100.9 |   400.0 |
+| 2024-01-02T09:30 | 100.0 | 100.4 |  99.8 |  100.2 |     750 |
+| 2024-01-02T09:35 | 100.6 | 101.0 | 100.6 |  100.7 |     550 |
+| 2024-01-02T09:40 | 100.9 | 100.9 | 100.9 |  100.9 |     400 |
 </code></pre><p>With several instruments, add the symbol to <code>:by</code>: <code>:by [(xbar :time 5 :minutes) :sym]</code>. On a number column, <code>xbar</code> makes equal-width buckets: <code>(xbar :price 10)</code> groups prices into 100–110, 110–120 and so on.</p><h2 id="matching-records-by-time">Matching Records by Time</h2><h3 id="as-of-joins">As-of Joins</h3><p>Two time series rarely share timestamps. Trades happen at one set of times and quotes at another. An <em>as-of join</em> gives each left row the most recent right row at or before its time, which is the information that was available at that moment. These datasets give times as plain numbers:</p><pre><code class="clojure">(def trades (ds/-&gt;dataset {:sym  ["AAPL" "AAPL" "MSFT"]
                            :time [10 25 30]
                            :qty  [100 50 75]}))
