@@ -75,9 +75,9 @@
         <h1>Quick Start</h1>
     </div>
     <ul class="toc"><li><a href="#installation">Installation</a></li><li><a href="#a-first-query">A First Query</a></li><li><a href="#reading-files">Reading Files</a></li><li><a href="#repl-and-notebooks">REPL and Notebooks</a></li><li><a href="#next-steps">Next Steps</a></li></ul>
-    <h2 id="installation">Installation</h2><p>Datajure requires Java 21+ and Clojure 1.12+.</p><p>With the Clojure CLI, add Datajure to <code>deps.edn</code>:</p><pre><code class="clojure">{:deps {com.github.clojure-finance/datajure {:mvn/version "2.7.9"}}}
-</code></pre><p>With Leiningen, add it to <code>:dependencies</code> in <code>project.clj</code>:</p><pre><code class="clojure">[com.github.clojure-finance/datajure "2.7.9"]
-</code></pre><p>The <a href="https://clojars.org/com.github.clojure-finance/datajure">Clojars page</a> always shows the latest version, and the <a href="https://github.com/clojure-finance/datajure/blob/main/CHANGELOG.md">changelog</a> lists what changed in each release.</p><p>To try Datajure without creating a project, start a REPL with it on the classpath:</p><pre><code class="bash">clj -Sdeps '{:deps {com.github.clojure-finance/datajure {:mvn/version "2.7.9"}}}'
+    <h2 id="installation">Installation</h2><p>Datajure requires Java 21+ and Clojure 1.12+.</p><p>With the Clojure CLI, add Datajure to <code>deps.edn</code>:</p><pre><code class="clojure">{:deps {com.github.clojure-finance/datajure {:mvn/version "2.7.10"}}}
+</code></pre><p>With Leiningen, add it to <code>:dependencies</code> in <code>project.clj</code>:</p><pre><code class="clojure">[com.github.clojure-finance/datajure "2.7.10"]
+</code></pre><p>The <a href="https://clojars.org/com.github.clojure-finance/datajure">Clojars page</a> always shows the latest version, and the <a href="https://github.com/clojure-finance/datajure/blob/main/CHANGELOG.md">changelog</a> lists what changed in each release.</p><p>To try Datajure without creating a project, start a REPL with it on the classpath:</p><pre><code class="bash">clj -Sdeps '{:deps {com.github.clojure-finance/datajure {:mvn/version "2.7.10"}}}'
 </code></pre><h2 id="a-first-query">A First Query</h2><p>Datajure works on <a href="https://github.com/techascent/tech.ml.dataset">tech.ml.dataset</a> datasets, which it brings in as a dependency. Create one from a map of columns:</p><pre><code class="clojure">(require '[datajure.core :refer [dt dt1 nrow asc desc]]
          '[tech.v3.dataset :as ds])
 
