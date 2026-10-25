@@ -55,6 +55,35 @@ _unnamed [2 3]:
 | MSFT | 0.01165150 | 0.01888828 |
 ```
 
+### Compare across Stocks
+
+Group by date instead of by stock to work across the cross-section. Each return minus that day's average return:
+
+```clojure
+(-> prices
+    (dt :by [:sym] :within-order [(asc :date)]
+        :set {:ret #dt/e (- (win/ratio :price) 1)})
+    (dt :by [:date]
+        :set {:excess #dt/e (stat/demean :ret)}
+        :select [:date :sym :ret :excess]
+        :order-by [(asc :date)]))
+```
+
+```text
+_unnamed [8 4]:
+
+|      :date | :sym |        :ret |     :excess |
+|------------|------|------------:|------------:|
+| 2024-01-02 | AAPL |             |             |
+| 2024-01-02 | MSFT |             |             |
+| 2024-01-03 | AAPL |  0.02000000 |  0.01500000 |
+| 2024-01-03 | MSFT | -0.01000000 | -0.01500000 |
+| 2024-01-04 | AAPL | -0.02941176 | -0.02480689 |
+| 2024-01-04 | MSFT |  0.02020202 |  0.02480689 |
+| 2024-01-05 | AAPL |  0.05050505 |  0.01287629 |
+| 2024-01-05 | MSFT |  0.02475248 | -0.01287629 |
+```
+
 ### Match by Time
 
 An as-of join gives each trade the latest quote for its symbol at or before the trade's time:
