@@ -84,7 +84,7 @@ _unnamed [2 3]:
 | AAPL |  2 |     103.00 |
 ```
 
-`:set` and `:agg` cannot be used in the same call; thread several `dt` calls with `->` instead. An unknown keyword is an error with a suggestion (`:wehre -> :where`), not silently ignored.
+`:set` and `:agg` cannot be used in the same call; thread several `dt` calls with `->` instead. `:by` only groups for `:set` or `:agg`: without either it is silently ignored, so `(dt prices :by [:sym])` returns `prices` unchanged. An unknown keyword is an error with a suggestion (`:wehre -> :where`), not silently ignored.
 
 ### Rows In, Rows Out: `:by` with `:set` or `:agg`
 
