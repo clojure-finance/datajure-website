@@ -183,7 +183,7 @@ The pandas lag and fill rows, and dplyr's `fill`, assume the rows are already so
 | Replace missing values | `prices[is.na(volume), volume := 0L]` | `prices.with_columns(pl.col("volume").fill_null(0))` | `(dt prices :set {:volume #dt/e (coalesce :volume 0)})` |
 | Fill forward within group | `prices[, volume := nafill(volume, "locf"), by = sym]` | `prices.with_columns(pl.col("volume").forward_fill().over("sym", order_by="date"))` | `(dt prices :by [:sym] :within-order [(asc :date)] :set {:volume #dt/e (win/fills :volume)})` |
 
-The data.table `:=` rows change `prices` itself; the Datajure versions return a new dataset instead.
+The data.table fill row, like the pandas one, assumes the rows are already sorted by date; the Polars rows pass `order_by`, so their input order does not matter. The data.table `:=` rows change `prices` itself; the Datajure versions return a new dataset instead.
 
 ## Differences Worth Knowing
 
